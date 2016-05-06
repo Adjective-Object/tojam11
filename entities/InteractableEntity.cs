@@ -29,11 +29,12 @@ namespace Adventure
 			}
 		}
 
-		static float animSpeed = 4.0f;
+		static float animSpeed = 10.0f;
 
 		public override void Update(GameTime elapsed) {
-			Vector2 goalOffset = this.highlighted ? this.focused ? focusOffset : highlightOffset : hiddenOffset;
-			float goalAlpha = this.highlighted ? this.focused ? focusAlpha : highlightAlpha : hiddenAlpha;
+			Boolean effectiveHighlighting = this.highlighted && !this.behavior.IsDisabled ();
+			Vector2 goalOffset = effectiveHighlighting ? this.focused ? focusOffset : highlightOffset : hiddenOffset;
+			float goalAlpha = effectiveHighlighting ? this.focused ? focusAlpha : highlightAlpha : hiddenAlpha;
 
 			animatedAlpha = animatedAlpha + (goalAlpha - animatedAlpha) * (float)elapsed.ElapsedGameTime.TotalSeconds * animSpeed;
 			animatedOffset = animatedOffset + (goalOffset - animatedOffset) * (float)elapsed.ElapsedGameTime.TotalSeconds * animSpeed;

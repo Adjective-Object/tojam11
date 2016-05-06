@@ -112,7 +112,7 @@ namespace Adventure
 			// add newly spawned entities
 			entities.AddRange(toSpawn);
 			toSpawn.Clear ();
-			entities.Sort((BaseEntity e, BaseEntity f) => e.position.Y.CompareTo(f.position.Y));
+			entities.Sort((BaseEntity e, BaseEntity f) => e.isUI ? 1 : e.position.Y.CompareTo(f.position.Y));
 
 			base.Update (gameTime);
 		}
@@ -130,7 +130,9 @@ namespace Adventure
 			// draw entity shadows
 			entityBatch.Begin ();
 			foreach (BaseEntity e in this.entities) {
-				entityBatch.Draw(shadowTexture, new Vector2(e.position.X - 64, e.position.Y - 6));
+				if (e.hasShadow) {
+					entityBatch.Draw (shadowTexture, new Vector2 (e.position.X - 64, e.position.Y - 6));
+				}
 			}
 			entityBatch.End ();
 

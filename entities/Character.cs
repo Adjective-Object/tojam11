@@ -14,6 +14,10 @@ namespace Adventure
 		CharacterBehavior charBehavior;
 		public Boolean facingLeft = true;
 
+		override public Boolean hasShadow {
+			get { return true; }
+		}
+
 		Color [] headColors, bodyColors;
 		static Color [] referenceColors = {
 			new Color(255,0,0),

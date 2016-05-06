@@ -31,10 +31,14 @@ namespace Adventure
 		//
 		static Vector2 STARTING_OFFSET = new Vector2(0,10);
 		static Vector2 LETTER_OFFSET = new Vector2(10,0);
+		static Vector2 GRADUAL_RISE = new Vector2(0,-10);
 		static double ANIMATION_TIME = 0.4;
 		static double LETTER_SPAWN_DELAY = 0.03;
 		static double AMBIENT_SPEECH_LIFETIME = 3.0;
 
+		override public Boolean isUI {
+			get { return true; }
+		}
 		public Boolean doneEmitting {
 			get { return this.ages[this.ages.Length - 1] > ANIMATION_TIME; }
 		}
@@ -113,6 +117,7 @@ namespace Adventure
 				}
 
 				offset = offset - LETTER_OFFSET * text.Length / 2;
+				offset = offset + GRADUAL_RISE * (float) ages [0];
 
 				// apply the calculated opacity and offset
 				batch.DrawString (

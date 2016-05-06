@@ -62,12 +62,22 @@ namespace Adventure
 				this.highlights.Highlight(e);
 			}
 			this.highlights.AssignFocus ();
+
+			// advance the focus on tab / shift + tab
 			if (Input.KeyPressed(Key.TAB)) {
 				if (Input.KeyDown(Key.SHIFT)) {
 					this.highlights.AdvanceFocus(-1);
 				} else {
 					this.highlights.AdvanceFocus(1);
 				}
+			}
+
+			// if enter is just pressed, call the interaction of the thing
+			if (Input.KeyPressed (Key.ENTER) && 
+				this.highlights.focus != null && 
+				!this.highlights.focus.behavior.IsDisabled()) {
+
+				this.highlights.focus.behavior.RespondToInteraction ();
 			}
 		}
 
@@ -89,7 +99,11 @@ namespace Adventure
 
 	class HighlightManager {
 		protected List<InteractableEntity> entities = new List<InteractableEntity> ();
-		InteractableEntity focus;
+		InteractableEntity _focus;
+		public InteractableEntity focus {
+			get { return _focus; }
+		}
+
 		int focusIndex;
 		public void ClearHighlights() {
 			foreach (InteractableEntity e in entities) {
@@ -104,37 +118,37 @@ namespace Adventure
 		}
 
 		public void AssignFocus() {
-			if (this.focus != null)
-				this.focus.focused = false;
+			if (this._focus != null)
+				this._focus.focused = false;
 			if (entities.Count > 0) {
 				// if the focus entity is no longer in range, assign focus randomly
-				if (!entities.Contains (focus)) {
-					if (this.focus != null) this.focus.focused = false;
+				if (!entities.Contains (_focus)) {
+					if (this._focus != null) this._focus.focused = false;
 					focusIndex = 0;
-					focus = entities [0];
+					_focus = entities [0];
 				}
 
 				// otherwise, repair focusIndex
 				else {
-					focusIndex = entities.IndexOf (focus);
+					focusIndex = entities.IndexOf (_focus);
 				}
 
 			} else {
-				if (this.focus != null) this.focus.focused = false;
+				if (this._focus != null) this._focus.focused = false;
 				focusIndex = -1;
-				focus = null;
+				_focus = null;
 			}
 
-			if (this.focus != null)
-				this.focus.focused = true;
+			if (this._focus != null)
+				this._focus.focused = true;
 		}
 
 		public void AdvanceFocus(int amt) {
-			if (this.focus != null) {
-				this.focus.focused = false;
+			if (this._focus != null) {
+				this._focus.focused = false;
 				focusIndex = (focusIndex + amt + this.entities.Count) % this.entities.Count;
-				this.focus = this.entities [focusIndex];
-				this.focus.focused = true;
+				this._focus = this.entities [focusIndex];
+				this._focus.focused = true;
 			}
 		}
 	}

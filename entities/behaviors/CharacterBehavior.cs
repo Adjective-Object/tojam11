@@ -32,6 +32,10 @@ namespace Adventure
 		public virtual void RespondToInteraction() {
 			this.EmitSpeech("character response not implemented");
 		}
+
+		public Boolean IsDisabled() {
+			return this.speechReference != null;
+		}
 	}
 }
 

@@ -9,6 +9,14 @@ namespace Adventure
 	{
 		public Vector2 position = new Vector2 (0, 0);
 		protected Boolean _alive = true;
+		public virtual Boolean hasShadow {
+			get { return false; }
+		}
+
+		public virtual Boolean isUI {
+			get { return false; }
+		}
+
 		public Boolean alive {
 			get { return _alive; }
 		}
