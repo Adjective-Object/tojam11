@@ -102,6 +102,7 @@ namespace Adventure
 		override public void Update(GameTime time) {
 			// Perform the behaviors specified by this Character's CharacterBehavior
 			this.charBehavior.Update(time);
+			base.Update (time);
 
 			head = currentHeadAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
 			body = currentBodyAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
