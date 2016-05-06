@@ -74,9 +74,6 @@ namespace Adventure
 
 			// Tell font loader to load Monaco as default font
 			SpeechText.LoadFont(Content, "Monaco");
-
-
-			testCharacter.EmitSpeech ("This is me talking.");
 		}
 
 		/// <summary>
@@ -139,25 +136,28 @@ namespace Adventure
 
 
 		private void InitEntities() {
-			testCharacter = new Character (new Vector2 (200, 300),
+			entities.Add(new Character (new Vector2 (200, 300),
 				"bunny", new Color[] { new Color (255, 255, 255), new Color (255, 200, 200) },
-				"male", new Color[] { new Color (255, 255, 255), new Color (255, 255, 200) }
-			);
-			entities.Add (testCharacter);
+				"male", new Color[] { new Color (255, 255, 255), new Color (255, 255, 200) },
+				new CharacterBehavior()
+			));
 
 			entities.Add (new Character (new Vector2 (350, 300),
 				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
-				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (200, 100, 255), new Color (255, 200, 255) }
+				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (200, 100, 255), new Color (255, 200, 255) },
+				new CharacterBehavior()
 			));
 
 			entities.Add (new Character (new Vector2 (500, 300),
 				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (20, 250, 30) },
-				"male", new Color[] { new Color (180, 190, 170), new Color (100, 60, 190), new Color (255, 200, 255) }
+				"male", new Color[] { new Color (180, 190, 170), new Color (100, 60, 190), new Color (255, 200, 255) },
+				new CharacterBehavior()
 			));
 
 			entities.Add (new Character (new Vector2 (650, 300),
 				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (250, 250, 100) },
-				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (120, 120, 30), new Color (255, 200, 255) }
+				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (120, 120, 30), new Color (255, 200, 255) },
+				new CharacterBehavior()
 			));
 		}
 

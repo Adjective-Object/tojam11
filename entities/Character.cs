@@ -9,11 +9,9 @@ namespace Adventure
 	// class that handles assembling and animating sprites
 	public class Character : BaseEntity
 	{
-
-		Dictionary <String, Texture2D> headTextures, bodyTextures;
 		string headName, bodyName;
 		Texture2D head, body;
-		SpeechText speechReference;
+		CharacterBehavior behavior;
 
 		Color [] headColors, bodyColors;
 		static Color [] referenceColors = {
@@ -25,60 +23,59 @@ namespace Adventure
 			new Color(0,255,255),
 		};
 
-		Animation currentHeadAnimation;
-		Animation currentBodyAnimation;
-		Animation headIdle;
-		Animation headTalk;
-		Animation bodyIdle;
+		Animation currentHeadAnimation, currentBodyAnimation;
+		Dictionary<String, Animation> headAnimations, bodyAnimations;
 
 		public Character (
 			Vector2 position,
 			String headName, Color[] headColors,
-			String bodyName, Color[] bodyColors) : base(position)
+			String bodyName, Color[] bodyColors,
+			CharacterBehavior behavior) : base(position)
 		{
 			this.headName = headName;
 			this.bodyName = bodyName;
 			this.headColors = headColors;
 			this.bodyColors = bodyColors;
+			this.behavior = behavior;
+
+			this.headAnimations = new Dictionary<String, Animation> ();
+			this.bodyAnimations = new Dictionary<String, Animation> ();
 		}
 
 		// load and set the colors of the sprites
 		override public void Load(ContentManager content, SpriteBatch batch) {
-			// initialize either dictionary by rendering the things
-			Console.WriteLine("npc_parts/" + headName + "_idle.png");
-			headTextures = new Dictionary<String, Texture2D>() {
-				{"idle", ApplyPallette(content.Load<Texture2D>("npc_parts/head_" + headName + "_idle"), headColors)},
-				{"talk_1", ApplyPallette(content.Load<Texture2D>("npc_parts/head_" + headName + "_talk_1"), headColors)}
-			};
+			// load head textures
+			Texture2D headTextureIdle = ApplyPallette (content.Load<Texture2D> ("npc_parts/head_" + headName + "_idle"), headColors);
+			Texture2D headTextureTalk = ApplyPallette (content.Load<Texture2D> ("npc_parts/head_" + headName + "_talk_1"), headColors);
 
-			bodyTextures = new Dictionary<String, Texture2D>() {
-				{"idle", ApplyPallette(content.Load<Texture2D>("npc_parts/body_" + bodyName + "_idle"), bodyColors)}
-			};
+			// load body textures
+			Texture2D bodyTextureIdle = ApplyPallette (content.Load<Texture2D> ("npc_parts/body_" + bodyName + "_idle"), bodyColors);
 
-			// animations
 
+			// create head animations
 			Frame[] headIdleFrames = {
-				new Frame(10, headTextures["idle"])
+				new Frame(10, headTextureIdle)
 			};
-			headIdle = new Animation(headIdleFrames);
+			headAnimations.Add("idle", new Animation(headIdleFrames));
 
 			Frame[] headTalkFrames = {
-				new Frame(0.2, headTextures["talk_1"]),
-				new Frame(0.2, headTextures["idle"])
+				new Frame(0.2, headTextureTalk),
+				new Frame(0.2, headTextureIdle)
 			};
-			headTalk = new Animation(headTalkFrames);
+			headAnimations.Add("talk", new Animation(headTalkFrames));
 
+			// create body animations
 			Frame[] bodyIdleFrames = {
-				new Frame(10, bodyTextures["idle"])
+				new Frame(10, bodyTextureIdle)
 			};
-			bodyIdle = new Animation(bodyIdleFrames);
+			bodyAnimations.Add("idle", new Animation(bodyIdleFrames));
 
-			currentBodyAnimation = bodyIdle;
-			currentHeadAnimation = headIdle;
+			currentHeadAnimation = headAnimations["idle"];
+			currentBodyAnimation = bodyAnimations["idle"];
 		}
 
 
-		// apply some color pallette
+		// apply some color pallette to a texture using reference colors
 		private Texture2D ApplyPallette(Texture2D texture, Color [] palette) {
 			Texture2D newTexture = new Texture2D(
 				texture.GraphicsDevice, texture.Width, texture.Height);
@@ -99,29 +96,26 @@ namespace Adventure
 		}
 			
 		override public void Update(GameTime time) {
-			if (currentHeadAnimation == headTalk &&
-			    this.speechReference != null &&
-			    this.speechReference.doneEmitting) {
-
-				this.speechReference = null;
-				this.currentHeadAnimation = headIdle;
-			}
+			// Perform the behaviors specified by this Character's CharacterBehavior
+			this.behavior.Update(time);
 
 			head = currentHeadAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
 			body = currentBodyAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
 		}
 
-		public void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT) {
-			this.speechReference = SpeechText.Spawn (
-				"Monaco", this.position + new Vector2(0, -200), text, mode);
-			this.currentHeadAnimation = headTalk.Reset ();
-		}
 
 		override public void Draw(SpriteBatch batch, GameTime time) {
 			batch.Draw(body, new Vector2 (position.X - 64, position.Y - 105));
 			batch.Draw(head, new Vector2 (position.X - 64, position.Y - 175));
 		}
 
+		public void PlayAnimHead(String name) {
+			this.currentHeadAnimation = this.headAnimations [name].Reset();
+		}
+
+		public void PlayAnimBody(String name) {
+			this.currentBodyAnimation = this.bodyAnimations [name].Reset();
+		}
 	}
 
 }

@@ -7,7 +7,7 @@ namespace Adventure
 {
 	public abstract class BaseEntity
 	{
-		protected Vector2 position = new Vector2 (0, 0);
+		public Vector2 position = new Vector2 (0, 0);
 		protected Boolean _alive = true;
 		public Boolean alive {
 			get { return _alive; }
