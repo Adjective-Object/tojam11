@@ -20,9 +20,10 @@ namespace Adventure
 			this.frames = frames;
 		}
 
-		public void Reset() {
+		public Animation Reset() {
 			this.currentFrameIndex = 0;
 			this.frameTimeCounter = 0;
+			return this;
 		}
 
 		public Texture2D GetFrame(double elapsedTime) {

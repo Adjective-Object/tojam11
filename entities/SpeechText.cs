@@ -21,8 +21,10 @@ namespace Adventure
 
 			SpeechText.fonts [fontName] = content.Load<SpriteFont> (fontName);
 		}
-		public static void Spawn(String fontName, Vector2 position, String text, SpeechMode mode = SpeechMode.AMBIENT) {
-			AdventureGame.SpawnEntitiy(new SpeechText(fonts[fontName], position, text, mode));
+		public static SpeechText Spawn(String fontName, Vector2 position, String text, SpeechMode mode = SpeechMode.AMBIENT) {
+			SpeechText e = new SpeechText (fonts [fontName], position, text, mode);
+			AdventureGame.SpawnEntity(e);
+			return e;
 		}
 
 		//
@@ -33,6 +35,10 @@ namespace Adventure
 		static double ANIMATION_TIME = 0.4;
 		static double LETTER_SPAWN_DELAY = 0.03;
 		static double AMBIENT_SPEECH_LIFETIME = 3.0;
+
+		public Boolean doneEmitting {
+			get { return this.ages[this.ages.Length - 1] > ANIMATION_TIME; }
+		}
 
 		SpriteFont font;
 		SpeechMode mode;
@@ -106,6 +112,8 @@ namespace Adventure
 						STARTING_OFFSET * (float) Math.Pow(t, 3);
 					opacity = (1 - t);
 				}
+
+				offset = offset - LETTER_OFFSET * text.Length / 2;
 
 				// apply the calculated opacity and offset
 				batch.DrawString (

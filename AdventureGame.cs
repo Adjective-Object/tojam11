@@ -34,6 +34,8 @@ namespace Adventure
 			Content.RootDirectory = "Content";
 		}
 
+		Character testCharacter; // temp for testing
+
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
 		/// This is where it can query for any required services and load any non-graphic
@@ -70,10 +72,11 @@ namespace Adventure
 				e.Load (Content, enitityBatch);
 			}
 
-			// Tell font loader that arial existsT
+			// Tell font loader to load Monaco as default font
 			SpeechText.LoadFont(Content, "Monaco");
-			SpeechText.Spawn ("Monaco", new Vector2 (50, 50), "emitting speech text sounds");
-			SpeechText.Spawn ("Monaco", new Vector2 (50, 100), "Press Enter to dismiss this text", SpeechText.SpeechMode.PLAYER_CONTROLLED);
+
+
+			testCharacter.EmitSpeech ("This is me talking.");
 		}
 
 		/// <summary>
@@ -136,10 +139,11 @@ namespace Adventure
 
 
 		private void InitEntities() {
-			entities.Add (new Character (new Vector2 (200, 300),
+			testCharacter = new Character (new Vector2 (200, 300),
 				"bunny", new Color[] { new Color (255, 255, 255), new Color (255, 200, 200) },
 				"male", new Color[] { new Color (255, 255, 255), new Color (255, 255, 200) }
-			));
+			);
+			entities.Add (testCharacter);
 
 			entities.Add (new Character (new Vector2 (350, 300),
 				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
@@ -158,7 +162,7 @@ namespace Adventure
 		}
 
 		// schedules an entity to be spawned after this update loop
-		public static void SpawnEntitiy(BaseEntity e) {
+		public static void SpawnEntity(BaseEntity e) {
 			AdventureGame.instance.toSpawn.Add (e);
 		}
 	}

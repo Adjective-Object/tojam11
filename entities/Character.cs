@@ -63,8 +63,8 @@ namespace Adventure
 			headIdle = new Animation(headIdleFrames);
 
 			Frame[] headTalkFrames = {
-				new Frame(0.5, headTextures["talk_1"]),
-				new Frame(0.5, headTextures["idle"])
+				new Frame(0.2, headTextures["talk_1"]),
+				new Frame(0.2, headTextures["idle"])
 			};
 			headTalk = new Animation(headTalkFrames);
 
@@ -74,7 +74,7 @@ namespace Adventure
 			bodyIdle = new Animation(bodyIdleFrames);
 
 			currentBodyAnimation = bodyIdle;
-			currentHeadAnimation = headTalk;
+			currentHeadAnimation = headIdle;
 		}
 
 
@@ -98,10 +98,23 @@ namespace Adventure
 			return newTexture;
 		}
 			
-
 		override public void Update(GameTime time) {
+			if (currentHeadAnimation == headTalk &&
+			    this.speechReference != null &&
+			    this.speechReference.doneEmitting) {
+
+				this.speechReference = null;
+				this.currentHeadAnimation = headIdle;
+			}
+
 			head = currentHeadAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
 			body = currentBodyAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
+		}
+
+		public void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT) {
+			this.speechReference = SpeechText.Spawn (
+				"Monaco", this.position + new Vector2(0, -200), text, mode);
+			this.currentHeadAnimation = headTalk.Reset ();
 		}
 
 		override public void Draw(SpriteBatch batch, GameTime time) {
