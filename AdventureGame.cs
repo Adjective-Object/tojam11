@@ -17,6 +17,9 @@ namespace Adventure
 		SpriteBatch entityBatch;
 		Texture2D shadowTexture;
 		Camera gameCamera;
+		public static List<BaseEntity> Entities {
+			get { return instance.entities; }
+		}
 		List<BaseEntity> entities; 
 		List<BaseEntity> toSpawn; 
 

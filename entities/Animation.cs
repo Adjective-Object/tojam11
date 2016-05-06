@@ -28,7 +28,6 @@ namespace Adventure
 
 		public Texture2D GetFrame(double elapsedTime) {
 			frameTimeCounter += elapsedTime;
-			Console.WriteLine (currentFrameIndex + " " + frameTimeCounter + " " + elapsedTime);
 			while (frameTimeCounter > this.frames [currentFrameIndex].time) {
 				frameTimeCounter -= this.frames [currentFrameIndex].time;
 				currentFrameIndex = (currentFrameIndex + 1) % this.frames.Length;

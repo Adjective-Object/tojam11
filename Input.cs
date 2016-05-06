@@ -38,6 +38,8 @@ namespace Adventure
 			pressedThisFrame[Key.DOWN] 	= state.IsKeyDown (Keys.Down);
 			pressedThisFrame[Key.LEFT] 	= state.IsKeyDown (Keys.Left);
 			pressedThisFrame[Key.RIGHT] = state.IsKeyDown (Keys.Right);
+			pressedThisFrame[Key.TAB]   = state.IsKeyDown (Keys.Tab);
+			pressedThisFrame[Key.SHIFT] = state.IsKeyDown (Keys.LeftShift) || state.IsKeyDown (Keys.RightShift);
 
 		}
 
@@ -51,7 +53,7 @@ namespace Adventure
 	}
 
 	public enum Key {
-		ENTER, UP, DOWN, LEFT, RIGHT
+		ENTER, UP, DOWN, LEFT, RIGHT, TAB, SHIFT
 	}
 }
 

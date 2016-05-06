@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace Adventure
 {
-	public class CharacterBehavior
+	public class CharacterBehavior : EntityBehavior
 	{
 		protected Character character;
 		protected SpeechText speechReference;

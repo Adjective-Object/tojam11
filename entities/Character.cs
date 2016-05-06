@@ -7,11 +7,11 @@ using Microsoft.Xna.Framework.Content;
 namespace Adventure
 {
 	// class that handles assembling and animating sprites
-	public class Character : BaseEntity
+	public class Character : InteractableEntity
 	{
 		string headName, bodyName;
 		Texture2D head, body;
-		CharacterBehavior behavior;
+		CharacterBehavior charBehavior;
 		public Boolean facingLeft = true;
 
 		Color [] headColors, bodyColors;
@@ -31,14 +31,14 @@ namespace Adventure
 			Vector2 position,
 			String headName, Color[] headColors,
 			String bodyName, Color[] bodyColors,
-			CharacterBehavior behavior) : base(position)
+			CharacterBehavior behavior) : base(position, behavior)
 		{
 			this.headName = headName;
 			this.bodyName = bodyName;
 			this.headColors = headColors;
 			this.bodyColors = bodyColors;
-			this.behavior = behavior;
-			behavior.BindToCharacter (this);
+			this.charBehavior = behavior;
+			charBehavior.BindToCharacter (this);
 
 			this.headAnimations = new Dictionary<String, Animation> ();
 			this.bodyAnimations = new Dictionary<String, Animation> ();
@@ -74,6 +74,8 @@ namespace Adventure
 
 			currentHeadAnimation = headAnimations["idle"];
 			currentBodyAnimation = bodyAnimations["idle"];
+
+			base.Load (content, batch);
 		}
 
 
@@ -99,7 +101,7 @@ namespace Adventure
 			
 		override public void Update(GameTime time) {
 			// Perform the behaviors specified by this Character's CharacterBehavior
-			this.behavior.Update(time);
+			this.charBehavior.Update(time);
 
 			head = currentHeadAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
 			body = currentBodyAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
@@ -112,8 +114,10 @@ namespace Adventure
 				body, new Vector2 (position.X - 64, position.Y - 105), 
 				null, null, null, 0, null, null, flipEffect);
 			batch.Draw(
-				head, new Vector2 (position.X - 64, position.Y - 175), 
+				head, new Vector2 (position.X - 64, position.Y - 175),
 				null, null, null, 0, null, null, flipEffect);
+
+			base.DrawFocusIndicator(batch, new Vector2(0, - 150));
 		}
 
 		public void PlayAnimHead(String name) {
