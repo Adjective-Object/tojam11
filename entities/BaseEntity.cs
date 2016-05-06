@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace Adventure
 {
-	public abstract class BaseEntity
+	public abstract class BaseEntity 
 	{
 		public Vector2 position = new Vector2 (0, 0);
 		protected Boolean _alive = true;

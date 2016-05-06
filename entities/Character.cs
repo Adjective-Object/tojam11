@@ -12,6 +12,7 @@ namespace Adventure
 		string headName, bodyName;
 		Texture2D head, body;
 		CharacterBehavior behavior;
+		public Boolean facingLeft = true;
 
 		Color [] headColors, bodyColors;
 		static Color [] referenceColors = {
@@ -37,6 +38,7 @@ namespace Adventure
 			this.headColors = headColors;
 			this.bodyColors = bodyColors;
 			this.behavior = behavior;
+			behavior.BindToCharacter (this);
 
 			this.headAnimations = new Dictionary<String, Animation> ();
 			this.bodyAnimations = new Dictionary<String, Animation> ();
@@ -105,8 +107,13 @@ namespace Adventure
 
 
 		override public void Draw(SpriteBatch batch, GameTime time) {
-			batch.Draw(body, new Vector2 (position.X - 64, position.Y - 105));
-			batch.Draw(head, new Vector2 (position.X - 64, position.Y - 175));
+			SpriteEffects flipEffect = this.facingLeft ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+			batch.Draw(
+				body, new Vector2 (position.X - 64, position.Y - 105), 
+				null, null, null, 0, null, null, flipEffect);
+			batch.Draw(
+				head, new Vector2 (position.X - 64, position.Y - 175), 
+				null, null, null, 0, null, null, flipEffect);
 		}
 
 		public void PlayAnimHead(String name) {

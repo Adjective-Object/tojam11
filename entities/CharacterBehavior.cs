@@ -5,14 +5,14 @@ namespace Adventure
 {
 	public class CharacterBehavior
 	{
-		Character character;
-		SpeechText speechReference;
+		protected Character character;
+		protected SpeechText speechReference;
 
 		public void BindToCharacter(Character c) {
 			this.character = c;
 		}
 
-		public void Update(GameTime elapsed) {
+		public virtual void Update(GameTime elapsed) {
 			// reset head if we are done speaking
 			if (this.speechReference != null &&
 			    this.speechReference.doneEmitting) {
@@ -23,13 +23,13 @@ namespace Adventure
 		}
 
 		
-		public void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT) {
+		public virtual void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT) {
 			this.speechReference = SpeechText.Spawn (
 				"Monaco", character.position + new Vector2(0, -200), text, mode);
 			character.PlayAnimHead("talk");
 		}
 			
-		public void RespondToInteraction() {
+		public virtual void RespondToInteraction() {
 			this.EmitSpeech("character response not implemented");
 		}
 	}
