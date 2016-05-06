@@ -12,14 +12,22 @@ namespace Adventure
 	/// </summary>
 	public class AdventureGame : Game
 	{
-
+		static AdventureGame instance;
 		GraphicsDeviceManager graphics;
 		SpriteBatch enitityBatch;
 		Camera gameCamera;
-		IList<BaseEntity> entities; 
+		List<BaseEntity> entities; 
+		List<BaseEntity> toSpawn; 
 
 		public AdventureGame ()
 		{
+			// make adventureGame a singleton
+			if (instance == null) {
+				instance = this;
+			} else {
+				Exit ();
+			}
+
 			graphics = new GraphicsDeviceManager (this);
 			Content.RootDirectory = "Content";
 		}
@@ -34,28 +42,15 @@ namespace Adventure
 		{
 			// initialize my fields
 			entities = new List<BaseEntity> ();
-			// gameCamera = new Camera (this);
+			toSpawn = new List<BaseEntity> ();
 
-			entities.Add(new Character( new Vector2(200,300),
-				"bunny", new Color[] {new Color(255,255,255), new Color(255, 200, 200)},
-				"male",  new Color[] {new Color(255,255,255), new Color(255, 255, 200)}
-			));
+			// initialize the camera
+			// gameCamera = new Camera ();
 
-			entities.Add(new Character( new Vector2(350,300),
-				"bunny", new Color[] {new Color(180,190,170), new Color(255, 200, 200)},
-				"female_hipster",  new Color[] {new Color(180,190,170), new Color(200, 100, 255), new Color(255, 200, 255)}
-			));
+			// add all the entities on the map
+			this.InitEntities ();
 
-			entities.Add(new Character( new Vector2(500,300),
-				"kitty", new Color[] {new Color(180,190,170), new Color(255, 200, 200), new Color(20,250,30)},
-				"male",  new Color[] {new Color(180,190,170), new Color(100,60,190), new Color(255, 200, 255)}
-			));
-
-			entities.Add(new Character( new Vector2(650,300),
-				"kitty", new Color[] {new Color(180,190,170), new Color(255, 200, 200), new Color(250,250,100)},
-				"female_hipster",  new Color[] {new Color(180,190,170), new Color(120,120,30), new Color(255, 200, 255)}
-			));
-
+			// init game
 			base.Initialize ();
 		}
 
@@ -71,7 +66,9 @@ namespace Adventure
 				e.Load (Content, enitityBatch);
 			}
 
-			//TODO: use this.Content to load your game content here 
+			// Tell font loader that arial existsT
+			SpeechText.LoadFont(Content, "Monaco");
+			SpeechText.Spawn ("Monaco", new Vector2 (50, 50), "emitting speech text sounds");
 		}
 
 		/// <summary>
@@ -88,9 +85,19 @@ namespace Adventure
 				Exit ();
 			#endif
 
-			foreach (BaseEntity e in this.entities) {
-				e.Update(gameTime);
+			// update all entities in the entity list
+			for (int i=0; i<entities.Count; i++) {
+				entities[i].Update(gameTime);
+
+				if (!entities [i].alive) {
+					entities.RemoveAt (i);
+					i--;
+				}
 			}
+
+			// add newly spawned entities
+			entities.AddRange(toSpawn);
+			toSpawn.Clear ();
 
 			base.Update (gameTime);
 		}
@@ -114,6 +121,37 @@ namespace Adventure
 
             
 			base.Draw (gameTime);
+		}
+
+
+
+
+
+		private void InitEntities() {
+			entities.Add (new Character (new Vector2 (200, 300),
+				"bunny", new Color[] { new Color (255, 255, 255), new Color (255, 200, 200) },
+				"male", new Color[] { new Color (255, 255, 255), new Color (255, 255, 200) }
+			));
+
+			entities.Add (new Character (new Vector2 (350, 300),
+				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
+				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (200, 100, 255), new Color (255, 200, 255) }
+			));
+
+			entities.Add (new Character (new Vector2 (500, 300),
+				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (20, 250, 30) },
+				"male", new Color[] { new Color (180, 190, 170), new Color (100, 60, 190), new Color (255, 200, 255) }
+			));
+
+			entities.Add (new Character (new Vector2 (650, 300),
+				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (250, 250, 100) },
+				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (120, 120, 30), new Color (255, 200, 255) }
+			));
+		}
+
+		// schedules an entity to be spawned after this update loop
+		public static void SpawnEntitiy(BaseEntity e) {
+			AdventureGame.instance.toSpawn.Add (e);
 		}
 	}
 }
