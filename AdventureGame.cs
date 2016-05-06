@@ -69,6 +69,7 @@ namespace Adventure
 			// Tell font loader that arial existsT
 			SpeechText.LoadFont(Content, "Monaco");
 			SpeechText.Spawn ("Monaco", new Vector2 (50, 50), "emitting speech text sounds");
+			SpeechText.Spawn ("Monaco", new Vector2 (50, 100), "Press Enter to dismiss this text", SpeechText.SpeechMode.PLAYER_CONTROLLED);
 		}
 
 		/// <summary>
@@ -90,6 +91,7 @@ namespace Adventure
 				entities[i].Update(gameTime);
 
 				if (!entities [i].alive) {
+					Console.WriteLine("removing dead entity " + entities[i].ToString());
 					entities.RemoveAt (i);
 					i--;
 				}
