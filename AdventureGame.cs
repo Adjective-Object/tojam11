@@ -28,6 +28,8 @@ namespace Adventure
 				Exit ();
 			}
 
+			// intitialize the;
+
 			graphics = new GraphicsDeviceManager (this);
 			Content.RootDirectory = "Content";
 		}
@@ -46,6 +48,8 @@ namespace Adventure
 
 			// initialize the camera
 			// gameCamera = new Camera ();
+			// initialize the static Input class
+			Input.Initialize();
 
 			// add all the entities on the map
 			this.InitEntities ();
@@ -85,6 +89,8 @@ namespace Adventure
 			if (GamePad.GetState (PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState ().IsKeyDown (Keys.Escape))
 				Exit ();
 			#endif
+
+			Input.Update ();
 
 			// update all entities in the entity list
 			for (int i=0; i<entities.Count; i++) {

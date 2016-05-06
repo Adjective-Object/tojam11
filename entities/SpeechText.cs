@@ -61,14 +61,12 @@ namespace Adventure
 			// update depending on mode
 			switch (mode) {
 			case SpeechMode.AMBIENT:
-				if (ages [ages.Length - 1] > AMBIENT_SPEECH_LIFETIME + ANIMATION_TIME) {
-					this._alive = false;
-				} else if (ages [ages.Length - 1] > AMBIENT_SPEECH_LIFETIME) {
-					this.dismissedTime = ages [ages.Length - 1];
+				if (ages [ages.Length - 1] > AMBIENT_SPEECH_LIFETIME) {
+					this.dismissedTime = AMBIENT_SPEECH_LIFETIME;
 				}
 				break;
 			case SpeechMode.PLAYER_CONTROLLED:
-				if (Keyboard.GetState().IsKeyDown(Keys.Enter)) {
+				if (Input.KeyPressed(Key.ENTER)) {
 					// if it's still animating in and the enter button is pressed, speed up the animation
 					if (ages [ages.Length - 1] < ANIMATION_TIME) {
 						this.timeScale = 3.0;
@@ -77,6 +75,10 @@ namespace Adventure
 					}
 				}
 				break;
+			}
+
+			if (dismissedTime > 0 && ages [ages.Length - 1] > dismissedTime + ANIMATION_TIME) {
+				this._alive = false;	
 			}
 		}
 

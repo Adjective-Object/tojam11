@@ -13,6 +13,7 @@ namespace Adventure
 		Dictionary <String, Texture2D> headTextures, bodyTextures;
 		string headName, bodyName;
 		Texture2D head, body;
+		SpeechText speechReference;
 
 		Color [] headColors, bodyColors;
 		static Color [] referenceColors = {
@@ -23,6 +24,12 @@ namespace Adventure
 			new Color(255,0,255),
 			new Color(0,255,255),
 		};
+
+		Animation currentHeadAnimation;
+		Animation currentBodyAnimation;
+		Animation headIdle;
+		Animation headTalk;
+		Animation bodyIdle;
 
 		public Character (
 			Vector2 position,
@@ -40,14 +47,36 @@ namespace Adventure
 			// initialize either dictionary by rendering the things
 			Console.WriteLine("npc_parts/" + headName + "_idle.png");
 			headTextures = new Dictionary<String, Texture2D>() {
-				{"idle", ApplyPallette(content.Load<Texture2D>("npc_parts/head_" + headName + "_idle"), headColors)}
+				{"idle", ApplyPallette(content.Load<Texture2D>("npc_parts/head_" + headName + "_idle"), headColors)},
+				{"talk_1", ApplyPallette(content.Load<Texture2D>("npc_parts/head_" + headName + "_talk_1"), headColors)}
 			};
 
 			bodyTextures = new Dictionary<String, Texture2D>() {
 				{"idle", ApplyPallette(content.Load<Texture2D>("npc_parts/body_" + bodyName + "_idle"), bodyColors)}
 			};
 
+			// animations
+
+			Frame[] headIdleFrames = {
+				new Frame(10, headTextures["idle"])
+			};
+			headIdle = new Animation(headIdleFrames);
+
+			Frame[] headTalkFrames = {
+				new Frame(0.5, headTextures["talk_1"]),
+				new Frame(0.5, headTextures["idle"])
+			};
+			headTalk = new Animation(headTalkFrames);
+
+			Frame[] bodyIdleFrames = {
+				new Frame(10, bodyTextures["idle"])
+			};
+			bodyIdle = new Animation(bodyIdleFrames);
+
+			currentBodyAnimation = bodyIdle;
+			currentHeadAnimation = headTalk;
 		}
+
 
 		// apply some color pallette
 		private Texture2D ApplyPallette(Texture2D texture, Color [] palette) {
@@ -71,8 +100,8 @@ namespace Adventure
 			
 
 		override public void Update(GameTime time) {
-			head = headTextures["idle"];
-			body = bodyTextures["idle"];
+			head = currentHeadAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
+			body = currentBodyAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
 		}
 
 		override public void Draw(SpriteBatch batch, GameTime time) {
