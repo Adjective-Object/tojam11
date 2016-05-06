@@ -15,7 +15,7 @@ namespace Adventure
 		static AdventureGame instance;
 		GraphicsDeviceManager graphics;
 		SpriteBatch entityBatch;
-		Texture2D shadowTexture;
+		Texture2D shadowTexture, houseTexture;
 		Camera gameCamera;
 		public static List<BaseEntity> Entities {
 			get { return instance.entities; }
@@ -80,6 +80,7 @@ namespace Adventure
 
 			// load the shadow texture
 			shadowTexture = Content.Load<Texture2D>("shadow");
+			houseTexture = Content.Load<Texture2D> ("house");
 		}
 
 		/// <summary>
@@ -127,17 +128,19 @@ namespace Adventure
             
 			// Camera.apply ();
 
-			// draw entity shadows
 			entityBatch.Begin ();
+
+			// draw hosue
+			entityBatch.Draw(houseTexture, new Vector2(-1000,-1000));
+
+			// draw entity shadows
 			foreach (BaseEntity e in this.entities) {
 				if (e.hasShadow) {
 					entityBatch.Draw (shadowTexture, new Vector2 (e.position.X - 64, e.position.Y - 6));
 				}
 			}
-			entityBatch.End ();
 
 			// draw the entities
-			entityBatch.Begin ();
 			foreach (BaseEntity e in this.entities) {
 				e.Draw(entityBatch, gameTime);
 			}
@@ -161,7 +164,7 @@ namespace Adventure
 			entities.Add (new Character (new Vector2 (350, 300),
 				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
 				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (200, 100, 255), new Color (255, 200, 255) },
-				new CharacterBehavior()
+				new NPCCat()
 			));
 
 			entities.Add (new Character (new Vector2 (500, 300),
