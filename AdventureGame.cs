@@ -92,6 +92,8 @@ namespace Adventure
             headSprites = new List<string>();
             headSprites.Add("bunny");
             headSprites.Add("kitty");
+            headSprites.Add("bird");
+            headSprites.Add("mouse");
 
             bodySprites = new List<string>();
             bodySprites.Add("male");
