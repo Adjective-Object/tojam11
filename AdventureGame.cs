@@ -153,6 +153,12 @@ namespace Adventure
 			toSpawn.Clear ();
 			entities.Sort((BaseEntity e, BaseEntity f) => e.isUI ? 1 : e.position.Y.CompareTo(f.position.Y));
 
+			// update Inventory
+			if (Input.KeyPressed (Key.I)) {
+				Inventory.Toggle ();
+			}
+			Inventory.Update(gameTime);
+
 			// update base
 			base.Update (gameTime);
 		}

@@ -25,8 +25,8 @@ namespace Adventure
 
 
 
-		static Easing offset = new Easing(
-			new Vector2(0, 100),
+		static Easing<Vector2> offset = new Easing<Vector2>(
+			new Vector2(-200, 0),
 			new Vector2(0, 0),
 			10
 		);
@@ -39,7 +39,7 @@ namespace Adventure
 		}
 
 		public static void Draw(SpriteBatch batch) {
-			Vector2 origin = new Vector2(100, 100) + offset.current;
+			Vector2 origin = new Vector2(10, 10) + offset.current;
 			for (int i = 0; i < contents.Count; i++) {
 				batch.Draw(Item.Get(contents[i]).texture, origin + OFFSET_VECTOR * i);
 			}
