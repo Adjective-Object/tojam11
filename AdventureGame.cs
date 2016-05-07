@@ -109,10 +109,19 @@ namespace Adventure
 			headSprites.Add("raccoon");
 			headSprites.Add("fish");
 			headSprites.Add("beaver");
+            headSprites.Add("goat");
+            headSprites.Add("frog");
+            headSprites.Add("fox");
+            headSprites.Add("dog");
+            headSprites.Add("rooster");
+            headSprites.Add("chicken");
 
 			bodySprites = new List<string>();
 			bodySprites.Add("male");
 			bodySprites.Add("female_hipster");
+            bodySprites.Add("jacket");
+            bodySprites.Add("jock");
+            bodySprites.Add("male_hipster");
 
             //Initialize player class
             player = new Character(new Vector2(1280/2, 500),
