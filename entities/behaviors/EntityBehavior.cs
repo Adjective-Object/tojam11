@@ -5,7 +5,7 @@ namespace Adventure
 	public interface EntityBehavior
 	{
 		Boolean IsDisabled();
-		void RespondToInteraction();
+		void RespondToInteraction(Character player);
 	}
 }
 

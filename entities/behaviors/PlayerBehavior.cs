@@ -108,7 +108,7 @@ namespace Adventure
 				this.highlights.focus != null && 
 				!this.highlights.focus.behavior.IsDisabled()) {
 
-				this.highlights.focus.behavior.RespondToInteraction ();
+				this.highlights.focus.behavior.RespondToInteraction (this.character);
 			}
 		}
 
