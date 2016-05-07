@@ -53,6 +53,7 @@ namespace Adventure
             EndGame
         }
         GameState currentState;
+        bool endGame = false;
 
 		public AdventureGame ()
 		{
@@ -205,6 +206,9 @@ namespace Adventure
                 entities.Sort((BaseEntity e, BaseEntity f) => e.isUI ? 1 : e.position.Y.CompareTo(f.position.Y));
 
                 Inventory.Update(gameTime);
+
+                if (endGame)
+                    GameOver();
             }
             else if (currentState == GameState.StartGame)
             {
@@ -259,12 +263,31 @@ namespace Adventure
             }
             else if (currentState == GameState.EndGame)
             {
-
+                if (Input.KeyPressed(Key.ENTER))
+                {
+                    currentState = GameState.StartGame;
+                }
             }
 
 			// update base
 			base.Update (gameTime);
 		}
+
+        /**
+         * Call to cause end of game.
+         */
+        public void SetEndGame()
+        {
+            endGame = true;
+        }
+
+        public void GameOver()
+        {
+            endGame = false;
+            currentState = GameState.EndGame;
+            entities.Clear();
+            player.position = new Vector2(500, 500);
+        }
 
         public void initGame()
         {

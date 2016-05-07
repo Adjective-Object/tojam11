@@ -39,6 +39,9 @@ namespace Adventure
 			case 3:
 				EmitSpeech ("I was told there would be catnip.");
 				break;
+            case 4:
+                AdventureGame.instance.SetEndGame();
+                break;
 			default:
 				EmitSpeech ("I'm out of things to say to you");
 				break;
