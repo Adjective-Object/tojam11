@@ -129,6 +129,10 @@ namespace Adventure
 				head, new Vector2 (position.X - 64, position.Y - 175),
 				null, null, null, 0, null, null, flipEffect);
 
+            Texture2D dummyTexture = new Texture2D(batch.GraphicsDevice, 1, 1);
+            dummyTexture.SetData(new Color[] { Color.White });
+            batch.Draw(dummyTexture, position, Color.Red);
+
 			base.DrawFocusIndicator(batch, new Vector2(0, - 150));
 		}
 

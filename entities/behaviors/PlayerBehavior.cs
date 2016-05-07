@@ -50,11 +50,39 @@ namespace Adventure
 				movement = movement * (float)time.ElapsedGameTime.TotalSeconds;
 				movement.X *= (float)speedx;
 				movement.Y *= (float)speedy;
-				character.position += movement;
+
+                Vector2 newPosition = character.position + movement;
+
+                if (PlayerCollidesWithMap(new Vector2(newPosition.X, character.position.Y)) == false)
+                {
+                    character.position.X = newPosition.X;
+                }
+                if (PlayerCollidesWithMap(new Vector2(character.position.X, newPosition.Y)) == false)
+                {
+                    character.position.Y = newPosition.Y;
+                }
+
+                
 			} else {
 				character.PlayAnimBody("idle");
 			}
 		}
+
+        protected bool PlayerCollidesWithMap(Vector2 pos)
+        {
+            //Width and height of player collision
+            int width = 15;
+            int height = 15;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = -width; x < width; x++)
+                {
+                    if (AdventureGame.instance.collisionMap[(int)pos.Y + x, (int)pos.X + y] == 1)
+                        return true;
+                }
+            }
+            return false;
+        }
 
 		HighlightManager highlights = new HighlightManager();
 		protected void UpdateHighlights() {
