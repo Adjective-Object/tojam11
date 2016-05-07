@@ -16,14 +16,18 @@ namespace Adventure
 		public GraphicsDeviceManager graphics;
 		SpriteBatch entityBatch;
 		Texture2D shadowTexture, houseTexture;
+        public Byte[,] collisionMap;
 		Camera gameCamera;
 		Character player;
 
+        GameStateDictionary gameStateDictionary;
 		public static List<BaseEntity> Entities {
 			get { return instance.entities; }
 		}
-		List<BaseEntity> entities; 
-		List<BaseEntity> toSpawn; 
+		List<BaseEntity> entities;
+		List<BaseEntity> toSpawn;
+
+        //Byte[,] collisionMap;
 
 		public AdventureGame ()
 		{
@@ -34,12 +38,16 @@ namespace Adventure
 				Exit ();
 			}
 
+            //collisionMap = new Byte[2135, 4048];
+
 			// intitialize the;
 
 			graphics = new GraphicsDeviceManager (this);
 			graphics.PreferredBackBufferWidth = 1280;
 			graphics.PreferredBackBufferHeight = 720;
 			Content.RootDirectory = "Content";
+
+            gameStateDictionary = new GameStateDictionary();
 		}
 
 
@@ -93,6 +101,24 @@ namespace Adventure
 			// load the shadow texture
 			shadowTexture = Content.Load<Texture2D>("shadow");
 			houseTexture = Content.Load<Texture2D> ("house");
+
+
+            Texture2D collisionTexture = Content.Load<Texture2D>("collision");
+            Color[] collisionColors = new Color[collisionTexture.Width * collisionTexture.Height];
+            collisionTexture.GetData<Color>(collisionColors);
+
+            collisionMap = new Byte[collisionTexture.Height, collisionTexture.Width];
+            for (int y = 0; y < collisionTexture.Height; y++)
+            {
+                for (int x = 0; x < collisionTexture.Width; x++)
+                {
+                    if (collisionColors[x + y * collisionTexture.Width].A != 255)
+                        collisionMap[y, x] = 0;
+                    else
+                        collisionMap[y, x] = 1;
+                }
+            }
+
 		}
 
 		/// <summary>
@@ -155,13 +181,12 @@ namespace Adventure
 			foreach (BaseEntity e in this.entities) {
 				e.Draw(entityBatch, gameTime);
 			}
-				
 			entityBatch.End ();
 
 			entityBatch.Begin ();
 			Inventory.Draw (entityBatch);
 			entityBatch.End ();
-            
+
 			base.Draw (gameTime);
 		}
 
