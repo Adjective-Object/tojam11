@@ -45,6 +45,8 @@ namespace Adventure
         public List<String> headSprites;
         int currentBodySprite = 0;
         public List<String> bodySprites;
+        int currentBodyColor = 0;
+        public List<Color[]> bodyColors;
 
         public enum GameState
         {
@@ -95,10 +97,17 @@ namespace Adventure
             headSprites.Add("kitty");
             headSprites.Add("bird");
             headSprites.Add("mouse");
+            headSprites.Add("raccoon");
+            headSprites.Add("fish");
+            headSprites.Add("beaver");
 
             bodySprites = new List<string>();
             bodySprites.Add("male");
             bodySprites.Add("female_hipster");
+
+            bodyColors = new List<Color[]>();
+            bodyColors.Add(new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) });
+            bodyColors.Add(new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) });
 
             //Initialize player class
             player = new Character(new Vector2(500, 500),
@@ -222,16 +231,20 @@ namespace Adventure
                 {
                     if (currentSelectionType == 0)
                         currentHeadSprite++;
-                    else
+                    else if(currentSelectionType == 1)
                         currentBodySprite++;
+                    else
+                        currentBodyColor++;
                     selectionChanged = true;
                 }
                 else if (Input.KeyPressed(Key.RIGHT))
                 {
                     if (currentSelectionType == 0)
                         currentHeadSprite--;
-                    else
+                    else if(currentSelectionType == 1)
                         currentBodySprite--;
+                    else
+                        currentBodyColor--;
                     selectionChanged = true;
                 }
                 else if (Input.KeyPressed(Key.UP))
@@ -242,7 +255,7 @@ namespace Adventure
                 else if (Input.KeyPressed(Key.DOWN))
                 {
                     currentSelectionType++;
-                    currentSelectionType = Math.Min(currentSelectionType, 1);
+                    currentSelectionType = Math.Min(currentSelectionType, 2);
                 }
 
                 if (selectionChanged)
@@ -257,7 +270,13 @@ namespace Adventure
                     if (currentBodySprite < 0)
                         currentBodySprite = bodySprites.Count - 1;
 
+                    if (currentBodyColor >= bodyColors.Count)
+                        currentBodyColor = 0;
+                    if (currentBodyColor < 0)
+                        currentBodyColor = bodyColors.Count - 1;
+
                     player.SetCharacterSprites(headSprites[currentHeadSprite], bodySprites[currentBodySprite]);
+                    player.SetCharacterColor(bodyColors[currentBodyColor]);
                     player.Load(Content, entityBatch);
                 }
             }
@@ -377,20 +396,20 @@ namespace Adventure
 			entities.Add (player);
 
 			entities.Add (new Character (new Vector2 (1240, 730),
-				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
-				"male", new Color[] { new Color (180, 190, 170), new Color (200, 100, 255), new Color (255, 200, 255) },
+				headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
+                bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(200, 100, 255), new Color(255, 200, 255) },
 				new NPCCat(catSounds)
 			));
 
 			entities.Add (new Character (new Vector2 (1500, 740),
-				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (20, 250, 30) },
-				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (100, 60, 190), new Color (255, 200, 255) },
+                headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(20, 250, 30) },
+                bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(100, 60, 190), new Color(255, 200, 255) },
 				new CharacterBehavior(catSounds)
 			));
 
 			entities.Add (new Character (new Vector2 (1450, 800),
-				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (250, 250, 100) },
-				"male", new Color[] { new Color (180, 190, 170), new Color (120, 120, 30), new Color (255, 200, 255) },
+                headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) },
+                bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(120, 120, 30), new Color(255, 200, 255) },
 				new CharacterBehavior(catSounds)
 			));
 		}
