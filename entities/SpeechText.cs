@@ -185,7 +185,6 @@ namespace Adventure
 			
 
 			if (dismissedTime >= 0 && ages [ages.Length - 1] > dismissedTime + ANIMATION_TIME) {
-				Console.WriteLine ("killing text on timeout");
 				this._alive = false;	
 			}
 		}

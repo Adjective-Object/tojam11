@@ -47,6 +47,7 @@ namespace Adventure
 			get { return instance.graphics.GraphicsDevice.PresentationParameters.Bounds; }
 		}
 
+		// stuff for the opening menu
         int currentSelectionType = 0;
         int currentHeadSprite = 0;
         public List<String> headSprites;
@@ -54,6 +55,8 @@ namespace Adventure
         public List<String> bodySprites;
         int currentBodyColor = 0;
         public List<Color[]> bodyColors;
+		Easing<float> indicatorHeight;
+
 
         public enum GameState
         {
@@ -115,6 +118,8 @@ namespace Adventure
             bodyColors = new List<Color[]>();
             bodyColors.Add(new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) });
             bodyColors.Add(new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) });
+
+			indicatorHeight = new Easing<float> (410f, 460f, 10);
 
             //Initialize player class
             player = new Character(new Vector2(1280/2, 500),
@@ -224,6 +229,8 @@ namespace Adventure
             }
             else if (currentState == GameState.StartGame)
             {
+				indicatorHeight.Update(gameTime, currentSelectionType != 0);
+
                 bool selectionChanged = false;
                 if (Input.KeyPressed(Key.ENTER))
                 {
@@ -395,15 +402,17 @@ namespace Adventure
 
                 if (currentSelectionType == 0)
                 {
-                    entityBatch.DrawString(defaultFont, "Choose Your Head >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Head >").X, 410), Color.White);
+					entityBatch.DrawString(
+						defaultFont, "Choose Your Head >", 
+						new Vector2(ScreenBounds.Width / 2 - 34 - defaultFont.MeasureString("Choose Your Head >").X, (int)indicatorHeight.current), Color.White);
                 }
                 else if (currentSelectionType == 1)
                 {
-                    entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Outfit >").X, 460), Color.White);
+					entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Outfit >").X, (int) indicatorHeight.current), Color.White);
                 }
                 else if (currentSelectionType == 2)
                 {
-                    entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Colors >").X, 460), Color.White);
+					entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Colors >").X, (int) indicatorHeight.current), Color.White);
                 }
 
                 entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(1280/2 - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);

@@ -76,7 +76,7 @@ namespace Adventure
 			Vector2 origin = new Vector2(10, 10) + offset.current;
 			for (int i = 1; i < contents.Count; i++) {
 				if (i == selector) {
-					batch.Draw (Item.Get (contents [i]).texture, origin + OFFSET_VECTOR * i);
+					batch.Draw (Item.Get (contents [i]).texture, origin + OFFSET_VECTOR * (i - 1) + new Vector2(5, 0));
 				}
 				else {
 					batch.Draw (
