@@ -24,8 +24,8 @@ namespace Adventure
 			SpeechText.fonts [fontName] = font;
 		}
 		public static SpeechText Spawn(String fontName, Vector2 position, String text, 
-			SpeechMode mode = SpeechMode.AMBIENT, Func<Boolean> walkAwayAction = null) {
-			SpeechText e = new SpeechText (fonts [fontName], position, text, mode, walkAwayAction);
+			SpeechMode mode = SpeechMode.AMBIENT, Func<Boolean> walkAwayAction = null, Action enterCallback = null) {
+			SpeechText e = new SpeechText (fonts [fontName], position, text, mode, walkAwayAction, enterCallback);
 			AdventureGame.SpawnEntity(e);
 
 			e.position -= LETTER_OFFSET * text.Length / 2;
@@ -67,12 +67,13 @@ namespace Adventure
 		double dismissedTime;
 		string text;
 		double timeScale = 1;
-		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode, Func<Boolean> walkAwayAction = null) : base(position){
+		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode, Func<Boolean> walkAwayAction = null, Action enterCallback = null) : base(position){
 			this.text = text;
 			this.font = font;
 			this.mode = mode;
 			this.dismissedTime = -1;
 			this.checkWalkAway = walkAwayAction == null ? () => false : walkAwayAction;
+			this.enterCallback = enterCallback == null ? () => {} : enterCallback;
 
 			if (mode != SpeechMode.PLAYER_ANSWER_QUESTION) {
 				this.ages = new double[text.Length];
@@ -84,6 +85,7 @@ namespace Adventure
 
 		Option[] options = null;
 		Func<Boolean> checkWalkAway;
+		Action enterCallback;
 		int selectionIndex = 0;
 		protected SpeechText(SpriteFont font, Vector2 position, String text, Option[] options, Func<Boolean> checkWalkAway)
 			: this(font, position, text, SpeechMode.PLAYER_ANSWER_QUESTION){
@@ -124,6 +126,7 @@ namespace Adventure
 						} else if (!this.IsDismissed) {
 							this.dismissedTime = ages [ages.Length - 1];
 							this.timeScale = 1.0;
+							enterCallback ();
 						}
 					}
 					if (this.ages [ages.Length - 1] >= ANIMATION_TIME && checkWalkAway ()) {
@@ -138,6 +141,7 @@ namespace Adventure
 						if (ages [ages.Length - 1] < ANIMATION_TIME) {
 							// if it's still animating in and the enter button is pressed, speed up the animation
 							this.timeScale = 3.0;
+							enterCallback ();
 						} else {
 							// otherwise, select the currently selected option
 							this.options [this.selectionIndex].callback ();

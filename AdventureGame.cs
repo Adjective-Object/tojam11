@@ -173,13 +173,27 @@ namespace Adventure
 			base.Update (gameTime);
 		}
 
+
+		Random r = new Random ();
+		Color oldBkg = new Color (0, 0, 0);
+
 		/// <summary>
 		/// This is called when the game should draw itself.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw (GameTime gameTime)
 		{
-			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
+			float k = 0.05f;
+			Color newBkg = new Color(
+				(int)(r.NextDouble() * 100) + 50, 
+				(int)(r.NextDouble() * 100) + 50, 
+				(int)(r.NextDouble() * 100) + 50);
+			newBkg = new Color(
+				(int)(newBkg.R * k + oldBkg.R * (1-k)),
+				(int)(newBkg.G * k + oldBkg.G * (1-k)),
+				(int)(newBkg.G * k + oldBkg.B * (1-k)));
+			oldBkg = newBkg;
+			graphics.GraphicsDevice.Clear (newBkg);
             
 			entityBatch.Begin (SpriteSortMode.Deferred, null, null, null, null, null, gameCamera.Transform);
 

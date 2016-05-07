@@ -13,7 +13,7 @@ namespace Adventure
 			// do conversation
 			switch (interactionCount) {
 			case 0:
-				EmitSpeech ("I'm tired.", SpeechText.SpeechMode.PLAYER_CONTROLLED);
+				EmitSpeech ("I'm tired.", SpeechText.SpeechMode.PLAYER_CONTROLLED, null, () => {this.RespondToInteraction(player);});
 				break;
 			case 1:
 				EmitSpeechOption ("what's your favorite?",
