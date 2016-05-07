@@ -14,6 +14,8 @@ namespace Adventure
 		CharacterBehavior charBehavior;
 		public Boolean facingLeft = true;
 
+		public ItemID? heldItem = null;
+
 		override public Boolean hasShadow {
 			get { return true; }
 		}
@@ -119,6 +121,7 @@ namespace Adventure
 			body = currentBodyAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);
 		}
 
+		const int ITEM_SIZE = 42;
 
 		override public void Draw(SpriteBatch batch, GameTime time) {
 			SpriteEffects flipEffect = this.facingLeft ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
@@ -129,9 +132,16 @@ namespace Adventure
 				head, new Vector2 (position.X - 64, position.Y - 175),
 				null, null, null, 0, null, null, flipEffect);
 
-            Texture2D dummyTexture = new Texture2D(batch.GraphicsDevice, 1, 1);
-            dummyTexture.SetData(new Color[] { Color.White });
-            batch.Draw(dummyTexture, position, Color.Red);
+            // Texture2D dummyTexture = new Texture2D(batch.GraphicsDevice, 1, 1);
+            // dummyTexture.SetData(new Color[] { Color.White });
+            // batch.Draw(dummyTexture, position, Color.Red);
+
+			if (this.heldItem != null) {
+				Vector2 offset = new Vector2 ((this.facingLeft ? -30 : 30) - ITEM_SIZE / 2, -32 - ITEM_SIZE / 2);
+				offset += this.position;
+				batch.Draw (Item.Get (heldItem.Value).texture, null,
+					new Rectangle((int) offset.X, (int) offset.Y,ITEM_SIZE,ITEM_SIZE), null, null, 0, null, null, flipEffect);
+			}
 
 			base.DrawFocusIndicator(batch, new Vector2(0, - 150));
 		}

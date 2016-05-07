@@ -20,12 +20,21 @@ namespace Adventure
 		Camera gameCamera;
 		Character player;
 
+		SpriteFont defaultFont;
+		public static SpriteFont DefaultFont {
+			get { return AdventureGame.instance.defaultFont; }
+		}
+
         GameStateDictionary gameStateDictionary;
 		public static List<BaseEntity> Entities {
 			get { return instance.entities; }
 		}
 		List<BaseEntity> entities;
 		List<BaseEntity> toSpawn;
+
+		public static Rectangle ScreenBounds {
+			get { return instance.graphics.GraphicsDevice.PresentationParameters.Bounds; }
+		}
 
         //Byte[,] collisionMap;
 
@@ -89,14 +98,16 @@ namespace Adventure
 				e.Load (Content, entityBatch);
 			}
 
-			Item.Initialize(Content);
+			Item.LoadContent(Content);
+			Inventory.LoadContent (Content, entityBatch);
 			Inventory.Add (ItemID.BEER);
-			Inventory.Add (ItemID.BEER);
-			Inventory.Add (ItemID.BEER);
-			Inventory.Add (ItemID.BEER);
+			Inventory.Add (ItemID.POISON);
+			Inventory.Add (ItemID.KNIFE);
+			Inventory.Add (ItemID.KNIFE_USED);
 
 			//Tell font loader to load Monaco as defaulft font
-			SpeechText.LoadFont(Content, "Monaco");
+			defaultFont = Content.Load<SpriteFont>("Monaco");
+			SpeechText.LoadFont("Monaco", defaultFont);
 
 			// load the shadow texture
 			shadowTexture = Content.Load<Texture2D>("shadow");
@@ -153,10 +164,6 @@ namespace Adventure
 			toSpawn.Clear ();
 			entities.Sort((BaseEntity e, BaseEntity f) => e.isUI ? 1 : e.position.Y.CompareTo(f.position.Y));
 
-			// update Inventory
-			if (Input.KeyPressed (Key.I)) {
-				Inventory.Toggle ();
-			}
 			Inventory.Update(gameTime);
 
 			// update base

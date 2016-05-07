@@ -16,9 +16,12 @@ namespace Adventure
 		protected static Dictionary<String, SpriteFont> fonts = new Dictionary<String, SpriteFont>();
 
 		public static void LoadFont(ContentManager content, String fontName) {
-			if (fonts.Count == 0) SpeechText.fonts ["default"] = content.Load<SpriteFont> (fontName);
+			LoadFont (fontName, content.Load<SpriteFont> (fontName));
+		}
 
-			SpeechText.fonts [fontName] = content.Load<SpriteFont> (fontName);
+		public static void LoadFont(String fontName, SpriteFont font) {
+			if (fonts.Count == 0) SpeechText.fonts ["default"] = font;
+			SpeechText.fonts [fontName] = font;
 		}
 		public static SpeechText Spawn(String fontName, Vector2 position, String text, SpeechMode mode = SpeechMode.AMBIENT) {
 			SpeechText e = new SpeechText (fonts [fontName], position, text, mode);

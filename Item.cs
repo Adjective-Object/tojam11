@@ -11,7 +11,7 @@ namespace Adventure
 		static Dictionary<ItemID, Item> items = new Dictionary<ItemID, Item> ();
 		static Boolean initialized = false;
 
-		public static void Initialize(ContentManager content)
+		public static void LoadContent(ContentManager content)
 		{
 			if (initialized) return;
 			initialized = true;
