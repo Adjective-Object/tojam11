@@ -12,11 +12,12 @@ namespace Adventure
 	/// </summary>
 	public class AdventureGame : Game
 	{
-		static AdventureGame instance;
-		GraphicsDeviceManager graphics;
+		public static AdventureGame instance;
+		public GraphicsDeviceManager graphics;
 		SpriteBatch entityBatch;
 		Texture2D shadowTexture, houseTexture;
 		Camera gameCamera;
+		Character player;
 		public static List<BaseEntity> Entities {
 			get { return instance.entities; }
 		}
@@ -51,13 +52,15 @@ namespace Adventure
 			entities = new List<BaseEntity> ();
 			toSpawn = new List<BaseEntity> ();
 
-			// initialize the camera
-			// gameCamera = new Camera ();
 			// initialize the static Input class
 			Input.Initialize();
 
 			// add all the entities on the map
 			this.InitEntities ();
+
+			// initialize the camera
+			gameCamera = new Camera(player, new int [] {100, 400, 800, 1200, 1600});
+			this.entities.Add (gameCamera);
 
 			// init game
 			base.Initialize ();
@@ -75,7 +78,7 @@ namespace Adventure
 				e.Load (Content, entityBatch);
 			}
 
-			// Tell font loader to load Monaco as default font
+			// Tell font loader to load Monaco as defaulft font
 			SpeechText.LoadFont(Content, "Monaco");
 
 			// load the shadow texture
@@ -115,6 +118,7 @@ namespace Adventure
 			toSpawn.Clear ();
 			entities.Sort((BaseEntity e, BaseEntity f) => e.isUI ? 1 : e.position.Y.CompareTo(f.position.Y));
 
+			// update base
 			base.Update (gameTime);
 		}
 
@@ -126,12 +130,10 @@ namespace Adventure
 		{
 			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
             
-			// Camera.apply ();
-
-			entityBatch.Begin ();
+			entityBatch.Begin (SpriteSortMode.Deferred, null, null, null, null, null, gameCamera.Transform);
 
 			// draw hosue
-			entityBatch.Draw(houseTexture, new Vector2(-1000,-1000));
+			entityBatch.Draw(houseTexture, new Vector2(0,0));
 
 			// draw entity shadows
 			foreach (BaseEntity e in this.entities) {
@@ -155,11 +157,12 @@ namespace Adventure
 
 
 		private void InitEntities() {
-			entities.Add(new Character (new Vector2 (200, 300),
+			player = new Character (new Vector2 (200, 300),
 				"bunny", new Color[] { new Color (255, 255, 255), new Color (255, 200, 200) },
 				"male", new Color[] { new Color (255, 255, 255), new Color (255, 255, 200) },
 				new PlayerBehavior()
-			));
+			);
+			entities.Add (player);
 
 			entities.Add (new Character (new Vector2 (350, 300),
 				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
