@@ -18,6 +18,7 @@ namespace Adventure
 		Texture2D shadowTexture, houseTexture;
 		Camera gameCamera;
 		Character player;
+
 		public static List<BaseEntity> Entities {
 			get { return instance.entities; }
 		}
@@ -80,7 +81,13 @@ namespace Adventure
 				e.Load (Content, entityBatch);
 			}
 
-			// Tell font loader to load Monaco as defaulft font
+			Item.Initialize(Content);
+			Inventory.Add (ItemID.BEER);
+			Inventory.Add (ItemID.BEER);
+			Inventory.Add (ItemID.BEER);
+			Inventory.Add (ItemID.BEER);
+
+			//Tell font loader to load Monaco as defaulft font
 			SpeechText.LoadFont(Content, "Monaco");
 
 			// load the shadow texture
@@ -148,8 +155,12 @@ namespace Adventure
 			foreach (BaseEntity e in this.entities) {
 				e.Draw(entityBatch, gameTime);
 			}
+				
 			entityBatch.End ();
 
+			entityBatch.Begin ();
+			Inventory.Draw (entityBatch);
+			entityBatch.End ();
             
 			base.Draw (gameTime);
 		}
