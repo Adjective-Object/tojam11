@@ -30,7 +30,7 @@ namespace Adventure
 		// Instance Methods and Properties
 		//
 		static Vector2 STARTING_OFFSET = new Vector2(0,10);
-		static Vector2 LETTER_OFFSET = new Vector2(10,0);
+		static Vector2 LETTER_OFFSET = new Vector2(15,0);
 		static Vector2 GRADUAL_RISE = new Vector2(0,-10);
 		static double ANIMATION_TIME = 0.4;
 		static double LETTER_SPAWN_DELAY = 0.03;
@@ -120,11 +120,24 @@ namespace Adventure
 				offset = offset + GRADUAL_RISE * (float) ages [0];
 
 				// apply the calculated opacity and offset
+				foreach (Vector2 microOff in new Vector2[]{
+					new Vector2(-1, 0), new Vector2(0, -1), 
+					new Vector2(1, 0), new Vector2(0, 1)}) {
+					batch.DrawString (
+						font, 
+						this.text [i].ToString (), 
+						this.position + offset + microOff,
+						Color.Black * (float) Math.Pow(opacity, 2));
+				}
+
 				batch.DrawString (
 					font, 
 					this.text [i].ToString (), 
 					this.position + offset,
 					Color.White * opacity);
+	
+				
+				
 			}
 		}
 

@@ -56,6 +56,7 @@ namespace Adventure
 
 			// load body textures
 			Texture2D bodyTextureIdle = ApplyPallette (content.Load<Texture2D> ("npc_parts/body_" + bodyName + "_idle"), bodyColors);
+			Texture2D bodyTextureW1 = ApplyPallette (content.Load<Texture2D> ("npc_parts/body_" + bodyName + "_walk_1"), bodyColors);
 
 
 			// create head animations
@@ -75,6 +76,12 @@ namespace Adventure
 				new Frame(10, bodyTextureIdle)
 			};
 			bodyAnimations.Add("idle", new Animation(bodyIdleFrames));
+
+			Frame[] bodyWalkFrames = new Frame[]{
+				new Frame(0.2, bodyTextureW1),
+				new Frame(0.2, bodyTextureIdle),
+			};
+			bodyAnimations.Add("walk", new Animation(bodyWalkFrames));
 
 			currentHeadAnimation = headAnimations["idle"];
 			currentBodyAnimation = bodyAnimations["idle"];
@@ -126,11 +133,13 @@ namespace Adventure
 		}
 
 		public void PlayAnimHead(String name) {
-			this.currentHeadAnimation = this.headAnimations [name].Reset();
+			if (this.currentHeadAnimation != this.headAnimations[name])
+				this.currentHeadAnimation = this.headAnimations [name].Reset();
 		}
 
 		public void PlayAnimBody(String name) {
-			this.currentBodyAnimation = this.bodyAnimations [name].Reset();
+			if (this.currentBodyAnimation != this.bodyAnimations[name])
+				this.currentBodyAnimation = this.bodyAnimations [name].Reset();
 		}
 	}
 

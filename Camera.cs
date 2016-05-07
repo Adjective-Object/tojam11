@@ -10,14 +10,16 @@ namespace Adventure
 		int [] snapHeights;
 		BaseEntity following;
 		Vector2 destination;
+		Boolean firstUpdate = true;
 
-		public Camera (BaseEntity following, int[] snapHeights) : base (following.position)
+		public Camera (BaseEntity following, int[] snapHeights) 
+			: base (following.position)
 		{
 			this.following = following;
 			this.snapHeights = snapHeights;
 		}
 
-		double easeSpeed = 10.0;
+		double easeSpeed = 8.0;
 
 		override public void Update(GameTime time) {
 			// figure out where we should be aiming for
@@ -33,7 +35,12 @@ namespace Adventure
 			}
 
 			// ease to that location
-			this.position += (destination - this.position) * (float) (time.ElapsedGameTime.TotalSeconds * easeSpeed);
+			if (firstUpdate) {
+				this.position = destination;
+				this.firstUpdate = false;
+			} else {
+				this.position += (destination - this.position) * (float)(time.ElapsedGameTime.TotalSeconds * easeSpeed);
+			}
 		}
 
 		override public void Load(ContentManager content, SpriteBatch batch) {}

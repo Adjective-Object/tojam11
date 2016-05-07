@@ -43,13 +43,16 @@ namespace Adventure
 				movement.Y += (float) (time.ElapsedGameTime.TotalSeconds);
 			}
 
-			if (movement.LengthSquared() != 0) {
+			if (movement.LengthSquared () != 0) {
+				character.PlayAnimBody ("walk");
 				
 				movement.Normalize ();
-				movement = movement * (float) time.ElapsedGameTime.TotalSeconds;
-				movement.X *= (float) speedx;
-				movement.Y *= (float) speedy;
+				movement = movement * (float)time.ElapsedGameTime.TotalSeconds;
+				movement.X *= (float)speedx;
+				movement.Y *= (float)speedy;
 				character.position += movement;
+			} else {
+				character.PlayAnimBody("idle");
 			}
 		}
 

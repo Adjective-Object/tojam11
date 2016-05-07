@@ -4,3 +4,4 @@ obj
 Adventure.csproj
 OpenTK.dll.config
 Properties
+*.psd
