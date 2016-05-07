@@ -39,8 +39,7 @@ namespace Adventure
 			String bodyName, Color[] bodyColors,
 			CharacterBehavior behavior) : base(position, behavior)
 		{
-			this.headName = headName;
-			this.bodyName = bodyName;
+            SetCharacterSprites(headName, bodyName);
 			this.headColors = headColors;
 			this.bodyColors = bodyColors;
 			this.charBehavior = behavior;
@@ -49,6 +48,12 @@ namespace Adventure
 			this.headAnimations = new Dictionary<String, Animation> ();
 			this.bodyAnimations = new Dictionary<String, Animation> ();
 		}
+
+        public void SetCharacterSprites(String headName, String bodyName)
+        {
+            this.headName = headName;
+            this.bodyName = bodyName;
+        }
 
 		// load and set the colors of the sprites
 		override public void Load(ContentManager content, SpriteBatch batch) {
@@ -65,6 +70,7 @@ namespace Adventure
 			Frame[] headIdleFrames = {
 				new Frame(10, headTextureIdle)
 			};
+            headAnimations.Clear();
 			headAnimations.Add("idle", new Animation(headIdleFrames));
 
 			Frame[] headTalkFrames = {
@@ -77,6 +83,7 @@ namespace Adventure
 			Frame[] bodyIdleFrames = {
 				new Frame(10, bodyTextureIdle)
 			};
+            bodyAnimations.Clear();
 			bodyAnimations.Add("idle", new Animation(bodyIdleFrames));
 
 			Frame[] bodyWalkFrames = new Frame[]{
@@ -87,6 +94,8 @@ namespace Adventure
 
 			currentHeadAnimation = headAnimations["idle"];
 			currentBodyAnimation = bodyAnimations["idle"];
+            head = currentHeadAnimation.GetFrame(0);
+            body = currentBodyAnimation.GetFrame(0);
 
 			base.Load (content, batch);
 		}
