@@ -108,6 +108,8 @@ namespace Adventure
 			Inventory.Add (ItemID.KNIFE);
 			Inventory.Add (ItemID.KNIFE_USED);
 
+			catSounds.LoadContent (Content);
+
 			//Tell font loader to load Monaco as defaulft font
 			defaultFont = Content.Load<SpriteFont>("Monaco");
 			SpeechText.LoadFont("Monaco", defaultFont);
@@ -220,11 +222,10 @@ namespace Adventure
 			base.Draw (gameTime);
 		}
 
-
-
-
-
+		SoundFont catSounds;
 		private void InitEntities() {
+			catSounds = new SoundFont ("soundfonts/SWAR1685_TalkingEngM");
+
 			player = new Character (new Vector2 (1000, 700),
 				"bunny", new Color[] { new Color (255, 255, 255), new Color (255, 200, 200) },
 				"female_hipster", new Color[] { new Color (255, 255, 255), new Color (255, 255, 200) },
@@ -235,19 +236,19 @@ namespace Adventure
 			entities.Add (new Character (new Vector2 (1240, 730),
 				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
 				"male", new Color[] { new Color (180, 190, 170), new Color (200, 100, 255), new Color (255, 200, 255) },
-				new NPCCat()
+				new NPCCat(catSounds)
 			));
 
 			entities.Add (new Character (new Vector2 (1500, 740),
 				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (20, 250, 30) },
 				"female_hipster", new Color[] { new Color (180, 190, 170), new Color (100, 60, 190), new Color (255, 200, 255) },
-				new CharacterBehavior()
+				new CharacterBehavior(catSounds)
 			));
 
 			entities.Add (new Character (new Vector2 (1450, 800),
 				"kitty", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200), new Color (250, 250, 100) },
 				"male", new Color[] { new Color (180, 190, 170), new Color (120, 120, 30), new Color (255, 200, 255) },
-				new CharacterBehavior()
+				new CharacterBehavior(catSounds)
 			));
 		}
 
