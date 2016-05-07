@@ -14,7 +14,7 @@ namespace Adventure
 	{
 		public static AdventureGame instance;
 		public GraphicsDeviceManager graphics;
-		SpriteBatch entityBatch;
+		public SpriteBatch entityBatch;
 		Texture2D shadowTexture, houseTexture, collisionTexture;
         public Byte[,] collisionMap;
 		Camera gameCamera;
@@ -30,6 +30,9 @@ namespace Adventure
 
 		public static SpriteFont DefaultFont {
 			get { return AdventureGame.instance.defaultFont; }
+		}
+		public static SpriteFont TitleFont {
+			get { return AdventureGame.instance.titleFont; }
 		}
 		public static SoundFont DefaultSoundFont {
 			get { return AdventureGame.instance.defaultSoundFont; }
@@ -47,18 +50,6 @@ namespace Adventure
 			get { return instance.graphics.GraphicsDevice.PresentationParameters.Bounds; }
 		}
 
-		// stuff for the opening menu
-        int currentSelectionType = 0;
-        int currentHeadSprite = 0;
-        public List<String> headSprites;
-        int currentBodySprite = 0;
-        public List<String> bodySprites;
-        int currentBodyColor = 0;
-        public List<Color[]> bodyColors;
-		Easing<float> indicatorHeight;
-		Jitter<float> titleJitterRotation;
-		Jitter<Vector2> titleJitter;
-
 
         public enum GameState
         {
@@ -67,6 +58,8 @@ namespace Adventure
             EndGame
         }
         GameState currentState;
+		Room CharSelect = new CharacterSelect();
+
         bool endGame = false;
 
 		public AdventureGame ()
@@ -86,6 +79,8 @@ namespace Adventure
             gameStateDictionary = new GameStateDictionary();
 		}
 
+		public List<String> headSprites;
+		public List<String> bodySprites;
 
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
@@ -104,31 +99,25 @@ namespace Adventure
 			// initialize the static Input class
 			Input.Initialize();
 
-            headSprites = new List<string>();
-            headSprites.Add("bunny");
-            headSprites.Add("kitty");
-            headSprites.Add("bird");
-            headSprites.Add("mouse");
-            headSprites.Add("raccoon");
-            headSprites.Add("fish");
-            headSprites.Add("beaver");
+			CharSelect.Initialize ();
 
-            bodySprites = new List<string>();
-            bodySprites.Add("male");
-            bodySprites.Add("female_hipster");
+			headSprites = new List<string>();
+			headSprites.Add("bunny");
+			headSprites.Add("kitty");
+			headSprites.Add("bird");
+			headSprites.Add("mouse");
+			headSprites.Add("raccoon");
+			headSprites.Add("fish");
+			headSprites.Add("beaver");
 
-            bodyColors = new List<Color[]>();
-            bodyColors.Add(new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) });
-            bodyColors.Add(new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) });
-
-			indicatorHeight = new Easing<float> (410f, 460f, 10);
-			titleJitterRotation = new Jitter<float> (-0.02f, 0.02f);
-			titleJitter = new Jitter<Vector2> (new Vector2(0, -3), new Vector2(0, 3));
+			bodySprites = new List<string>();
+			bodySprites.Add("male");
+			bodySprites.Add("female_hipster");
 
             //Initialize player class
             player = new Character(new Vector2(1280/2, 500),
-                headSprites[currentHeadSprite], new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) },
-                bodySprites[currentBodySprite], new Color[] { new Color(255, 255, 255), new Color(255, 255, 200) },
+                headSprites[0], new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) },
+                bodySprites[0], new Color[] { new Color(255, 255, 255), new Color(255, 255, 200) },
                 new PlayerBehavior()
             );
             player.Load(Content, entityBatch);
@@ -206,6 +195,10 @@ namespace Adventure
 			#endif
 
 			Input.Update ();
+			if (currentState == GameState.StartGame)
+            {
+				CharSelect.Update (gameTime);
+            }
 
             if (currentState == GameState.Game)
             {
@@ -231,72 +224,8 @@ namespace Adventure
                 if (endGame)
                     GameOver();
             }
-            else if (currentState == GameState.StartGame)
-            {
-				indicatorHeight.Update(gameTime, currentSelectionType != 0);
-				titleJitter.Update (gameTime);
-				titleJitterRotation.Update (gameTime);
-
-                bool selectionChanged = false;
-                if (Input.KeyPressed(Key.ENTER))
-                {
-                    currentState = GameState.Game;
-                    initGame();
-                }
-                else if (Input.KeyPressed(Key.LEFT))
-                {
-                    if (currentSelectionType == 0)
-                        currentHeadSprite++;
-                    else if(currentSelectionType == 1)
-                        currentBodySprite++;
-                    else
-                        currentBodyColor++;
-                    selectionChanged = true;
-                }
-                else if (Input.KeyPressed(Key.RIGHT))
-                {
-                    if (currentSelectionType == 0)
-                        currentHeadSprite--;
-                    else if(currentSelectionType == 1)
-                        currentBodySprite--;
-                    else
-                        currentBodyColor--;
-                    selectionChanged = true;
-                }
-                else if (Input.KeyPressed(Key.UP))
-                {
-                    currentSelectionType--;
-                    currentSelectionType = Math.Max(0, currentSelectionType);
-                }
-                else if (Input.KeyPressed(Key.DOWN))
-                {
-                    currentSelectionType++;
-                    currentSelectionType = Math.Min(currentSelectionType, 2);
-                }
-
-                if (selectionChanged)
-                {
-                    if (currentHeadSprite >= headSprites.Count)
-                        currentHeadSprite = 0;
-                    if (currentHeadSprite < 0)
-                        currentHeadSprite = headSprites.Count - 1;
-
-                    if (currentBodySprite >= bodySprites.Count)
-                        currentBodySprite = 0;
-                    if (currentBodySprite < 0)
-                        currentBodySprite = bodySprites.Count - 1;
-
-                    if (currentBodyColor >= bodyColors.Count)
-                        currentBodyColor = 0;
-                    if (currentBodyColor < 0)
-                        currentBodyColor = bodyColors.Count - 1;
-
-                    player.SetCharacterSprites(headSprites[currentHeadSprite], bodySprites[currentBodySprite]);
-                    player.SetCharacterColor(bodyColors[currentBodyColor]);
-                    player.Load(Content, entityBatch);
-                }
-            }
-            else if (currentState == GameState.EndGame)
+            
+            if (currentState == GameState.EndGame)
             {
                 if (Input.KeyPressed(Key.ENTER))
                 {
@@ -315,6 +244,11 @@ namespace Adventure
         {
             endGame = true;
         }
+
+		public void StartGame() {
+			currentState = GameState.Game;
+			initGame ();
+		}
 
         public void GameOver()
         {
@@ -399,43 +333,7 @@ namespace Adventure
             }
             else if (currentState == GameState.StartGame)
             {
-                graphics.GraphicsDevice.Clear(Color.Black);
-
-                entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
-
-				int screenWidth = ScreenBounds.Width;
-				entityBatch.DrawString(defaultFont, "Lets get ready for the party...", new Vector2(screenWidth/2 - defaultFont.MeasureString("Lets get ready for the party...").X/2, 150), Color.White);
-                Player.Draw(entityBatch, gameTime);
-
-				const int characterSpacing = 42;
-
-                if (currentSelectionType == 0)
-                {
-					entityBatch.DrawString(
-						defaultFont, "Choose Your Head >", 
-						new Vector2(ScreenBounds.Width / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Head >").X, (int)indicatorHeight.current), Color.White);
-                }
-                else if (currentSelectionType == 1)
-                {
-					entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(screenWidth / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Outfit >").X, (int) indicatorHeight.current), Color.White);
-                }
-                else if (currentSelectionType == 2)
-                {
-					entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(screenWidth / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Colors >").X, (int) indicatorHeight.current), Color.White);
-                }
-
-                entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(screenWidth/2 - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
-                entityBatch.End();
-
-				Matrix textPosition = Matrix.CreateTranslation (new Vector3(screenWidth / 2, 100, 0));
-				Matrix textRotation = Matrix.CreateRotationZ (this.titleJitterRotation.current);
-				entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, textRotation * textPosition);
-				entityBatch.DrawString (
-					titleFont, "Social Anxiety Party Simulator", 
-					new Vector2(
-						- titleFont.MeasureString("Social Anxiety Party Simulator").X/2,
-						titleJitter.current.Y), Color.White);
-				entityBatch.End ();
+				CharSelect.Draw (gameTime);
             }
 			base.Draw (gameTime);
 		}
