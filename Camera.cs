@@ -23,11 +23,10 @@ namespace Adventure
 
 		override public void Update(GameTime time) {
 			// figure out where we should be aiming for
-			Rectangle viewBounds = AdventureGame.instance.graphics.GraphicsDevice.Viewport.Bounds;
-			destination.X = following.position.X - viewBounds.Width / 2;
+			destination.X = following.position.X;
 			destination.Y = snapHeights [0];
 
-			float followY = following.position.Y - viewBounds.Height / 2;;
+			float followY = following.position.Y;
 			foreach (int height in snapHeights) {
 				if (Math.Abs (height - followY) < Math.Abs (destination.Y - followY)) {
 					destination.Y = height;
@@ -48,7 +47,8 @@ namespace Adventure
 
 		public Matrix Transform {
 			get {
-				return Matrix.CreateTranslation (new Vector3 (-this.position.X, -this.position.Y, 0));
+				Rectangle viewBounds = AdventureGame.instance.graphics.GraphicsDevice.Viewport.Bounds;
+				return Matrix.CreateTranslation (new Vector3 (-this.position.X + viewBounds.Width/2, -this.position.Y + viewBounds.Height/2, 0));
 			}
 		}
 	}

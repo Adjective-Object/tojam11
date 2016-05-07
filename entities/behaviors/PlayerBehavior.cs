@@ -55,11 +55,20 @@ namespace Adventure
 
                 Vector2 newPosition = character.position + movement;
 
-                if (PlayerCollidesWithMap(new Vector2(newPosition.X, character.position.Y)) == false)
+				if (movement.X != 0) {
+					int incline = GroundIncline (character.position);
+					int playerWalk = (int)(movement.X / Math.Abs(movement.X));
+					Console.WriteLine ("incline: " + incline + "walk: " + playerWalk);
+					if (playerWalk == incline || playerWalk == -incline) {
+						newPosition.Y -= movement.X * 0.67f * incline;
+					}
+				}
+
+                if (!PlayerCollidesWithMap(new Vector2(newPosition.X, character.position.Y)))
                 {
                     character.position.X = newPosition.X;
                 }
-                if (PlayerCollidesWithMap(new Vector2(character.position.X, newPosition.Y)) == false)
+                if (!PlayerCollidesWithMap(new Vector2(character.position.X, newPosition.Y)))
                 {
                     character.position.Y = newPosition.Y;
                 }
@@ -67,6 +76,21 @@ namespace Adventure
                 
 			} else {
 				character.PlayAnimBody("idle");
+			}
+		}
+
+		protected int GroundIncline(Vector2 pos) {
+			byte ground = AdventureGame.instance.collisionMap [(int)pos.Y, (int)pos.X];
+			switch (ground) {
+			case 2: // up to the left
+				return -1;
+			case 3: // up to the right
+				return 1;
+
+			case 0: // normal
+			case 1: // wall
+			default:
+				return 0;
 			}
 		}
 

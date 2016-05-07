@@ -15,7 +15,7 @@ namespace Adventure
 		public static AdventureGame instance;
 		public GraphicsDeviceManager graphics;
 		SpriteBatch entityBatch;
-		Texture2D shadowTexture, houseTexture;
+		Texture2D shadowTexture, houseTexture, collisionTexture;
         public Byte[,] collisionMap;
 		Camera gameCamera;
 		Character player;
@@ -82,7 +82,7 @@ namespace Adventure
 			this.InitEntities ();
 
 			// initialize the camera
-			gameCamera = new Camera(player, new int [] {100, 400, 800, 1200, 1600});
+			gameCamera = new Camera(player, new int [] {600, 1000, 1500});
 			this.entities.Add (gameCamera);
 
 			// init game
@@ -119,19 +119,27 @@ namespace Adventure
 			houseTexture = Content.Load<Texture2D> ("house");
 
 
-            Texture2D collisionTexture = Content.Load<Texture2D>("collision");
+            collisionTexture = Content.Load<Texture2D>("collision");
             Color[] collisionColors = new Color[collisionTexture.Width * collisionTexture.Height];
             collisionTexture.GetData<Color>(collisionColors);
 
             collisionMap = new Byte[collisionTexture.Height, collisionTexture.Width];
             for (int y = 0; y < collisionTexture.Height; y++)
             {
-                for (int x = 0; x < collisionTexture.Width; x++)
-                {
-                    if (collisionColors[x + y * collisionTexture.Width].A != 255)
+				for (int x = 0; x < collisionTexture.Width; x++) {
+					Color c = collisionColors [x + y * collisionTexture.Width];
+					if (c.G != c.R) {
+						Console.WriteLine (c);
+					}
+					if (c.R == 0 && c.G == 0 && c.B == 0) {
+						collisionMap [y, x] = 1;
+					} else if (c.R == 255 && c.G == 0 && c.B == 0) {
+						collisionMap [y, x] = 3;
+					} else if (c.R == 0 && c.G ==255 && c.B ==0) {
+	                    collisionMap[y, x] = 2;
+					} else {
                         collisionMap[y, x] = 0;
-                    else
-                        collisionMap[y, x] = 1;
+					}
                 }
             }
 
@@ -201,6 +209,7 @@ namespace Adventure
 
 			// draw hosue
 			entityBatch.Draw(houseTexture, new Vector2(0,0));
+			// entityBatch.Draw(collisionTexture, new Vector2(0,0), new Color(255,255,255, 200));
 
 			// draw entity shadows
 			foreach (BaseEntity e in this.entities) {
@@ -226,7 +235,7 @@ namespace Adventure
 		private void InitEntities() {
 			catSounds = new SoundFont ("soundfonts/SWAR1685_TalkingEngM");
 
-			player = new Character (new Vector2 (1000, 700),
+			player = new Character (new Vector2 (1000, 1200),
 				"bunny", new Color[] { new Color (255, 255, 255), new Color (255, 200, 200) },
 				"female_hipster", new Color[] { new Color (255, 255, 255), new Color (255, 255, 200) },
 				new PlayerBehavior()

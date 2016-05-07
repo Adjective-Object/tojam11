@@ -42,7 +42,7 @@ namespace Adventure
 		const int TEXT_MARGIN = 10;
 		static Easing<Vector2> descriptionOffset = new Easing<Vector2> (
 			                                           new Vector2 (0, TEXT_MARGIN),
-			                                           new Vector2 (0, -64 - TEXT_MARGIN),
+			                                           new Vector2 (0, -80 - TEXT_MARGIN),
 			                                           5
 		                                           );
 
@@ -88,8 +88,13 @@ namespace Adventure
 			);
 			batch.DrawString (
 				AdventureGame.DefaultFont,
-				SelectedItem.description,
+				SelectedItem.name,
 				textLocation,
+				Color.White);
+			batch.DrawString (
+				AdventureGame.DefaultFont,
+				SelectedItem.description,
+				textLocation + new Vector2(0, 32),
 				Color.White);
 		}
 
