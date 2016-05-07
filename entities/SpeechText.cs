@@ -172,7 +172,10 @@ namespace Adventure
 					}
 
 					// check for walk away
-					if (this.ages[ages.Length -1] >= ANIMATION_TIME && checkWalkAway != null && checkWalkAway ()) {
+					if (this.ages[ages.Length -1] >= ANIMATION_TIME &&
+						checkWalkAway != null &&
+						checkWalkAway ()) {
+
 						this.dismissedTime = this.ages [this.ages.Length - 1];
 						this.timeScale = 1.0;
 					}
@@ -182,6 +185,7 @@ namespace Adventure
 			
 
 			if (dismissedTime >= 0 && ages [ages.Length - 1] > dismissedTime + ANIMATION_TIME) {
+				Console.WriteLine ("killing text on timeout");
 				this._alive = false;	
 			}
 		}

@@ -21,6 +21,7 @@ namespace Adventure
 		public InteractableEntity (Vector2 position, EntityBehavior behavior) : base (position)
 		{
 			this.behavior = behavior;
+			this.behavior.BindToEntity (this);
 		}
 
 		override public void Load(ContentManager content, SpriteBatch batch) {
@@ -31,13 +32,15 @@ namespace Adventure
 
 		static float animSpeed = 10.0f;
 
-		public override void Update(GameTime elapsed) {
+		public override void Update(GameTime time) {
 			Boolean effectiveHighlighting = this.highlighted && !this.behavior.IsDisabled ();
 			Vector2 goalOffset = effectiveHighlighting ? this.focused ? focusOffset : highlightOffset : hiddenOffset;
 			float goalAlpha = effectiveHighlighting ? this.focused ? focusAlpha : highlightAlpha : hiddenAlpha;
 
-			animatedAlpha = animatedAlpha + (goalAlpha - animatedAlpha) * (float)elapsed.ElapsedGameTime.TotalSeconds * animSpeed;
-			animatedOffset = animatedOffset + (goalOffset - animatedOffset) * (float)elapsed.ElapsedGameTime.TotalSeconds * animSpeed;
+			animatedAlpha = animatedAlpha + (goalAlpha - animatedAlpha) * (float)time.ElapsedGameTime.TotalSeconds * animSpeed;
+			animatedOffset = animatedOffset + (goalOffset - animatedOffset) * (float)time.ElapsedGameTime.TotalSeconds * animSpeed;
+
+			this.behavior.Update (time);
 		}
 
 		protected void DrawFocusIndicator(SpriteBatch batch, Vector2 givenOffset) {

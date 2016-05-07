@@ -24,21 +24,25 @@ namespace Adventure
 		}
 
 		SpriteFont defaultFont;
+		SoundFont defaultSoundFont;
 		public static SpriteFont DefaultFont {
 			get { return AdventureGame.instance.defaultFont; }
+		}
+		public static SoundFont DefaultSoundFont {
+			get { return AdventureGame.instance.defaultSoundFont; }
 		}
 
         GameStateDictionary gameStateDictionary;
 		public static List<BaseEntity> Entities {
 			get { return instance.entities; }
 		}
+
 		List<BaseEntity> entities;
 		List<BaseEntity> toSpawn;
 
 		public static Rectangle ScreenBounds {
 			get { return instance.graphics.GraphicsDevice.PresentationParameters.Bounds; }
 		}
-
 
         int currentSelectionType = 0;
         int currentHeadSprite = 0;
@@ -131,8 +135,10 @@ namespace Adventure
 			Inventory.Add (ItemID.KNIFE);
 			Inventory.Add (ItemID.KNIFE_USED);
 
-            catSounds = new SoundFont("soundfonts/SWAR1685_TalkingEngM");
+			catSounds = new SoundFont("soundfonts/SWAR1685_TalkingEngM", 94);
 			catSounds.LoadContent (Content);
+			defaultSoundFont = new SoundFont ("soundfonts/machine", 12);
+			defaultSoundFont.LoadContent (Content);
 
 			//Tell font loader to load Monaco as defaulft font
 			defaultFont = Content.Load<SpriteFont>("Monaco");
@@ -151,9 +157,6 @@ namespace Adventure
             {
 				for (int x = 0; x < collisionTexture.Width; x++) {
 					Color c = collisionColors [x + y * collisionTexture.Width];
-					if (c.G != c.R) {
-						Console.WriteLine (c);
-					}
 					if (c.R == 0 && c.G == 0 && c.B == 0) {
 						collisionMap [y, x] = 1;
 					} else if (c.R == 255 && c.G == 0 && c.B == 0) {
@@ -193,7 +196,6 @@ namespace Adventure
 
                     if (!entities[i].alive)
                     {
-                        Console.WriteLine("removing dead entity " + entities[i].ToString());
                         entities.RemoveAt(i);
                         i--;
                     }
@@ -269,7 +271,8 @@ namespace Adventure
         public void initGame()
         {
             // Move player to start position
-            player.position = new Vector2(825, 963);
+            player.position = new Vector2(1500, 1500);
+            //player.position = new Vector2(825, 963);
 
             // add all the entities on the map
             this.InitEntities();
@@ -356,7 +359,7 @@ namespace Adventure
 			entities.Add (new Character (new Vector2 (1240, 730),
 				"bunny", new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
 				"male", new Color[] { new Color (180, 190, 170), new Color (200, 100, 255), new Color (255, 200, 255) },
-				new NPCCat(catSounds)
+				new CatNPC(catSounds)
 			));
 
 			entities.Add (new Character (new Vector2 (1500, 740),
@@ -370,6 +373,15 @@ namespace Adventure
 				"male", new Color[] { new Color (180, 190, 170), new Color (120, 120, 30), new Color (255, 200, 255) },
 				new CharacterBehavior(catSounds)
 			));
+
+			entities.Add (new StaticEntity (
+				"environment/antenna",
+				new Vector2 (1600, 1400),
+				new Antenna (),
+				new Vector2(-20, -175),
+				new Vector2(0, -150)
+			));
+
 		}
 
 		// schedules an entity to be spawned after this update loop
