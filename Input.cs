@@ -34,10 +34,10 @@ namespace Adventure
 			// re-evaluate the current frame dictionary
 			KeyboardState state = Keyboard.GetState ();
 			pressedThisFrame[Key.ENTER] = state.IsKeyDown (Keys.Enter);
-			pressedThisFrame[Key.UP] 	= state.IsKeyDown (Keys.Up);
-			pressedThisFrame[Key.DOWN] 	= state.IsKeyDown (Keys.Down);
-			pressedThisFrame[Key.LEFT] 	= state.IsKeyDown (Keys.Left);
-			pressedThisFrame[Key.RIGHT] = state.IsKeyDown (Keys.Right);
+			pressedThisFrame[Key.UP] 	= state.IsKeyDown (Keys.Up) || state.IsKeyDown(Keys.W);
+			pressedThisFrame[Key.DOWN] 	= state.IsKeyDown (Keys.Down) || state.IsKeyDown(Keys.S);
+			pressedThisFrame[Key.LEFT] 	= state.IsKeyDown (Keys.Left) || state.IsKeyDown(Keys.A);
+			pressedThisFrame[Key.RIGHT] = state.IsKeyDown (Keys.Right) || state.IsKeyDown(Keys.D);
 			pressedThisFrame[Key.TAB]   = state.IsKeyDown (Keys.Tab);
 			pressedThisFrame[Key.SHIFT] = state.IsKeyDown (Keys.LeftShift) || state.IsKeyDown (Keys.RightShift);
 
