@@ -19,6 +19,9 @@ namespace Adventure
         public Byte[,] collisionMap;
 		Camera gameCamera;
 		Character player;
+		public static Character Player {
+			get { return instance.player; }
+		}
 
 		SpriteFont defaultFont;
 		public static SpriteFont DefaultFont {

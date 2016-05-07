@@ -13,6 +13,9 @@ namespace Adventure
 			// do conversation
 			switch (interactionCount) {
 			case 0:
+				EmitSpeech ("I'm tired.", SpeechText.SpeechMode.PLAYER_CONTROLLED);
+				break;
+			case 1:
 				EmitSpeechOption ("what's your favorite?",
 					new SpeechText.Option[] {
 						new SpeechText.Option("chips", () => GameStateDictionary.instance.setState("cat_favorite", "chips")),
@@ -27,11 +30,8 @@ namespace Adventure
 						})
 				);
 				break;
-			case 1:
-                EmitSpeech("so you like " + GameStateDictionary.instance.getState("cat_favorite") + "?");
-				break;
 			case 2:
-				EmitSpeech ("I'm tired.");
+                EmitSpeech("so you like " + GameStateDictionary.instance.getState("cat_favorite") + "?");
 				break;
 			case 3:
 				EmitSpeech ("I was told there would be catnip.");

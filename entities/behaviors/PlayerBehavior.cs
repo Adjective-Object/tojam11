@@ -117,15 +117,12 @@ namespace Adventure
 		protected IList<InteractableEntity> GetNearbyInteractable() {
 			List<InteractableEntity> interactables = new List<InteractableEntity> ();
 			foreach (BaseEntity e in AdventureGame.Entities) {
-				Console.WriteLine (e + " " + (e.position - this.character.position));
-				Console.WriteLine (e.GetType () + "  " + typeof(InteractableEntity));
 				if (e.GetType().IsSubclassOf(typeof(InteractableEntity)) &&
 					e != this.character && 
 					(e.position - this.character.position).Length() < interactionRadius ) {
 					interactables.Add ((InteractableEntity)e);
 				}
 			}
-			Console.WriteLine (interactables.Count + " " + interactables);
 			return interactables;
 		}
 	}

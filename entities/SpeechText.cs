@@ -23,8 +23,9 @@ namespace Adventure
 			if (fonts.Count == 0) SpeechText.fonts ["default"] = font;
 			SpeechText.fonts [fontName] = font;
 		}
-		public static SpeechText Spawn(String fontName, Vector2 position, String text, SpeechMode mode = SpeechMode.AMBIENT) {
-			SpeechText e = new SpeechText (fonts [fontName], position, text, mode);
+		public static SpeechText Spawn(String fontName, Vector2 position, String text, 
+			SpeechMode mode = SpeechMode.AMBIENT, Func<Boolean> walkAwayAction = null) {
+			SpeechText e = new SpeechText (fonts [fontName], position, text, mode, walkAwayAction);
 			AdventureGame.SpawnEntity(e);
 
 			e.position -= LETTER_OFFSET * text.Length / 2;
@@ -66,11 +67,12 @@ namespace Adventure
 		double dismissedTime;
 		string text;
 		double timeScale = 1;
-		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode) : base(position){
+		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode, Func<Boolean> walkAwayAction = null) : base(position){
 			this.text = text;
 			this.font = font;
 			this.mode = mode;
 			this.dismissedTime = -1;
+			this.checkWalkAway = walkAwayAction == null ? () => false : walkAwayAction;
 
 			if (mode != SpeechMode.PLAYER_ANSWER_QUESTION) {
 				this.ages = new double[text.Length];
@@ -114,12 +116,19 @@ namespace Adventure
 				}
 				break;
 			case SpeechMode.PLAYER_CONTROLLED:
-				if (Input.KeyPressed(Key.ENTER)) {
-					// if it's still animating in and the enter button is pressed, speed up the animation
-					if (ages [ages.Length - 1] < ANIMATION_TIME) {
-						this.timeScale = 3.0;
-					} else if (this.IsDismissed){
-						this.dismissedTime = ages[ages.Length - 1];
+				if (!this.IsDismissed) {
+					if (Input.KeyPressed (Key.ENTER)) {
+						// if it's still animating in and the enter button is pressed, speed up the animation
+						if (ages [ages.Length - 1] < ANIMATION_TIME) {
+							this.timeScale = 3.0;
+						} else if (!this.IsDismissed) {
+							this.dismissedTime = ages [ages.Length - 1];
+							this.timeScale = 1.0;
+						}
+					}
+					if (this.ages [ages.Length - 1] >= ANIMATION_TIME && checkWalkAway ()) {
+						this.dismissedTime = ages [ages.Length - 1];
+						this.timeScale = 1.0;
 					}
 				}
 				break;
@@ -133,9 +142,8 @@ namespace Adventure
 							// otherwise, select the currently selected option
 							this.options [this.selectionIndex].callback ();
 							this.dismissedTime = this.ages [this.ages.Length - 1];
+							this.timeScale = 1.0;
 						}
-
-						// TODO keys for up & down to change selection
 					}
 
 					// toggling between options
@@ -148,15 +156,16 @@ namespace Adventure
 					}
 
 					// check for walk away
-					if (checkWalkAway ()) {
+					if (this.ages[ages.Length -1] >= ANIMATION_TIME && checkWalkAway ()) {
 						this.dismissedTime = this.ages [this.ages.Length - 1];
+						this.timeScale = 1.0;
 					}
 				}
 				break;
 			}
 			
 
-			if (dismissedTime > 0 && ages [ages.Length - 1] > dismissedTime + ANIMATION_TIME) {
+			if (dismissedTime >= 0 && ages [ages.Length - 1] > dismissedTime + ANIMATION_TIME) {
 				this._alive = false;	
 			}
 		}
@@ -184,7 +193,6 @@ namespace Adventure
 			for  (int i = 0; i < str.Length; i++) {
 				// calculate the animation time for this letter
 				double age = ages [i + ageArrayOffset];
-				Console.WriteLine (ages + " " + age);
 
 				Vector2 offset;
 				float opacity;

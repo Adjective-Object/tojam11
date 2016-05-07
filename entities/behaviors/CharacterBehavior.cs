@@ -27,9 +27,11 @@ namespace Adventure
 		}
 
 		
-		public virtual void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT) {
+		public virtual void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT, Func<bool> walkAwayCallback = null) {
+			walkAwayCallback =  (walkAwayCallback == null) ? walkAway(AdventureGame.Player, this.character, () => {}) : walkAwayCallback;
 			this.speechReference = SpeechText.Spawn (
-				"Monaco", character.position + new Vector2(0, -200), text, mode);
+				"Monaco", character.position + new Vector2 (0, -200), text, mode, 
+				walkAwayCallback);
 			character.PlayAnimHead("talk");
 		}
 
