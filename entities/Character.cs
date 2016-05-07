@@ -58,6 +58,7 @@ namespace Adventure
         public void SetCharacterColor(Color[] color)
         {
             this.bodyColors = color;
+            this.headColors = color;
         }
 
 		// load and set the colors of the sprites

@@ -21,8 +21,10 @@ namespace Adventure
 
 		public void Initialize () {
 			bodyColors = new List<Color[]>();
-			bodyColors.Add(new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) });
+
+			bodyColors.Add(new Color[] { new Color(255, 255, 255), new Color(25, 135, 0), new Color(0, 20, 200) });
 			bodyColors.Add(new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) });
+            bodyColors.Add(new Color[] { new Color(100, 50, 15), new Color(100, 0, 100), new Color(250, 250, 100) });
 
 			indicatorHeight = new Easing<float> (410f, 460f, 10);
 			titleJitterRotation = new Jitter<float> (-0.02f, 0.02f);
