@@ -2,11 +2,11 @@
 
 namespace Adventure
 {
-	public class NPCCat : CharacterBehavior
+	public class CatNPC : CharacterBehavior
 	{
 		int interactionCount = 0;
 
-		public NPCCat (SoundFont speech) : base (speech) {
+		public CatNPC (SoundFont speech) : base (speech) {
 		}
 
 		override public void RespondToInteraction(Character player) {

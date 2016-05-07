@@ -29,6 +29,7 @@ namespace Adventure
 		}
 
 		protected void UpdateMotion(GameTime time) {
+			int incline = GroundIncline (character.position);
 			Vector2 movement = new Vector2 (0, 0);
 			if (Input.KeyDown(Key.LEFT)) {
 				movement.X -= (float) (time.ElapsedGameTime.TotalSeconds);
@@ -38,11 +39,13 @@ namespace Adventure
 				movement.X += (float) (time.ElapsedGameTime.TotalSeconds);	
 				character.facingLeft = false;
 			}
-			if (Input.KeyDown (Key.UP)) {
-				movement.Y -= (float) (time.ElapsedGameTime.TotalSeconds);
-			}
-			if (Input.KeyDown (Key.DOWN)) {
-				movement.Y += (float) (time.ElapsedGameTime.TotalSeconds);
+			if (movement.X == 0 || incline == 0) {
+				if (Input.KeyDown (Key.UP)) {
+					movement.Y -= (float)(time.ElapsedGameTime.TotalSeconds);
+				}
+				if (Input.KeyDown (Key.DOWN)) {
+					movement.Y += (float)(time.ElapsedGameTime.TotalSeconds);
+				}
 			}
 
 			if (movement.LengthSquared () != 0) {
@@ -56,9 +59,7 @@ namespace Adventure
                 Vector2 newPosition = character.position + movement;
 
 				if (movement.X != 0) {
-					int incline = GroundIncline (character.position);
 					int playerWalk = (int)(movement.X / Math.Abs(movement.X));
-					Console.WriteLine ("incline: " + incline + "walk: " + playerWalk);
 					if (playerWalk == incline || playerWalk == -incline) {
 						newPosition.Y -= movement.X * 0.67f * incline;
 					}

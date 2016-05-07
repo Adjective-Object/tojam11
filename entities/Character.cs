@@ -43,7 +43,7 @@ namespace Adventure
 			this.headColors = headColors;
 			this.bodyColors = bodyColors;
 			this.charBehavior = behavior;
-			charBehavior.BindToCharacter (this);
+			charBehavior.BindToEntity (this);
 
 			this.headAnimations = new Dictionary<String, Animation> ();
 			this.bodyAnimations = new Dictionary<String, Animation> ();
@@ -128,7 +128,6 @@ namespace Adventure
 			
 		override public void Update(GameTime time) {
 			// Perform the behaviors specified by this Character's CharacterBehavior
-			this.charBehavior.Update(time);
 			base.Update (time);
 
 			head = currentHeadAnimation.GetFrame(time.ElapsedGameTime.TotalSeconds);

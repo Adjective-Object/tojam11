@@ -3,73 +3,39 @@ using Microsoft.Xna.Framework;
 
 namespace Adventure
 {
-	public class CharacterBehavior : EntityBehavior
+	public class CharacterBehavior : SpriteBehavior
 	{
-		protected Character character;
-		protected SpeechText speechReference;
-		protected SoundFont sounds;
-
-		public CharacterBehavior(SoundFont sounds) {
-			this.sounds= sounds;
+		public CharacterBehavior(SoundFont sf) : base(sf) {
 		}
 
-		public void BindToCharacter(Character c) {
-			this.character = c;
-		}
-
-		public virtual void Update(GameTime elapsed) {
+		override public void Update(GameTime elapsed) {
 			// reset head if we are done speaking
 			if (this.speechReference != null &&
 			    this.speechReference.DoneEmitting) {
-
-				character.PlayAnimHead("idle");
+				((Character) entity).PlayAnimHead("idle");
 			}
-
-			if (this.speechReference != null && 
-				!this.speechReference.alive) {
-				this.speechReference = null;
-			}
+			base.Update (elapsed);
 		}
 
-		
-		public virtual void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT, Func<bool> walkAwayCallback = null, Action enterCallback = null) {
-			walkAwayCallback =  (walkAwayCallback == null) ? walkAway(AdventureGame.Player, this.character, () => {}) : walkAwayCallback;
-			this.speechReference = SpeechText.Spawn (
-				"Monaco", character.position + new Vector2 (0, -200), text, mode);
-			this.speechReference.AttachWalkawayCallback (walkAwayCallback);
-			this.speechReference.AttachEnterCallback (enterCallback);
-			this.speechReference.AttachSoundFont (this.sounds);
-
-			character.PlayAnimHead("talk");
+		public Character character;
+		override public void BindToEntity(BaseEntity entity) {
+			base.BindToEntity(entity);
+			character = (Character) entity;
 		}
 
-		public virtual void EmitSpeechOption(String text, SpeechText.Option[] options, Func<bool> walkAwayCallback = null) {
-			this.speechReference = SpeechText.Spawn (
-				"Monaco", character.position + new Vector2(0, -200), text,  options);
-			this.speechReference.AttachWalkawayCallback (walkAwayCallback);
-			this.speechReference.AttachSoundFont (this.sounds);
-
-			character.PlayAnimHead ("talk");
+		override public void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT, Func<bool> walkAwayCallback = null, Action enterCallback = null) {
+			base.EmitSpeech(text, mode, walkAwayCallback, enterCallback);
+			((Character) entity).PlayAnimHead("talk");
 		}
 
-		static double WALK_AWAY_RADIUS = 100;
-		protected Func<Boolean> walkAway(BaseEntity e1, BaseEntity e2, Action callback) {
-			return () => {
-				if ((e1.position - e2.position).Length () > WALK_AWAY_RADIUS) {
-					callback ();
-					return true;
-				}
-				return false;
-			};
-		}
-			
-		public virtual void RespondToInteraction(Character player) {
-			this.EmitSpeech("character response not implemented");
-			character.facingLeft = player.position.X < character.position.X;
+		override public void EmitSpeechOption(String text, SpeechText.Option[] options, Func<bool> walkAwayCallback = null) {
+			base.EmitSpeechOption(text, options, walkAwayCallback);
+			((Character) entity).PlayAnimHead ("talk");
 		}
 
-		public Boolean IsDisabled() {
-			return this.speechReference != null;
+		override public void RespondToInteraction(Character player) {
+			this.EmitSpeech("((Character) entity)response not implemented");
+			((Character) entity).facingLeft = player.position.X < entity.position.X;
 		}
 	}
 }
