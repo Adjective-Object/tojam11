@@ -24,6 +24,7 @@ namespace Adventure
 		}
 
 		SpriteFont defaultFont;
+        SpriteFont titleFont;
 		public static SpriteFont DefaultFont {
 			get { return AdventureGame.instance.defaultFont; }
 		}
@@ -110,7 +111,7 @@ namespace Adventure
             bodyColors.Add(new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) });
 
             //Initialize player class
-            player = new Character(new Vector2(500, 500),
+            player = new Character(new Vector2(1280/2, 500),
                 headSprites[currentHeadSprite], new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) },
                 bodySprites[currentBodySprite], new Color[] { new Color(255, 255, 255), new Color(255, 255, 200) },
                 new PlayerBehavior()
@@ -146,6 +147,7 @@ namespace Adventure
 
 			//Tell font loader to load Monaco as defaulft font
 			defaultFont = Content.Load<SpriteFont>("Monaco");
+            titleFont = Content.Load<SpriteFont>("MonacoTitle");
 			SpeechText.LoadFont("Monaco", defaultFont);
 
 			// load the shadow texture
@@ -161,9 +163,7 @@ namespace Adventure
             {
 				for (int x = 0; x < collisionTexture.Width; x++) {
 					Color c = collisionColors [x + y * collisionTexture.Width];
-					if (c.G != c.R) {
-						Console.WriteLine (c);
-					}
+
 					if (c.R == 0 && c.G == 0 && c.B == 0) {
 						collisionMap [y, x] = 1;
 					} else if (c.R == 255 && c.G == 0 && c.B == 0) {
@@ -305,7 +305,7 @@ namespace Adventure
             endGame = false;
             currentState = GameState.EndGame;
             entities.Clear();
-            player.position = new Vector2(500, 500);
+            player.position = new Vector2(1280/2, 500);
         }
 
         public void initGame()
@@ -373,19 +373,36 @@ namespace Adventure
                 entityBatch.End();
 
             }
-
             else if (currentState == GameState.EndGame)
             {
                 graphics.GraphicsDevice.Clear(Color.Black);
+                entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
+                entityBatch.DrawString(titleFont, "Well that party is over...", new Vector2(1280 / 2 - titleFont.MeasureString("Well that party is over...").X / 2, 100), Color.White);
+                entityBatch.End();
             }
-
             else if (currentState == GameState.StartGame)
             {
                 graphics.GraphicsDevice.Clear(Color.Black);
 
-                
                 entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
+
+                entityBatch.DrawString(titleFont, "Lets get ready for the party...", new Vector2(1280/2 - titleFont.MeasureString("Lets get ready for the party...").X/2, 100), Color.White);
                 Player.Draw(entityBatch, gameTime);
+
+                if (currentSelectionType == 0)
+                {
+                    entityBatch.DrawString(defaultFont, "Choose Your Head >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Head >").X, 410), Color.White);
+                }
+                else if (currentSelectionType == 1)
+                {
+                    entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Outfit >").X, 460), Color.White);
+                }
+                else if (currentSelectionType == 2)
+                {
+                    entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Colors >").X, 460), Color.White);
+                }
+
+                entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(1280/2 - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
                 entityBatch.End();
             }
 			base.Draw (gameTime);
