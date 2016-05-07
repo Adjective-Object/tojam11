@@ -19,6 +19,8 @@ namespace Adventure
         public Byte[,] collisionMap;
 		Camera gameCamera;
 		Character player;
+
+        GameStateDictionary gameStateDictionary;
 		public static List<BaseEntity> Entities {
 			get { return instance.entities; }
 		}
@@ -44,6 +46,8 @@ namespace Adventure
 			graphics.PreferredBackBufferWidth = 1280;
 			graphics.PreferredBackBufferHeight = 720;
 			Content.RootDirectory = "Content";
+
+            gameStateDictionary = new GameStateDictionary();
 		}
 
 

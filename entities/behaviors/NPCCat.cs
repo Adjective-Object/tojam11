@@ -5,7 +5,6 @@ namespace Adventure
 	public class NPCCat : CharacterBehavior
 	{
 		int interactionCount = 0;
-		string favorite;
 
 		override public void RespondToInteraction(Character player) {
 			// turn to face player
@@ -16,20 +15,20 @@ namespace Adventure
 			case 0:
 				EmitSpeechOption ("what's your favorite?",
 					new SpeechText.Option[] {
-						new SpeechText.Option("chips", () => this.favorite = "chips"),
-						new SpeechText.Option("dip", () => this.favorite = "dip"),
-						new SpeechText.Option("salsa", () => this.favorite = "salsa"),
+						new SpeechText.Option("chips", () => GameStateDictionary.instance.setState("cat_favorite", "chips")),
+						new SpeechText.Option("dip", () => GameStateDictionary.instance.setState("cat_favorite", "dip")),
+						new SpeechText.Option("salsa", () => GameStateDictionary.instance.setState("cat_favorite", "salsa")),
 					},
 					walkAway(
 						player, character,
 						() => {
-							this.favorite = "being an asshole"; 
+							GameStateDictionary.instance.setState("cat_favorite", "being an asshole"); 
 							EmitSpeech("where are you going?");
 						})
 				);
 				break;
 			case 1:
-				EmitSpeech ("so you like " + favorite + "?");
+                EmitSpeech("so you like " + GameStateDictionary.instance.getState("cat_favorite") + "?");
 				break;
 			case 2:
 				EmitSpeech ("I'm tired.");
