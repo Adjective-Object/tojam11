@@ -351,8 +351,6 @@ namespace Adventure
 
 		SoundFont catSounds;
 		private void InitEntities() {
-			catSounds = new SoundFont ("soundfonts/SWAR1685_TalkingEngM");
-
 			entities.Add (player);
 
 			entities.Add (new Character (new Vector2 (1240, 730),
