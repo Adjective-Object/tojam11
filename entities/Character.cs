@@ -55,6 +55,11 @@ namespace Adventure
             this.bodyName = bodyName;
         }
 
+        public void SetCharacterColor(Color[] color)
+        {
+            this.bodyColors = color;
+        }
+
 		// load and set the colors of the sprites
 		override public void Load(ContentManager content, SpriteBatch batch) {
 			// load head textures
