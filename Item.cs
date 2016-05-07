@@ -16,10 +16,12 @@ namespace Adventure
 			if (initialized) return;
 			initialized = true;
 
+			items.Add (ItemID.NO_ITEM, 		new Item (null, 		"No Item", 		"you put away your item"));
 			items.Add (ItemID.KNIFE, 		new Item (content.Load<Texture2D>("items/knife"), 		"Knife", 		"A harmless kitchen knife"));
 			items.Add (ItemID.KNIFE_USED, 	new Item (content.Load<Texture2D>("items/knife_used"), 	"Used Knife", 	"You should probably get rid of this"));
 			items.Add (ItemID.BEER, 		new Item (content.Load<Texture2D>("items/beer_1"), 		"Beer", 		"A craft beer. The label says 'Mister Bone's Wild IPA'."));
 			items.Add (ItemID.POISON, 		new Item (content.Load<Texture2D>("items/poison"), 		"Poison", 		"Rat poison"));
+			items.Add (ItemID.ANTENNA, 		new Item (content.Load<Texture2D>("items/antenna"), 	"Antenna", 		"The antenna to the TV in the basement. Why did you take it?"));
 
 			foreach (ItemID k in items.Keys) {
 				items [k].type = k;
@@ -43,8 +45,9 @@ namespace Adventure
 	}
 
 	public enum ItemID {
+		NO_ITEM,
 		KNIFE, KNIFE_USED,
-		BEER, POISON
+		BEER, POISON, ANTENNA
 	}
 
 }

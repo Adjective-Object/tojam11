@@ -21,6 +21,11 @@ namespace Adventure
 			get { return _alive; }
 		}
 
+		public void Kill() {
+			Console.WriteLine ("manually killing " + this);
+			this._alive = false;
+		}
+
 		public BaseEntity (Vector2 position) {
 			this.position = position;
 		}

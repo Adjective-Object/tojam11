@@ -8,13 +8,14 @@ namespace Adventure
 {
 	public class Inventory
 	{
-		public static List<ItemID> contents = new List<ItemID>();
+		public static List<ItemID> contents = new List<ItemID>() {ItemID.NO_ITEM};
 		public static int capacity = 5;
 		public static int selector = 0;
 		public static Boolean active;
 
-		static double ACTIVATION_WINDOW = 1;
+		static double ACTIVATION_WINDOW = 3;
 		static double lastActivated = -ACTIVATION_WINDOW;
+		static Boolean deferredActivation = false;
 
 		static Texture2D blackRect;
 
@@ -24,6 +25,7 @@ namespace Adventure
 
 		public static void Add(ItemID i) {
 			contents.Add (i);
+			deferredActivation = true;
 		}
 
 		public static Item SelectedItem {
@@ -60,6 +62,10 @@ namespace Adventure
 				selector = (selector + toNext + contents.Count) % contents.Count;
 				lastActivated = time.TotalGameTime.TotalSeconds;
 			}
+			if (deferredActivation) {
+				deferredActivation = false;
+				lastActivated = time.TotalGameTime.TotalSeconds;
+			}
 
 			active = time.TotalGameTime.TotalSeconds - lastActivated < ACTIVATION_WINDOW;
 			offset.Update (time, active);
@@ -68,14 +74,14 @@ namespace Adventure
 
 		public static void Draw(SpriteBatch batch) {
 			Vector2 origin = new Vector2(10, 10) + offset.current;
-			for (int i = 0; i < contents.Count; i++) {
+			for (int i = 1; i < contents.Count; i++) {
 				if (i == selector) {
 					batch.Draw (Item.Get (contents [i]).texture, origin + OFFSET_VECTOR * i);
 				}
 				else {
 					batch.Draw (
 						Item.Get (contents [i]).texture, 
-						origin + OFFSET_VECTOR * i, 
+						origin + OFFSET_VECTOR * (i - 1), 
 						new Color(100,100,100, 100));
 				}
 			}
