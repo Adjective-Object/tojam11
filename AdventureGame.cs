@@ -56,6 +56,8 @@ namespace Adventure
         int currentBodyColor = 0;
         public List<Color[]> bodyColors;
 		Easing<float> indicatorHeight;
+		Jitter<float> titleJitterRotation;
+		Jitter<Vector2> titleJitter;
 
 
         public enum GameState
@@ -120,6 +122,8 @@ namespace Adventure
             bodyColors.Add(new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) });
 
 			indicatorHeight = new Easing<float> (410f, 460f, 10);
+			titleJitterRotation = new Jitter<float> (-0.02f, 0.02f);
+			titleJitter = new Jitter<Vector2> (new Vector2(0, -3), new Vector2(0, 3));
 
             //Initialize player class
             player = new Character(new Vector2(1280/2, 500),
@@ -230,6 +234,8 @@ namespace Adventure
             else if (currentState == GameState.StartGame)
             {
 				indicatorHeight.Update(gameTime, currentSelectionType != 0);
+				titleJitter.Update (gameTime);
+				titleJitterRotation.Update (gameTime);
 
                 bool selectionChanged = false;
                 if (Input.KeyPressed(Key.ENTER))
@@ -397,26 +403,39 @@ namespace Adventure
 
                 entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
 
-                entityBatch.DrawString(titleFont, "Lets get ready for the party...", new Vector2(1280/2 - titleFont.MeasureString("Lets get ready for the party...").X/2, 100), Color.White);
+				int screenWidth = ScreenBounds.Width;
+				entityBatch.DrawString(defaultFont, "Lets get ready for the party...", new Vector2(screenWidth/2 - defaultFont.MeasureString("Lets get ready for the party...").X/2, 150), Color.White);
                 Player.Draw(entityBatch, gameTime);
+
+				const int characterSpacing = 42;
 
                 if (currentSelectionType == 0)
                 {
 					entityBatch.DrawString(
 						defaultFont, "Choose Your Head >", 
-						new Vector2(ScreenBounds.Width / 2 - 34 - defaultFont.MeasureString("Choose Your Head >").X, (int)indicatorHeight.current), Color.White);
+						new Vector2(ScreenBounds.Width / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Head >").X, (int)indicatorHeight.current), Color.White);
                 }
                 else if (currentSelectionType == 1)
                 {
-					entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Outfit >").X, (int) indicatorHeight.current), Color.White);
+					entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(screenWidth / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Outfit >").X, (int) indicatorHeight.current), Color.White);
                 }
                 else if (currentSelectionType == 2)
                 {
-					entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(1280 / 2 - 34 - defaultFont.MeasureString("Choose Your Colors >").X, (int) indicatorHeight.current), Color.White);
+					entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(screenWidth / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Colors >").X, (int) indicatorHeight.current), Color.White);
                 }
 
-                entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(1280/2 - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
+                entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(screenWidth/2 - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
                 entityBatch.End();
+
+				Matrix textPosition = Matrix.CreateTranslation (new Vector3(screenWidth / 2, 100, 0));
+				Matrix textRotation = Matrix.CreateRotationZ (this.titleJitterRotation.current);
+				entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, textRotation * textPosition);
+				entityBatch.DrawString (
+					titleFont, "Social Anxiety Party Simulator", 
+					new Vector2(
+						- titleFont.MeasureString("Social Anxiety Party Simulator").X/2,
+						titleJitter.current.Y), Color.White);
+				entityBatch.End ();
             }
 			base.Draw (gameTime);
 		}

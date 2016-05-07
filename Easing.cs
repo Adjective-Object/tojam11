@@ -34,8 +34,34 @@ namespace Adventure
 		}
 	}
 
+	public class Jitter<T> {
+		public T current;
+		T start;
+		T finish;
+		Random r;
 
+		Calculator<T> calc;
 
+		public Jitter(T start, T finish)
+		{
+			this.start = start;
+			this.finish = finish;
+			this.current = start;
+			this.r = new Random ();
+
+			if (typeof(T) == typeof(Vector2)) {
+				calc = Activator.CreateInstance(typeof(Vector2Calculator)) as Calculator<T>;
+			} else if (typeof(T) == typeof(float)) {
+				calc = Activator.CreateInstance(typeof(FloatCalculator)) as Calculator<T>;
+			}
+		}
+
+		public T Update(GameTime t) {
+			float scale = (float) r.NextDouble();
+			this.current = calc.Add(calc.Mul(start, scale), calc.Mul(finish, (1 - scale)));
+			return this.current;
+		}
+	}
 
 	public interface Calculator<T> {
 		T Sub (T a, T b);
