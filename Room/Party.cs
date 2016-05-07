@@ -4,13 +4,13 @@ namespace Adventure
 {
 	public class Party : Room
 	{
-		public void Update (GameTime gameTime) {
-		}
-
 		public void Initialize () {
 		}
 
 		public void LoadContent () {
+		}
+
+		public void Update (GameTime gameTime) {
 		}
 
 		public void Draw (GameTime gameTime) {

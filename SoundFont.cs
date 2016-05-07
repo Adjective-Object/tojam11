@@ -26,7 +26,7 @@ namespace Adventure
 		}
 
 		public SoundEffectInstance FetchRandomInstance() {
-			int number = random.Next() % count;
+			int number = random.Next() % (count + 1);
 			SoundEffectInstance instance = sounds [number].CreateInstance();
 			instance.Pitch = (float)(random.NextDouble() * SOUND_JITTER * 2 - SOUND_JITTER);
 			return instance;

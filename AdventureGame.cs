@@ -144,7 +144,7 @@ namespace Adventure
 
 			catSounds = new SoundFont("soundfonts/SWAR1685_TalkingEngM", 94);
 			catSounds.LoadContent (Content);
-			defaultSoundFont = new SoundFont ("soundfonts/machine", 12);
+			defaultSoundFont = new SoundFont ("soundfonts/machine", 9);
 			defaultSoundFont.LoadContent (Content);
 
 			//Tell font loader to load Monaco as defaulft font
@@ -196,10 +196,8 @@ namespace Adventure
 
 			Input.Update ();
 			if (currentState == GameState.StartGame)
-            {
 				CharSelect.Update (gameTime);
-            }
-
+			
             if (currentState == GameState.Game)
             {
                 // update all entities in the entity list
