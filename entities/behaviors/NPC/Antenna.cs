@@ -11,6 +11,8 @@ namespace Adventure
 					new SpeechText.Option("Take it", () => {
 						this.EmitSpeech("you take the antenna", 
 							SpeechText.SpeechMode.PLAYER_CONTROLLED);
+						Inventory.Add(ItemID.ANTENNA);
+						this.entity.Kill();
 					}),
 					new SpeechText.Option("Don't take it", () => {
 						this.EmitSpeech("you don't take the antenna", 

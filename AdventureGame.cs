@@ -140,10 +140,6 @@ namespace Adventure
 
 			Item.LoadContent(Content);
 			Inventory.LoadContent (Content, entityBatch);
-			Inventory.Add (ItemID.BEER);
-			Inventory.Add (ItemID.POISON);
-			Inventory.Add (ItemID.KNIFE);
-			Inventory.Add (ItemID.KNIFE_USED);
 
 			catSounds = new SoundFont("soundfonts/SWAR1685_TalkingEngM", 94);
 			catSounds.LoadContent (Content);

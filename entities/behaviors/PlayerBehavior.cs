@@ -23,7 +23,11 @@ namespace Adventure
 			// update highlights
 			UpdateHighlights();
 
-			this.character.heldItem = Inventory.SelectedItemID;
+			if (Inventory.SelectedItemID != ItemID.NO_ITEM) {
+				this.character.heldItem = Inventory.SelectedItemID;
+			} else {
+				this.character.heldItem = null;
+			}
 
 			base.Update(time);
 		}
