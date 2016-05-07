@@ -118,7 +118,7 @@ namespace Adventure
             player = new Character(new Vector2(1280/2, 500),
                 headSprites[0], new Color[] { new Color(255, 255, 255), new Color(255, 200, 200) },
                 bodySprites[0], new Color[] { new Color(255, 255, 255), new Color(255, 255, 200) },
-                new PlayerBehavior()
+				new PlayerBehavior(catSounds)
             );
             player.Load(Content, entityBatch);
 			
@@ -259,8 +259,8 @@ namespace Adventure
         public void initGame()
         {
             // Move player to start position
-            player.position = new Vector2(1500, 1500);
-            //player.position = new Vector2(825, 963);
+            // player.position = new Vector2(1500, 1500);
+            player.position = new Vector2(825, 963);
 
             // add all the entities on the map
             this.InitEntities();
@@ -358,13 +358,59 @@ namespace Adventure
 				new CharacterBehavior(catSounds)
 			));
 
+
 			entities.Add (new StaticEntity (
 				"environment/antenna",
 				new Vector2 (1600, 1400),
 				new Antenna (),
-				new Vector2(-20, -175),
-				new Vector2(0, -150)
+				new Vector2(0, -97),
+				new Vector2(0, -117)
 			));
+
+			// TODO position these flavor items
+
+			entities.Add (new StaticEntity (
+				"environment/guitar",
+				new Vector2 (1100, 1100),
+				new GenericItem("it's a guitar.")
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/hammer",
+				new Vector2 (1300, 1100),
+				new GenericItem("I sure wish I could pick up this hammer.")
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/catnip",
+				new Vector2 (1500, 1100),
+				new GenericItem("Mmm, deliious catnip...", "Too bad you're not a cat.")
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/saw",
+				new Vector2 (1800, 1100),
+				new GenericItem("I see a saw. What do you see?")
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/soap",
+				new Vector2 (2000, 1100),
+				new GenericItem("SlipperyCo(tm) scrubbing soap.", "The label says \"Don't Drop it\".")
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/microwave",
+				new Vector2 (1600, 1100),
+				new GenericItem("A microwave.", "It's called that because you need a magnifying glass to see the waves.")
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/bleach",
+				new Vector2 (2100, 1100),
+				new GenericItem ("Bleach", "\"Warning, do not drink\"")
+			));
+
 		}
 
 		// schedules an entity to be spawned after this update loop

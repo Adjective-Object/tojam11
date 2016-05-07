@@ -12,7 +12,7 @@ namespace Adventure
 		double speedy = 190;
 		double interactionRadius = 100;
 
-		public PlayerBehavior () : base(null)
+		public PlayerBehavior (SoundFont s = null) : base(s)
 		{
 		}
 
