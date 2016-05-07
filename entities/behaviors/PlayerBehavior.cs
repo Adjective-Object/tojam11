@@ -77,7 +77,7 @@ namespace Adventure
             {
                 for (int x = -width; x < width; x++)
                 {
-                    if (AdventureGame.instance.collisionMap[(int)pos.Y + x, (int)pos.X + y] == 1)
+                    if (AdventureGame.instance.collisionMap[(int)pos.Y + y, (int)pos.X + x] == 1)
                         return true;
                 }
             }
