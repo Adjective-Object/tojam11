@@ -23,17 +23,14 @@ namespace Adventure
 			if (fonts.Count == 0) SpeechText.fonts ["default"] = font;
 			SpeechText.fonts [fontName] = font;
 		}
-		public static SpeechText Spawn(String fontName, Vector2 position, String text, 
-			SpeechMode mode = SpeechMode.AMBIENT, Func<Boolean> walkAwayAction = null, Action enterCallback = null) {
-			SpeechText e = new SpeechText (fonts [fontName], position, text, mode, walkAwayAction, enterCallback);
+		public static SpeechText Spawn(String fontName, Vector2 position, String text, SpeechMode mode = SpeechMode.AMBIENT) {
+			SpeechText e = new SpeechText (fonts [fontName], position, text, mode);
 			AdventureGame.SpawnEntity(e);
-
 			e.position -= LETTER_OFFSET * text.Length / 2;
-
 			return e;
 		}
-		public static SpeechText Spawn(String fontName, Vector2 position, String text, Option[] options, Func<Boolean> walkAwayAction) {
-			SpeechText e = new SpeechText (fonts [fontName], position, text, options, walkAwayAction);
+		public static SpeechText Spawn(String fontName, Vector2 position, String text, Option[] options) {
+			SpeechText e = new SpeechText (fonts [fontName], position, text, options);
 			AdventureGame.SpawnEntity(e);
 			e.position -= LETTER_OFFSET * text.Length / 2;
 			return e;	
@@ -67,13 +64,11 @@ namespace Adventure
 		double dismissedTime;
 		string text;
 		double timeScale = 1;
-		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode, Func<Boolean> walkAwayAction = null, Action enterCallback = null) : base(position){
+		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode) : base (position) {
 			this.text = text;
 			this.font = font;
 			this.mode = mode;
 			this.dismissedTime = -1;
-			this.checkWalkAway = walkAwayAction == null ? () => false : walkAwayAction;
-			this.enterCallback = enterCallback == null ? () => {} : enterCallback;
 
 			if (mode != SpeechMode.PLAYER_ANSWER_QUESTION) {
 				this.ages = new double[text.Length];
@@ -87,7 +82,7 @@ namespace Adventure
 		Func<Boolean> checkWalkAway;
 		Action enterCallback;
 		int selectionIndex = 0;
-		protected SpeechText(SpriteFont font, Vector2 position, String text, Option[] options, Func<Boolean> checkWalkAway)
+		protected SpeechText(SpriteFont font, Vector2 position, String text, Option[] options)
 			: this(font, position, text, SpeechMode.PLAYER_ANSWER_QUESTION){
 			this.options = options;
 			this.checkWalkAway = checkWalkAway;
@@ -103,11 +98,28 @@ namespace Adventure
 			}
 		}
 
+		public void AttachWalkawayCallback(Func<Boolean> checkWalkAway) {
+			this.checkWalkAway = checkWalkAway;
+		}
+
+		public void AttachEnterCallback(Action enterCallback) {
+			this.enterCallback = enterCallback;
+		}
+
+		SoundFont sounds;
+		public void AttachSoundFont(SoundFont sounds) {
+			this.sounds = sounds;
+		}
+
 		public override void Load(ContentManager content, SpriteBatch batch) {}
 		public override void Update(GameTime time) {
 			// update the ages of each letter
 			for (int i = 0; i < this.ages.Length; i++) {
+				double old_age = this.ages [i];
 				this.ages [i] = this.ages[i] + time.ElapsedGameTime.TotalSeconds * timeScale;
+				if (this.sounds != null && old_age < 0 && this.ages [i] > 0) {
+					this.sounds.FetchRandomInstance ().Play ();
+				}
 			}
 
 			// update depending on mode
@@ -126,10 +138,10 @@ namespace Adventure
 						} else if (!this.IsDismissed) {
 							this.dismissedTime = ages [ages.Length - 1];
 							this.timeScale = 1.0;
-							enterCallback ();
+							if (enterCallback != null) enterCallback ();
 						}
 					}
-					if (this.ages [ages.Length - 1] >= ANIMATION_TIME && checkWalkAway ()) {
+					if (this.ages [ages.Length - 1] >= ANIMATION_TIME && checkWalkAway != null && checkWalkAway ()) {
 						this.dismissedTime = ages [ages.Length - 1];
 						this.timeScale = 1.0;
 					}
@@ -141,7 +153,7 @@ namespace Adventure
 						if (ages [ages.Length - 1] < ANIMATION_TIME) {
 							// if it's still animating in and the enter button is pressed, speed up the animation
 							this.timeScale = 3.0;
-							enterCallback ();
+							if (enterCallback != null) enterCallback ();
 						} else {
 							// otherwise, select the currently selected option
 							this.options [this.selectionIndex].callback ();
@@ -160,7 +172,7 @@ namespace Adventure
 					}
 
 					// check for walk away
-					if (this.ages[ages.Length -1] >= ANIMATION_TIME && checkWalkAway ()) {
+					if (this.ages[ages.Length -1] >= ANIMATION_TIME && checkWalkAway != null && checkWalkAway ()) {
 						this.dismissedTime = this.ages [this.ages.Length - 1];
 						this.timeScale = 1.0;
 					}

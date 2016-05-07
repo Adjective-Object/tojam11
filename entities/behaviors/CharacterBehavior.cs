@@ -7,6 +7,11 @@ namespace Adventure
 	{
 		protected Character character;
 		protected SpeechText speechReference;
+		protected SoundFont sounds;
+
+		public CharacterBehavior(SoundFont sounds) {
+			this.sounds= sounds;
+		}
 
 		public void BindToCharacter(Character c) {
 			this.character = c;
@@ -30,16 +35,20 @@ namespace Adventure
 		public virtual void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT, Func<bool> walkAwayCallback = null, Action enterCallback = null) {
 			walkAwayCallback =  (walkAwayCallback == null) ? walkAway(AdventureGame.Player, this.character, () => {}) : walkAwayCallback;
 			this.speechReference = SpeechText.Spawn (
-				"Monaco", character.position + new Vector2 (0, -200), text, mode, 
-				walkAwayCallback, enterCallback);
+				"Monaco", character.position + new Vector2 (0, -200), text, mode);
+			this.speechReference.AttachWalkawayCallback (walkAwayCallback);
+			this.speechReference.AttachEnterCallback (enterCallback);
+			this.speechReference.AttachSoundFont (this.sounds);
+
 			character.PlayAnimHead("talk");
 		}
 
-		public virtual void EmitSpeechOption(String text, SpeechText.Option[] options, Func<bool> walkAwayCallback) {
+		public virtual void EmitSpeechOption(String text, SpeechText.Option[] options, Func<bool> walkAwayCallback = null) {
 			this.speechReference = SpeechText.Spawn (
-				"Monaco", character.position + new Vector2(0, -200), text, 
-				options, walkAwayCallback
-			);
+				"Monaco", character.position + new Vector2(0, -200), text,  options);
+			this.speechReference.AttachWalkawayCallback (walkAwayCallback);
+			this.speechReference.AttachSoundFont (this.sounds);
+
 			character.PlayAnimHead ("talk");
 		}
 

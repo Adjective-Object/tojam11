@@ -12,7 +12,7 @@ namespace Adventure
 		double speedy = 190;
 		double interactionRadius = 100;
 
-		public PlayerBehavior ()
+		public PlayerBehavior () : base(null)
 		{
 		}
 
