@@ -33,6 +33,8 @@ namespace Adventure
 					break;
 				}
 			}
+
+			((PlayerBehavior) player.behavior).triggeredText = this.speechReference;
 		}
 
 		private void resetConvo() {
@@ -46,6 +48,7 @@ namespace Adventure
 		}
 
 		private void giveChip() {
+			
 			Boolean success = Inventory.Add (ItemID.CHIP);
 			int numChips = Inventory.contents.Where ((x) => x.Equals (ItemID.CHIP)).Count();
 			if (success) {

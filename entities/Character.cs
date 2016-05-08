@@ -169,6 +169,16 @@ namespace Adventure
 			if (this.currentBodyAnimation != this.bodyAnimations[name])
 				this.currentBodyAnimation = this.bodyAnimations [name].Reset();
 		}
+
+
+		private static Random r = new Random();
+		public static Color[] MakeRandomPallete(int length) {
+			Color[] c = new Color[length];
+			for (int i = 0; i < length; i++) {
+				c[i] = new Color(r.Next(0, 255), r.Next(0,255), r.Next(0,255));
+			}
+			return c;
+		}
 	}
 
 }

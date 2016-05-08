@@ -376,7 +376,7 @@ namespace Adventure
                 foreach (BaseEntity e in this.entities)
                 {
                     e.Draw(entityBatch, gameTime);
-					if (Input.KeyDown(Key.DEBUG)) {
+					if (Input.KeyDown(Key.DEBUG) && e != gameCamera) {
 						entityBatch.DrawString (tinyFont, e.position.ToString (), e.position, Color.AliceBlue);
 					}
                 }
@@ -429,36 +429,70 @@ namespace Adventure
 		private void InitEntities() {
 			entities.Add (player);
 
-			entities.Add (new Character (new Vector2 (1240, 630),
-				headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
-                bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(200, 100, 255), new Color(255, 200, 255) },
+			// people
+			Color[] CatPalette = Character.MakeRandomPallete (3);
+			entities.Add (new Character (new Vector2 (1555, 1005),
+				"kitty", CatPalette,
+				bodySprites[r.Next(0, bodySprites.Count)], CatPalette,
 				new CatNPC(catSounds)
 			));
 
-			entities.Add (new Character (new Vector2 (1500, 640),
-                headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(20, 250, 30) },
-                bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(100, 60, 190), new Color(255, 200, 255) },
+			Color[] BroPalette = Character.MakeRandomPallete (3);
+			entities.Add (new Character (new Vector2 (1751, 1149),
+				headSprites[r.Next(0, headSprites.Count)], BroPalette,
+				"jock", BroPalette,
 				new BroNPC(catSounds)
 			));
 
-			entities.Add (new Character (new Vector2 (1555, 1005),
-                headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) },
-                bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(120, 120, 30), new Color(255, 200, 255) },
+			Color[] HipsterPalette = Character.MakeRandomPallete (3);
+			entities.Add (new Character (new Vector2 (1852, 975),
+				headSprites[r.Next(0, headSprites.Count)], HipsterPalette,
+				"male_hipster", HipsterPalette,
 				new HipsterNPC(catSounds)
 			));
 
-			entities.Add(new DissapearingWall("environment/shed", new Vector2(3128,997), player));
-
-
-			entities.Add (new StaticEntity (
-				"environment/antenna",
-				new Vector2 (1600, 1400),
-				new Antenna (),
-				new Vector2(0, -97),
-				new Vector2(0, -117)
+			Color[] LinuxPalette = Character.MakeRandomPallete (3);
+			entities.Add (new Character (new Vector2 (1765, 1682),
+				"penguin", LinuxPalette,
+				"penguin", LinuxPalette,
+				new CatNPC(catSounds)
+			));
+			
+			Color[] FoxPalette= Character.MakeRandomPallete (3);
+			entities.Add (new Character (new Vector2 (2677, 921),
+				"fox", FoxPalette,
+				"jacket", FoxPalette,
+				new CatNPC(catSounds)
 			));
 
-            // Door
+
+			Color[] ChickenPalette = new Color[]{ new Color(230, 230, 230), new Color(230, 0, 0), new Color(30, 30, 30)};
+			entities.Add (new Character (new Vector2 (3042, 953),
+				"chicken", ChickenPalette,
+				bodySprites[r.Next(0, bodySprites.Count)], ChickenPalette,
+				new ChickenGangMember(catSounds)
+			));
+
+			entities.Add (new Character (new Vector2 (3082, 1071),
+				"chicken", ChickenPalette,
+				bodySprites[r.Next(0, bodySprites.Count)], ChickenPalette,
+				new ChickenGangMember(catSounds)
+			));
+
+			entities.Add (new Character (new Vector2 (2940, 1134),
+				"chicken", ChickenPalette,
+				bodySprites[r.Next(0, bodySprites.Count)], ChickenPalette,
+				new ChickenGangMember(catSounds)
+			));
+
+			entities.Add (new Character (new Vector2 (2893, 1005),
+				"rooster", ChickenPalette,
+				bodySprites[r.Next(0, bodySprites.Count)], ChickenPalette,
+				new ChickenGangLeader(catSounds)
+			));
+
+
+            // Exit door
             entities.Add(new StaticEntity(
                 null,
                 new Vector2(825, 863),
@@ -467,8 +501,17 @@ namespace Adventure
                 new Vector2(0, -117)
             ));
 
-			// TODO position these flavor items
 
+			// basement
+			entities.Add (new StaticEntity (
+				"environment/antenna",
+				new Vector2 (1600, 1400),
+				new Antenna (),
+				new Vector2(0, -97),
+				new Vector2(0, -117)
+			));
+
+			// pointless flavor items
 			entities.Add (new StaticEntity (
 				"environment/guitar",
 				new Vector2 (1162, 1057),
@@ -480,6 +523,33 @@ namespace Adventure
 				new Vector2 (2571, 939),
 				new GenericItem("Mmm, deliious catnip...", "Too bad you're not a cat.")
 			));
+			
+			entities.Add (new StaticEntity (
+				"environment/soap",
+				new Vector2 (1143, 465),
+				new GenericItem("SlipperyCo(tm) scrubbing soap.", "The label says \"Don't Drop it\".")
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/microwave",
+				new Vector2 (2031, 922),
+				new GenericItem("A microwave.", "It's called that because you need a magnifying glass to see the waves."),
+				null,
+				new Vector2(0, -70)
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/bleach",
+				new Vector2 (2374, 956),
+				new GenericItem ("Bleach", "\"Warning, do not drink\""),
+				new Vector2(0, -100),
+				new Vector2(0, -177)
+			));
+
+
+
+			//toolshed
+			entities.Add(new DissapearingWall("environment/shed", new Vector2(3128,997), player));
 
 			entities.Add (new StaticEntity (
 				"environment/saw",
@@ -502,27 +572,6 @@ namespace Adventure
 				new Vector2(0, -30), new Vector2(0, -90)
 			));
 
-			entities.Add (new StaticEntity (
-				"environment/soap",
-				new Vector2 (1143, 465),
-				new GenericItem("SlipperyCo(tm) scrubbing soap.", "The label says \"Don't Drop it\".")
-			));
-
-			entities.Add (new StaticEntity (
-				"environment/microwave",
-				new Vector2 (2031, 922),
-				new GenericItem("A microwave.", "It's called that because you need a magnifying glass to see the waves."),
-				null,
-				new Vector2(0, -70)
-			));
-
-			entities.Add (new StaticEntity (
-				"environment/bleach",
-				new Vector2 (2374, 956),
-				new GenericItem ("Bleach", "\"Warning, do not drink\""),
-				new Vector2(0, -100),
-				new Vector2(0, -177)
-			));
 
 
 
