@@ -647,7 +647,7 @@ namespace Adventure
 
 
 
-                    if (TInput.KeyPressed(Keys.A))
+                    if (TInput.KeyPressed(Keys.Escape))
                     {
                         Running2 = false;
                         systemState = 1;
@@ -694,15 +694,6 @@ namespace Adventure
 						Timer = 0;
 					}
 
-				}
-
-
-				if (TInput.KeyPressed (Keys.A)) 
-                {
-					Running2 = true;
-					Timer = 200;
-					if (systemState < 0)
-						systemState = 0;
 				}
 
 			}
