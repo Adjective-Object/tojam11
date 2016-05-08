@@ -12,6 +12,24 @@ namespace Adventure
 	/// </summary>
 	public class AdventureGame : Game
 	{
+
+
+		// TYLER
+		public static PhoneGUI phoneGUI;
+		public static AtariSystem atari;
+		public static Texture2D tylerSquare, tylerSheet;
+		public static SpriteFont tylerFont, tylerFont2, tylerFont3;
+
+		public static Random RandomNumber = new Random();
+		internal static float RandomFloat(int a, int b, float divisor)
+		{
+			float value = (float)RandomNumber.Next(a, b) / divisor;
+			return value;
+		}
+
+
+
+
 		public static AdventureGame instance;
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch entityBatch;
@@ -195,6 +213,15 @@ namespace Adventure
                 }
             }
 
+
+			// Init Tyler
+			phoneGUI = new PhoneGUI ();
+			atari = new AtariSystem ();
+			tylerSquare = Content.Load<Texture2D> ("square");
+			tylerSheet = Content.Load<Texture2D> ("tylerSheet");
+            tylerFont = Content.Load<SpriteFont> ("Vectorb");
+            tylerFont2 = Content.Load<SpriteFont> ("arial");
+            tylerFont3 = Content.Load<SpriteFont> ("visitor");
 		}
 
 
@@ -217,6 +244,8 @@ namespace Adventure
 			#endif
 
 			Input.Update ();
+			TInput.Update ();
+
 			if (currentState == GameState.StartGame)
 				CharSelect.Update (gameTime);
 			
@@ -249,6 +278,10 @@ namespace Adventure
 
                 if (endGame)
                     GameOver(gameTime);
+
+				phoneGUI.Update(gameTime);
+				atari.Update(gameTime);
+
             }
             else if (currentState == GameState.EndGame)
             {
@@ -387,6 +420,13 @@ namespace Adventure
                 entityBatch.End();
 
 
+				entityBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+					DepthStencilState.None, RasterizerState.CullCounterClockwise);
+
+				phoneGUI.Draw (entityBatch);
+				atari.Draw (entityBatch);
+
+				entityBatch.End ();
 
             }
             else if (currentState == GameState.EndGame)
