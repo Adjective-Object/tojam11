@@ -420,6 +420,14 @@ namespace Adventure
 				phoneGUI.Draw (entityBatch);
 				atari.Draw (entityBatch);
 
+
+				if (atari.Running) {
+					entityBatch.DrawString (this.defaultFont, "Press 'esc' to close", new Vector2(10, 10), Color.White);
+				}
+				if (phoneGUI.Running) {
+					entityBatch.DrawString (this.defaultFont, "Press 'p' to close", new Vector2(10, 10), Color.White);
+				}
+
 				entityBatch.End ();
 
             }
