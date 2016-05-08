@@ -50,6 +50,8 @@ namespace Adventure
 					"activate the device?",
 					new  SpeechText.Option[] {
 						new SpeechText.Option("yes", ()=>{
+							GameStateDictionary.SetFlag ("alien", true);
+							LogEndMessage("ACTIVATED THE ALIEN TRANSMITTER");
 							AdventureGame.instance.SetEndGame();
 						}),
 						new SpeechText.Option("no",  ()=>{})

@@ -164,6 +164,9 @@ namespace Adventure
 			base.Initialize ();
 		}
 
+		Texture2D alien;
+		Vector2 alienOffset;
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -177,6 +180,9 @@ namespace Adventure
 
 			Item.LoadContent(Content);
 			Inventory.LoadContent (Content, entityBatch);
+
+			alien = Content.Load<Texture2D> ("alien");
+			alienOffset = new Vector2 (alien.Bounds.Width, alien.Bounds.Height) * -0.5f;
 
 			catSounds = new SoundFont("soundfonts/SWAR1685_TalkingEngM", 94);
 			catSounds.LoadContent (Content);
@@ -482,6 +488,18 @@ namespace Adventure
                 }
 
                 entityBatch.End();
+
+				if (gameStateDictionary.getFlag("alien")) {
+					double seconds = gameTime.TotalGameTime.TotalSeconds;
+					Matrix rotation = Matrix.CreateRotationZ ((float)Math.Sin (seconds * 1.6)),
+					translation = Matrix.CreateTranslation (new Vector3 (ScreenBounds.Width * 4 / 5, ScreenBounds.Height / 2, 0));
+
+					entityBatch.Begin (0, null, null, null, null, null, rotation * translation);
+					entityBatch.Draw (alien, alienOffset);
+					entityBatch.End ();
+				}
+
+
             }
             else if (currentState == GameState.StartGame)
             {
@@ -496,6 +514,10 @@ namespace Adventure
 		SoundFont catSounds;
 		private void InitEntities() {
 			entities.Add (player);
+
+			Inventory.Add (ItemID.ANTENNA);
+			Inventory.Add (ItemID.MICROWAVE);
+			Inventory.Add (ItemID.STRINGS);
 
 			// people
 			Color[] CatPalette = Character.MakeRandomPallete (3);

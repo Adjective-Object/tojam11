@@ -12,7 +12,7 @@ namespace Adventure
 		public PhoneGUI ()
 		{
             newsList.Add("Toronto up 43-31 \nover Miama at \nhalf-time.");
-            newsList.Add("Car stolen in the \narea of Franklin \npark.");
+            newsList.Add("Car stolen in the \narea of Franklin \nPark.");
             newsList.Add("FBI agents seen \nin town.");
 
 
@@ -76,12 +76,14 @@ namespace Adventure
 		public void Update(GameTime gameTime)
 		{
 			if (Running) {
-				if (Position.Y > 90) {
-					Position.Y = MathHelper.Lerp (Position.Y, 89, .1f);
-				} else {
-					Position.Y = 90;
-
-				}
+                if (Position.Y > 90)
+                {
+                    Position.Y = MathHelper.Lerp(Position.Y, 89, .1f);
+                }
+                else
+                {
+                    Position.Y = 90;
+                }
 
 				if (TInput.KeyPressed (Keys.P))
 					Running = false;
@@ -112,12 +114,12 @@ namespace Adventure
                         if (handOffset.X < 40)
                             handOffset.X += 10; 
                     }
-                    else if (TInput.IsKeyDown(Keys.Z))
+                    else if (TInput.IsKeyDown(Keys.Enter))
                     {
                         if (handOffset.Y > -10)
                             handOffset.Y -= 10; 
                     }
-                    else if (TInput.IsKeyDown(Keys.X))
+                    else if (TInput.IsKeyDown(Keys.Escape))
                     {
                         if (handOffset.Y < 10)
                             handOffset.Y += 10; 
@@ -141,7 +143,7 @@ namespace Adventure
                 {
                     if (GameOver)
                     {
-                        if (TInput.KeyPressed(Keys.Z))
+                        if (TInput.KeyPressed(Keys.Enter))
                         {
                             GameOver = false;
                             newP = new Point(AdventureGame.RandomNumber.Next(26) * 10, AdventureGame.RandomNumber.Next(5, 38) * 10);
@@ -209,14 +211,13 @@ namespace Adventure
                         }
                     }
 
-                    if (TInput.KeyPressed(Keys.X))
+                    if (TInput.KeyPressed(Keys.Escape))
                     {
                         RunningGame = false;
                         MenuLevel = 1;
                     }
                 }
                 #endregion
-
 
                 else
                 {
@@ -238,12 +239,12 @@ namespace Adventure
                                 if (MainSelectorInt > 2)
                                     MainSelectorInt = 0;
                             }
-                            else if (TInput.KeyPressed(Keys.Z))
+                            else if (TInput.KeyPressed(Keys.Enter))
                             {
                                 MenuLevel++;
                                 SecondSelectorInt = 0;
                             }
-                            else if (TInput.KeyPressed(Keys.X))
+                            else if (TInput.KeyPressed(Keys.Escape))
                             {
 
                             }
@@ -255,7 +256,6 @@ namespace Adventure
                         {
                             if (MainSelectorInt == 0)
                             {
-
                                 if (TInput.KeyPressed(Keys.Up))
                                 {
                                     SecondSelectorInt--;
@@ -268,11 +268,10 @@ namespace Adventure
                                     if (SecondSelectorInt > 3)
                                         SecondSelectorInt = 0;
                                 }
-                                else if (TInput.KeyPressed(Keys.Z))
+                                else if (TInput.KeyPressed(Keys.Enter))
                                 {
                                     MenuLevel++;
                                 }
-
                             }
                             else if (MainSelectorInt == 1)
                             {
@@ -288,11 +287,10 @@ namespace Adventure
                                     if (SecondSelectorInt > 2)
                                         SecondSelectorInt = 0;
                                 }
-                                else if (TInput.KeyPressed(Keys.Z))
+                                else if (TInput.KeyPressed(Keys.Enter))
                                 {
                                     MenuLevel++;
                                 }
-
                             }
                             else if (MainSelectorInt == 2)
                             {
@@ -309,7 +307,7 @@ namespace Adventure
                                         SecondSelectorInt = 0;
                                 }
 
-                                if (TInput.KeyPressed(Keys.Z))
+                                if (TInput.KeyPressed(Keys.Enter))
                                 {
                                     RunningGame = true;
 
@@ -324,7 +322,7 @@ namespace Adventure
                                 }
                             }
 
-                            if (TInput.KeyPressed(Keys.X))
+                            if (TInput.KeyPressed(Keys.Escape))
                             {
                                 MenuLevel--;
                             }
@@ -334,7 +332,7 @@ namespace Adventure
                         else if (MenuLevel == 2)
                         {
                            
-                            if (TInput.KeyPressed(Keys.X))
+                            if (TInput.KeyPressed(Keys.Escape))
                             {
                                 MenuLevel--;
                             }
@@ -342,8 +340,6 @@ namespace Adventure
 
                     }
                 }
-
-
 
 
 
@@ -369,10 +365,10 @@ namespace Adventure
             Color lightGreen = new Color(116, 155, 106);
 
             // back cat paw
-            spriteBatch.Draw (AdventureGame.tylerSheet, Position + new Vector2(-240, 200), new Rectangle (1248, 0, 416, 704), Color.White, 0, new Vector2 (0, 0), 1, SpriteEffects.FlipHorizontally, 1);
+            spriteBatch.Draw (AdventureGame.tylerSheet, Position + new Vector2(-240, 200), new Rectangle (1248 + 120, 0, 416, 704), Color.White, 0, new Vector2 (0, 0), 1, SpriteEffects.FlipHorizontally, 1);
 
             // phone image
-            spriteBatch.Draw (AdventureGame.tylerSheet, Position - new Vector2(37, 84), new Rectangle (912, 0, 336, 704), lightGreen, 0, new Vector2 (0, 0), 1, SpriteEffects.None, 1);
+            spriteBatch.Draw (AdventureGame.tylerSheet, Position - new Vector2(37, 84), new Rectangle (912 + 120, 0, 336, 704), lightGreen, 0, new Vector2 (0, 0), 1, SpriteEffects.None, 1);
 
             // green bg
             spriteBatch.Draw (AdventureGame.tylerSquare, Position, new Rectangle (0, 0, 260, 380), lightGreen, 0, new Vector2 (0, 0), 1, SpriteEffects.None, 1);
@@ -499,7 +495,7 @@ namespace Adventure
 
 
             // front cat paw
-            spriteBatch.Draw (AdventureGame.tylerSheet, Position + new Vector2(60, 480) + handOffset, new Rectangle (1248, 0, 416, 704), Color.White, 0, new Vector2 (0, 0), 1, SpriteEffects.None, 1);
+            spriteBatch.Draw (AdventureGame.tylerSheet, Position + new Vector2(60, 480) + handOffset, new Rectangle (1248 + 120, 0, 416, 704), Color.White, 0, new Vector2 (0, 0), 1, SpriteEffects.None, 1);
 
 		}
 	}

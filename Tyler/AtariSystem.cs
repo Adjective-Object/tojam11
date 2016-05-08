@@ -26,13 +26,13 @@ namespace Adventure
                     blockList.Add(new Block(new Point(x * 30, 80 + y * 18), col));
                 }
             }
-
-		}
+        }
 
 		Vector2 leftCorner = new Vector2 ((1280 - 800) / 2, (720 - 600) / 2);
 
 		Point ScreenSize = new Point (800, 600);
-		public bool Running = false;
+        public bool Running2 = false;
+        public bool Running = false;
 		public Vector2 Size = new Vector2 (0, 0);
 		public int systemState = -1;
 		float titleAlpha = 0;
@@ -44,8 +44,6 @@ namespace Adventure
 		bool Alive = false;
 		int Timer = 0;
 
-		string[] TopNames =  new string[] {"", ""};
-		int[] TopScores =  new int[] {0, 0};
 
 		public List<Bullet> bulletList = new List<Bullet>();
 		public List<Asteroid> asteroidList = new List<Asteroid>();
@@ -56,7 +54,7 @@ namespace Adventure
 		public int TopScore = 0;
 		public int Lives = 3;
 
-		public string[] letters = new string[] { "_", "_", "_" };
+		public string[] letters = new string[] { "A", "A", "A" };
 		public int letIndex = 0;
 
         public int gameSelection = 1;
@@ -78,13 +76,15 @@ namespace Adventure
         Vector2 ballVelocity = new Vector2(0, 0);
         Vector2 paddlePosition = new Vector2(300 - 40, 500 - 50);
 
-
+        int ignoreCollision = 0;
 
 
 		public void Update(GameTime gameTime)
 		{
-			if (Running) {
+			if (Running2) {
 				
+                Running = true;
+
 				#region turning tv on
                 if (systemState == 0)
                 {
@@ -102,13 +102,11 @@ namespace Adventure
                             systemState = 1;
                         }
                     }
-                    else
-                        Timer -= gameTime.ElapsedGameTime.Milliseconds;
+                    else Timer -= gameTime.ElapsedGameTime.Milliseconds;
 
                 }
                 else if (systemState == 1)
                 {
-
                     if (Size.Y < ScreenSize.Y - 1)
                     {
                         Size.Y = MathHelper.Lerp(Size.Y, ScreenSize.Y, .4f);
@@ -118,14 +116,14 @@ namespace Adventure
                         Size.Y = ScreenSize.Y;
                         systemState = 2;
                     }
-
                 }
                 else if (systemState == 2)
                 {
 
                     if (titleAlpha < 3.2f)
                         titleAlpha += .05f;
-                    else{
+                    else
+                    {
                         systemState = 3;
                         if(gameSelection == 1) Alive = true;
                     }
@@ -138,12 +136,12 @@ namespace Adventure
                     {
                         systemState = 4;
 
-                        AdventureGame.atari.asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
-                        AdventureGame.atari.asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
-                        AdventureGame.atari.asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+
+                        asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                        asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                        asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
                     }
-					
-                } 
+                }
 				#endregion
 
 
@@ -178,20 +176,49 @@ namespace Adventure
                         {
                             if (Alive)
                             {
+                                
+                                int containsBig = 0;
+                                for(int i = 0; i < asteroidList.Count;i++)
+                                {
+                                    if(asteroidList[i].Size == 2) containsBig++;
+                                }
+
+                                if(containsBig < 2 && asteroidList.Count < 8) 
+                                {
+                                    int rand = AdventureGame.RandomNumber.Next(4);
+                                    if(rand == 0)
+                                    {
+                                        asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), 0), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                                    }
+                                    if(rand == 1)
+                                    {
+                                        asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), 600), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                                    }
+                                    if(rand == 2)
+                                    {
+                                        asteroidList.Add(new Asteroid(new Vector2(0, AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                                    }
+                                    if(rand == 3)
+                                    {
+                                       asteroidList.Add(new Asteroid(new Vector2(800, AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                                    }
+                                }
+
+
                                 if (TInput.IsKeyDown(Keys.Right))
                                     Rotation += .1f;
                                 if (TInput.IsKeyDown(Keys.Left))
                                     Rotation -= .1f;
 
 
-                                if (TInput.IsKeyDown(Keys.Z))
+                                if (TInput.IsKeyDown(Keys.Up))
                                 {
                                     Vector2 desVel = AngleToVector(Rotation) * .1f;
 
                                     Velocity += desVel;
                                 }
 
-                                if (TInput.KeyPressed(Keys.X))
+                                if (TInput.KeyPressed(Keys.Enter))
                                 {
                                     Vector2 vel = AngleToVector(Rotation) * 5;
                                     bulletList.Add(new Bullet(Position, vel));
@@ -208,7 +235,7 @@ namespace Adventure
                             }
                             else
                             {
-                                if (TInput.KeyPressed(Keys.Z))
+                                if (TInput.KeyPressed(Keys.Enter))
                                 {
                                     if (Lives > 0)
                                     {
@@ -222,28 +249,23 @@ namespace Adventure
                         }
                         else if (systemState == 4)
                         {
-                            if (TInput.KeyPressed(Keys.Z))
+                            if (TInput.KeyPressed(Keys.Enter))
                             {
-                                Alive = true;
-                                Position = new Vector2(400, 300);
-                                Velocity = new Vector2(0, 0);
-                                systemState = 5;
-
-                                Lives = 0;
+                                NewGame();
                             }
                         }
                         else if (systemState == 6)
                         {
-                            if (TInput.KeyPressed(Keys.Z))
+                            if (TInput.KeyPressed(Keys.Enter))
                             {
                                 systemState = 7;
-
-                                letters = new string[] { "-", "-", "-" };
+                                letters = new string[] { "A", "A", "A" };
                                 letIndex = 0;
                             }
                         }
                         else if (systemState == 7)
                         {
+                            #region entering letters up down
                             if (TInput.KeyPressed(Keys.Up))
                             {
                                 if (letters[letIndex] == "-")
@@ -358,19 +380,18 @@ namespace Adventure
                                 else if (letters[letIndex] == "Z")
                                     letters[letIndex] = "Y";
                             }
+                            #endregion
 
-                            if (TInput.KeyPressed(Keys.Z))
+                            if (TInput.KeyPressed(Keys.Enter))
                             {
                                 if (letIndex < 2)
                                     letIndex++;
                                 else
                                 {
-                                    systemState = 8;
+                                    NewGame();
                                 }
                             }
                         }
-
-
 
 
 
@@ -477,7 +498,7 @@ namespace Adventure
                                 if(paddlePosition.X < 0) paddlePosition.X = 0;
                             }
 
-                            if (TInput.KeyPressed(Keys.Z))
+                            if (TInput.KeyPressed(Keys.Enter))
                             {
                                 if (ballPositon.X == -1 && ballPositon.Y == -1)
                                 {
@@ -487,25 +508,40 @@ namespace Adventure
                                 }
                             }
 
+
+
                             if (ballPositon.X == -1 && ballPositon.Y == -1){}
                             else
                             {
-
-
-                                ballPositon.X += ballVelocity.X;
-
                                 Rectangle paddleRect = new Rectangle((int)paddlePosition.X, (int)paddlePosition.Y, 80, 15);
                                 Rectangle ballRect = new Rectangle((int)ballPositon.X, (int)ballPositon.Y, 15, 15);
 
-                                if(paddleRect.Intersects(ballRect))
-                                {
-                                    ballVelocity.Y *= -1;
-                                    ballVelocity.X *= -1;
-                                    if(ballPositon.X < paddlePosition.X)
-                                        ballPositon.X = paddlePosition.X - 15;
-                                    else ballPositon.X = paddleRect.X + 80;
-                                }
+                              
 
+                                ballPositon.X += ballVelocity.X;
+                                if(ignoreCollision < 1)
+                                {
+
+                                    paddleRect = new Rectangle((int)paddlePosition.X, (int)paddlePosition.Y, 80, 15);
+                                    ballRect = new Rectangle((int)ballPositon.X, (int)ballPositon.Y, 15, 15);
+
+                                    if(paddleRect.Intersects(ballRect))
+                                    {
+                                        ignoreCollision = 1000;
+
+                                        if(ballPositon.X + 7 < paddlePosition.X + 20)
+                                        {
+
+                                        }
+
+                                        ballVelocity.Y *= -1;
+                                        ballVelocity.X *= -1;
+                                        if(ballPositon.X < paddlePosition.X)
+                                            ballPositon.X = paddlePosition.X - 15;
+                                        else ballPositon.X = paddleRect.X + 80;
+                                    }
+                                }
+                                else ignoreCollision -= gameTime.ElapsedGameTime.Milliseconds;
 
                                 for(int i = 0; i < blockList.Count;i++)
                                 {
@@ -514,22 +550,40 @@ namespace Adventure
                                     {
                                         ballVelocity.X *= -1;
                                         blockList.RemoveAt(i);
+                                        Score+= 1;
                                         break;
                                     }
                                 }
 
 
 
+
+
                                 ballPositon.Y += ballVelocity.Y;
-
-                                paddleRect = new Rectangle((int)paddlePosition.X, (int)paddlePosition.Y, 80, 15);
-                                ballRect = new Rectangle((int)ballPositon.X, (int)ballPositon.Y, 15, 15);
-
-                                if(paddleRect.Intersects(ballRect))
+                                if(ignoreCollision < 1)
                                 {
-                                    ballVelocity.Y *= -1;
-                                    ballPositon.Y = paddlePosition.Y - 15;
+
+                                    paddleRect = new Rectangle((int)paddlePosition.X, (int)paddlePosition.Y, 80, 15);
+                                    ballRect = new Rectangle((int)ballPositon.X, (int)ballPositon.Y, 15, 15);
+
+                                    if(paddleRect.Intersects(ballRect))
+                                    {
+
+//                                        if(ballPositon.X + 7 < paddlePosition.X + 20)
+//                                        {
+//                                            if(Velocity.X > 0) Velocity.X *= -1;
+//                                        }
+//                                        if(ballPositon.X + 7 > paddlePosition.X + 60)
+//                                        {
+//                                            if(Velocity.X < 0) Velocity.X *= -1;
+//                                        }
+
+                                        ignoreCollision = 1000;
+                                        ballVelocity.Y *= -1;
+                                        ballPositon.Y = paddlePosition.Y - 15;
+                                    }
                                 }
+                                else ignoreCollision -= gameTime.ElapsedGameTime.Milliseconds;
 
 
                                 for(int i = 0; i < blockList.Count;i++)
@@ -539,13 +593,10 @@ namespace Adventure
                                     {
                                         ballVelocity.Y *= -1;
                                         blockList.RemoveAt(i);
+                                        Score+= 1;
                                         break;
                                     }
                                 }
-
-
-
-
 
 
 
@@ -576,13 +627,20 @@ namespace Adventure
                         else
                         {
 
-                            if (TInput.KeyPressed(Keys.Z))
+                            if (TInput.KeyPressed(Keys.Enter))
                             {
-                                Alive = true;
-                                ballPositon = new Vector2(-1, -1);
-                                ballVelocity = new Vector2(0,0);
+                                if(Lives > 0)
+                                {
+                                    Lives--;
+                                    Alive = true;
+                                    ballPositon = new Vector2(-1, -1);
+                                    ballVelocity = new Vector2(0,0);
+                                }
+                                else
+                                {
+                                    NewGame();
+                                }
                             }
-
                         }
                     }
                     #endregion
@@ -591,17 +649,13 @@ namespace Adventure
 
                     if (TInput.KeyPressed(Keys.A))
                     {
-                        Running = false;
+                        Running2 = false;
                         systemState = 1;
                         Timer = 1000;
                     }
                 }
 
-
 			} 
-
-
-
 
 
 			#region closing tv
@@ -615,6 +669,7 @@ namespace Adventure
 						if(Timer < 1)
 						{
 							systemState = -1;
+                            Running = false;
 						}
 					}
 					else
@@ -642,8 +697,9 @@ namespace Adventure
 				}
 
 
-				if (TInput.KeyPressed (Keys.A)) {
-					Running = true;
+				if (TInput.KeyPressed (Keys.A)) 
+                {
+					Running2 = true;
 					Timer = 200;
 					if (systemState < 0)
 						systemState = 0;
@@ -653,18 +709,65 @@ namespace Adventure
 			#endregion
 		}
 
+
 		public void StartGame(int game) {
 			Running = true;
+			Running2 = true;
 			Timer = 200;
 			if (systemState < 0)
 				systemState = 0;
 			gameSelection = game;
 		}
 
+        public void NewGame()
+        {
+            Score = 0;
+            if (gameSelection == 1)
+            {
+                blockList.Clear();
+                for (int x = 0; x < 20; x++)
+                {
+                    for (int y = 0; y < 6; y++)
+                    {
+                        Color col = Color.Pink;
+                        if (y == 1) col = Color.LightSalmon;
+                        else if (y == 2) col = Color.Orange;
+                        else if (y == 3) col = Color.Yellow;
+                        else if (y == 4) col = Color.LightGreen;
+                        else if (y == 5) col = Color.LightBlue;
+
+                        blockList.Add(new Block(new Point(x * 30, 80 + y * 18), col));
+                    }
+                }
+
+                Lives = 3;
+                Alive = true;
+                ballPositon = new Vector2(-1, -1);
+                ballVelocity = new Vector2(0, 0);
+                paddlePosition = new Vector2(300 - 40, 500 - 50);
+            }
+            else
+            {
+                Alive = true;
+                Position = new Vector2(400, 300);
+                Velocity = new Vector2(0, 0);
+                systemState = 5;
+                Lives = 3;
+
+                asteroidList.Clear();
+                asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+                asteroidList.Add(new Asteroid(new Vector2(AdventureGame.RandomFloat(0, 800, 1), AdventureGame.RandomFloat(0, 600, 1)), new Vector2(AdventureGame.RandomFloat(-30, 30, 10), AdventureGame.RandomFloat(-30, 30, 10)), 2));
+            
+            }
+        }
+
 		public void Draw(SpriteBatch spriteBatch)
 		{
 			if (systemState > -1) 
-			spriteBatch.Draw(AdventureGame.tylerSquare, new Vector2(640, 360), new Rectangle(0, 0, 900, 700), Color.DarkGray, 0, new Vector2(900, 700) / 2, 1, SpriteEffects.None, 1);
+			spriteBatch.Draw(AdventureGame.tylerSquare, new Vector2(640 + 50, 360 + 35), new Rectangle(0, 0, 800, 650), Color.DarkGray, 0, new Vector2(900, 700) / 2, 1, SpriteEffects.None, 1);
+
+
 
 			spriteBatch.Draw (AdventureGame.tylerSquare, new Vector2(640, 360), new Rectangle (0, 0, (int)Size.X, (int)Size.Y), Color.Black, 0, new Vector2((int)Size.X, (int)Size.Y) / 2, 1, SpriteEffects.None, 1);
 
@@ -692,7 +795,7 @@ namespace Adventure
                         if (Alive)
                         {
                             int frame = 0;
-                            if (TInput.IsKeyDown(Keys.Z))
+                            if (TInput.IsKeyDown(Keys.Up))
                                 frame = 1;
                             spriteBatch.Draw(AdventureGame.tylerSheet, leftCorner + Position, new Rectangle(frame * 16, 208, 16, 24), Color.White, Rotation, new Vector2(8, 8), 1, SpriteEffects.None, 1);
                         }
@@ -722,11 +825,10 @@ namespace Adventure
                 }
 
 
-
                 if (systemState == 4)
                 {
 				
-                    spriteBatch.DrawString(AdventureGame.tylerFont, "PRESS START", leftCorner + new Vector2(400, 160), Color.White, 0, AdventureGame.tylerFont.MeasureString("PRESS START") / 2, 1.5f, SpriteEffects.None, 1);
+                    spriteBatch.DrawString(AdventureGame.tylerFont, "PRESS ENTER", leftCorner + new Vector2(400, 160), Color.White, 0, AdventureGame.tylerFont.MeasureString("PRESS START") / 2, 1.5f, SpriteEffects.None, 1);
 
                 }
                 else if (systemState == 6)
@@ -757,7 +859,7 @@ namespace Adventure
             }
             #endregion
 
-            #region asteroids draw
+            #region breakout draw
             else if (gameSelection == 1)
             {
                 if (systemState > 3)
@@ -770,9 +872,11 @@ namespace Adventure
 
                     spriteBatch.Draw (AdventureGame.tylerSquare, new Vector2(640, 360 + 50), new Rectangle (0, 0, (int)Size.X - 200, (int)Size.Y - 100), Color.Black, 0, new Vector2((int)Size.X - 200, (int)Size.Y - 100) / 2, 1, SpriteEffects.None, 1);
 
-
-                    spriteBatch.DrawString (AdventureGame.tylerFont3, "000", new Vector2 (640 - 200 + 10, 360 - 300), Color.White, 0, AdventureGame.tylerFont.MeasureString ("") / 2, 3, SpriteEffects.None, 1);
-                    spriteBatch.DrawString (AdventureGame.tylerFont3, "5", new Vector2 (640 + 50, 360 - 300), Color.White, 0, AdventureGame.tylerFont.MeasureString ("") / 2, 3, SpriteEffects.None, 1);
+                    string score = Score.ToString();
+                    if(score.Length < 3) score = "0" + score;
+                    if(score.Length < 3) score = "0" + score;
+                    spriteBatch.DrawString (AdventureGame.tylerFont3, score, new Vector2 (640 - 50, 360 - 300), Color.White, 0, new Vector2(AdventureGame.tylerFont.MeasureString (score).X / 2,0), 3, SpriteEffects.None, 1);
+                    spriteBatch.DrawString (AdventureGame.tylerFont3, Lives.ToString(), new Vector2 (640 + 50, 360 - 300), Color.White, 0, AdventureGame.tylerFont.MeasureString ("") / 2, 3, SpriteEffects.None, 1);
                     spriteBatch.DrawString (AdventureGame.tylerFont3, "1", new Vector2 (640 + 180, 360 - 300), Color.White, 0, AdventureGame.tylerFont.MeasureString ("") / 2, 3, SpriteEffects.None, 1);
 
 
@@ -795,6 +899,10 @@ namespace Adventure
                     spriteBatch.Draw (AdventureGame.tylerSquare, new Vector2(640 - 300 + paddlePosition.X, 360 - 200 + paddlePosition.Y), new Rectangle (0, 0, 80, 15), 
                         Color.Pink, 0, new Vector2(0, 0), 1, SpriteEffects.None, 1);
 
+                    if(!Alive && Lives == 0)
+                    {
+
+                    }
                 }
             }
             #endregion
@@ -806,8 +914,8 @@ namespace Adventure
 
 
             // tv border
-            if (systemState > -1) // if (Size.X > 1) 
-                spriteBatch.Draw(AdventureGame.tylerSheet, new Vector2(640, 360), new Rectangle(0, 324, 900, 700), Color.White, 0, new Vector2(900, 700) / 2, 1, SpriteEffects.None, 1);
+            if (systemState > -1)
+                spriteBatch.Draw(AdventureGame.tylerSheet, new Vector2(640 - 2, 360 - 3), new Rectangle(0, 324, 1030, 700), Color.White, 0, new Vector2(900, 700) / 2, 1, SpriteEffects.None, 1);
 		}
 
 
