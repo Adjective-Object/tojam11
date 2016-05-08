@@ -5,8 +5,8 @@ namespace Adventure
 {
 	public class ChickenGangMember : CharacterBehavior
 	{
-        double speedx = 300;
-        double speedy = 190;
+        double speedx = 150;
+        double speedy = 95;
 
         Vector2 targetPosition;
         Vector2 startPosition;
