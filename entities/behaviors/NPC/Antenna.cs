@@ -9,13 +9,23 @@ namespace Adventure
 				"Television Antenna",
 				new SpeechText.Option[] {
 					new SpeechText.Option("Take it", () => {
-						this.EmitSpeech("you take the antenna", 
-							SpeechText.SpeechMode.PLAYER_CONTROLLED);
-						Inventory.Add(ItemID.ANTENNA);
-						this.entity.Kill();
+						switch(player.heldItem) {
+						case ItemID.HAMMER:
+							this.EmitSpeech("you smash the antenna off the TV with the hammer");
+							Inventory.Add(ItemID.ANTENNA);
+							this.entity.Kill();
+							break;
+						case ItemID.SCREWDRIVER:
+							this.EmitSpeech("you try to use the screwdriver, but the screws are flathead");
+							break;
+						case ItemID.NO_ITEM:
+						default:
+							this.EmitSpeech("you try to take the antenna, but it's screwed on to the TV");
+							break;
+						}
 					}),
 					new SpeechText.Option("Don't take it", () => {
-						this.EmitSpeech("you don't take the antenna", 
+						this.EmitSpeech("you leave the antenna alone", 
 							SpeechText.SpeechMode.PLAYER_CONTROLLED);
 					}),
 				},

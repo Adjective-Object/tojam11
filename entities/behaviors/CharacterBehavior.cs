@@ -23,7 +23,7 @@ namespace Adventure
 			character = (Character) entity;
 		}
 
-		override public void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT, Func<bool> walkAwayCallback = null, Action enterCallback = null) {
+		override public void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.PLAYER_CONTROLLED, Func<bool> walkAwayCallback = null, Action enterCallback = null) {
 			base.EmitSpeech(text, mode, walkAwayCallback, enterCallback);
 			((Character) entity).PlayAnimHead("talk");
 		}

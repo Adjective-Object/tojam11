@@ -24,7 +24,7 @@ namespace Adventure
 			}
 		}
 
-		public virtual void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.AMBIENT, Func<bool> walkAwayCallback = null, Action enterCallback = null) {
+		public virtual void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.PLAYER_CONTROLLED, Func<bool> walkAwayCallback = null, Action enterCallback = null) {
 			walkAwayCallback = (walkAwayCallback == null) 
 				? walkAway(AdventureGame.Player, this.entity, () => {}) 
 				: walkAwayCallback;

@@ -275,8 +275,8 @@ namespace Adventure
         public void initGame()
         {
             // Move player to start position
-            player.position = new Vector2(3000, 1000);
-            // player.position = new Vector2(825, 963);
+            // player.position = new Vector2(3000, 1000);
+            player.position = new Vector2(825, 963);
 
             // add all the entities on the map
             this.InitEntities();
@@ -366,13 +366,13 @@ namespace Adventure
 		private void InitEntities() {
 			entities.Add (player);
 
-			entities.Add (new Character (new Vector2 (1240, 730),
+			entities.Add (new Character (new Vector2 (1240, 630),
 				headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color (180, 190, 170), new Color (255, 200, 200) },
                 bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(200, 100, 255), new Color(255, 200, 255) },
 				new CatNPC(catSounds)
 			));
 
-			entities.Add (new Character (new Vector2 (1500, 740),
+			entities.Add (new Character (new Vector2 (1500, 640),
                 headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(20, 250, 30) },
                 bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(100, 60, 190), new Color(255, 200, 255) },
 				new BroNPC(catSounds)
@@ -417,7 +417,7 @@ namespace Adventure
 			entities.Add (new StaticEntity (
 				"environment/hammer",
 				new Vector2 (3196, 878),
-				new GenericItem(ItemID.BEER, "I sure wish I could pick up this hammer."),
+				new GenericItem(ItemID.HAMMER, "I sure wish I could pick up this hammer."),
 				new Vector2(0, -30), new Vector2(0, -90)
 			));
 
