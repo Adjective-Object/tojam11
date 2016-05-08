@@ -8,6 +8,7 @@ namespace Adventure
 		void Update (GameTime gameTime);
 		void Initialize ();
 		void LoadContent ();
+		void OnEnter ();
 		void Draw (GameTime gameTime);
 	}
 }

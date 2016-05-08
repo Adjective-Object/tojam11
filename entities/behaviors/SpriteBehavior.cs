@@ -63,6 +63,16 @@ namespace Adventure
 		public Boolean IsDisabled() {
 			return this.speechReference != null;
 		}
+
+
+
+
+		// Unique end of game message 
+		int endGameMsgInd = -1;
+		protected void LogEndMessage(String msg) {
+			endGameMsgInd = AdventureGame.instance.AddEndGameMessage(endGameMsgInd, msg);
+		}
+
 	}
 }
 

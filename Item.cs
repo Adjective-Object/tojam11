@@ -25,6 +25,8 @@ namespace Adventure
 			items.Add (ItemID.SCREWDRIVER, 	new Item (content.Load<Texture2D>("items/screwdriver"), "Screwdriver", 	"A phillips-head screwdriver"));
 			items.Add (ItemID.HAMMER, 		new Item (content.Load<Texture2D>("items/hammer"), 		"Hammer", 		"A Hammer. It's for Smashing Things."));
 			items.Add (ItemID.CHIP, 		new Item (content.Load<Texture2D>("items/chip"), 		"Chip", 		"A Tortilla Chip."));
+			items.Add (ItemID.STRINGS, 		new Item (content.Load<Texture2D>("items/strings"), 	"Guitar Strings", "Strings to a guitar."));
+			items.Add (ItemID.MICROWAVE, 	new Item (content.Load<Texture2D>("environment/microwave"), 	"Microwave", 	"It's a microwave."));
 
 			foreach (ItemID k in items.Keys) {
 				items [k].type = k;
@@ -52,7 +54,8 @@ namespace Adventure
 		KNIFE, KNIFE_USED,
 		BEER, POISON, ANTENNA,
 		SCREWDRIVER, HAMMER,
-		CHIP
+		CHIP, STRINGS,
+		MICROWAVE
 	}
 
 }
