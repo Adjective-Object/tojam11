@@ -27,22 +27,26 @@ namespace Adventure
 			}
 		}
 
+		public const float deadZone = 0.1f;
+
 		public static void Update() {
 			// switch the last frame and current frame dictionaries
 			Dictionary<Key, Boolean> tmp = pressedLastFrame;
 			pressedLastFrame = pressedThisFrame;
 			pressedThisFrame = tmp;
 
+			GamePadState gps = GamePad.GetState(PlayerIndex.One);
+
 			// re-evaluate the current frame dictionary
 			KeyboardState state = Keyboard.GetState ();
-			pressedThisFrame[Key.ENTER] = state.IsKeyDown (Keys.Enter);
-			pressedThisFrame[Key.UP] 	= state.IsKeyDown (Keys.Up) || state.IsKeyDown(Keys.W);
-			pressedThisFrame[Key.DOWN] 	= state.IsKeyDown (Keys.Down) || state.IsKeyDown(Keys.S);
-			pressedThisFrame[Key.LEFT] 	= state.IsKeyDown (Keys.Left) || state.IsKeyDown(Keys.A);
-			pressedThisFrame[Key.RIGHT] = state.IsKeyDown (Keys.Right) || state.IsKeyDown(Keys.D);
-			pressedThisFrame[Key.TAB]   = state.IsKeyDown (Keys.Tab);
-			pressedThisFrame[Key.SHIFT] = state.IsKeyDown (Keys.LeftShift) || state.IsKeyDown (Keys.RightShift);
-			pressedThisFrame[Key.I] 	= state.IsKeyDown (Keys.I);
+			pressedThisFrame[Key.ENTER] = state.IsKeyDown (Keys.Enter) || gps.Buttons.A == ButtonState.Pressed;
+			pressedThisFrame[Key.UP] 	= state.IsKeyDown (Keys.Up) || state.IsKeyDown(Keys.W) || gps.ThumbSticks.Left.Y < -deadZone;
+			pressedThisFrame[Key.DOWN] 	= state.IsKeyDown (Keys.Down) || state.IsKeyDown(Keys.S) || gps.ThumbSticks.Left.Y > deadZone;
+			pressedThisFrame[Key.LEFT] 	= state.IsKeyDown (Keys.Left) || state.IsKeyDown(Keys.A) || gps.ThumbSticks.Left.X > deadZone;
+			pressedThisFrame[Key.RIGHT] = state.IsKeyDown (Keys.Right) || state.IsKeyDown(Keys.D) || gps.ThumbSticks.Left.X < -deadZone;
+			pressedThisFrame[Key.TAB]   = state.IsKeyDown (Keys.Tab) || gps.Buttons.RightShoulder == ButtonState.Pressed;
+			pressedThisFrame[Key.SHIFT] = state.IsKeyDown (Keys.LeftShift) || state.IsKeyDown (Keys.RightShift) || gps.Buttons.LeftShoulder == ButtonState.Pressed;
+			pressedThisFrame[Key.I] 	= state.IsKeyDown (Keys.I) || gps.Buttons.X == ButtonState.Pressed;
 			pressedThisFrame[Key.DEBUG] = state.IsKeyDown (Keys.Z);
 
 		}
