@@ -13,8 +13,20 @@ namespace Adventure
 			get { return false; }
 		}
 
-		public virtual int sortOrder {
+		public virtual int SortingLayer {
 			get { return 0; }
+		}
+
+		Boolean sortOrderForced = false;
+		float forcedSort = -1;
+		public float SortingY {
+			get {
+				return (this.sortOrderForced) ? forcedSort : this.position.Y ;
+			}
+			set {
+				this.sortOrderForced = true;
+				this.forcedSort = value;
+			}
 		}
 
 		public Boolean alive {

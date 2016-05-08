@@ -49,7 +49,7 @@ namespace Adventure
 		static double AMBIENT_SPEECH_LIFETIME = 3.0;
 
 
-		override public int sortOrder {
+		override public int SortingLayer {
 			get { return 1; }
 		}
 		public Boolean DoneEmitting {

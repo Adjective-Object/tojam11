@@ -22,7 +22,7 @@ namespace Adventure
 
 			this.spritePath = spritePath;
 			this.spriteOffset = spriteOffset.GetValueOrDefault(new Vector2(0,0));
-			this.speechOffset = speechOffset.GetValueOrDefault(new Vector2(0,0));
+			this.speechOffset = speechOffset.GetValueOrDefault(new Vector2(0,-70));
 		}
 
 		override public void Load(ContentManager content, SpriteBatch batch) {

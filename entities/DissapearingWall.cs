@@ -44,10 +44,10 @@ namespace Adventure
 				Color.White * this.opacity.current);
 		}
 
-		public override int sortOrder {
+		public override int SortingLayer {
 			get {
 				if (this.container.Contains (this.following.position)) {
-					return this.following.sortOrder - 1;
+					return this.following.SortingLayer - 1;
 				} else {
 					return 0;
 				}

@@ -23,8 +23,7 @@ namespace Adventure
 			get { return instance.player; }
 		}
 
-		SpriteFont defaultFont;
-        SpriteFont titleFont;
+		SpriteFont defaultFont, titleFont, tinyFont;
 
 		SoundFont defaultSoundFont;
 
@@ -166,6 +165,7 @@ namespace Adventure
 
 			//Tell font loader to load Monaco as defaulft font
 			defaultFont = Content.Load<SpriteFont>("Monaco");
+			tinyFont = Content.Load<SpriteFont>("MonacoTiny");
             titleFont = Content.Load<SpriteFont>("MonacoTitle");
 			SpeechText.LoadFont("Monaco", defaultFont);
 
@@ -198,6 +198,7 @@ namespace Adventure
 		}
 
 
+		Vector2 previousMousePos = new Vector2(0,0);
 
 
 
@@ -237,13 +238,12 @@ namespace Adventure
                 entities.AddRange(toSpawn);
                 toSpawn.Clear();
 				entities.Sort((BaseEntity e, BaseEntity f) => {
-					if (e.sortOrder == f.sortOrder) {
-						return e.position.Y.CompareTo(f.position.Y);
+					if (e.SortingLayer == f.SortingLayer) {
+						return e.SortingY.CompareTo(f.SortingY);
 					} else {
-						return e.sortOrder.CompareTo(f.sortOrder);
+						return e.SortingLayer.CompareTo(f.SortingLayer);
 					}
 				});
-						
 
                 Inventory.Update(gameTime);
 
@@ -257,6 +257,31 @@ namespace Adventure
                     currentState = GameState.StartGame;
                 }
             }
+
+			// move objects around w/ debug mode
+			Point mousePos = Mouse.GetState ().Position;
+			Vector2 mp = new Vector2(
+				mousePos.X + gameCamera.position.X - ScreenBounds.Width/2,
+				mousePos.Y + gameCamera.position.Y - ScreenBounds.Height / 2);
+
+			if (Input.KeyDown (Key.DEBUG)) {
+				this.IsMouseVisible = true;
+				float dist = 10000000;
+				BaseEntity closest = entities [0];
+				foreach (BaseEntity e in this.entities) {
+					if (e != gameCamera && (e.position - previousMousePos).Length () < dist) {
+						dist = (e.position - previousMousePos).Length ();
+						closest = e;
+					}
+				}
+
+				if (Input.KeyDown (Key.SHIFT)) {
+					closest.position += (mp - previousMousePos);
+				}
+			} else {
+				this.IsMouseVisible = false;
+			}
+			previousMousePos = mp;
 
 			// update base
 			base.Update (gameTime);
@@ -351,12 +376,17 @@ namespace Adventure
                 foreach (BaseEntity e in this.entities)
                 {
                     e.Draw(entityBatch, gameTime);
+					if (Input.KeyDown(Key.DEBUG)) {
+						entityBatch.DrawString (tinyFont, e.position.ToString (), e.position, Color.AliceBlue);
+					}
                 }
                 entityBatch.End();
 
                 entityBatch.Begin();
                 Inventory.Draw(entityBatch);
                 entityBatch.End();
+
+
 
             }
             else if (currentState == GameState.EndGame)
@@ -411,7 +441,7 @@ namespace Adventure
 				new BroNPC(catSounds)
 			));
 
-			entities.Add (new Character (new Vector2 (1450, 800),
+			entities.Add (new Character (new Vector2 (1555, 1005),
                 headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) },
                 bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(120, 120, 30), new Color(255, 200, 255) },
 				new HipsterNPC(catSounds)
@@ -441,13 +471,13 @@ namespace Adventure
 
 			entities.Add (new StaticEntity (
 				"environment/guitar",
-				new Vector2 (1100, 1100),
+				new Vector2 (1162, 1057),
 				new GenericItem("it's a guitar.")
 			));
 
 			entities.Add (new StaticEntity (
 				"environment/catnip",
-				new Vector2 (1500, 1100),
+				new Vector2 (2571, 939),
 				new GenericItem("Mmm, deliious catnip...", "Too bad you're not a cat.")
 			));
 
@@ -474,14 +504,16 @@ namespace Adventure
 
 			entities.Add (new StaticEntity (
 				"environment/soap",
-				new Vector2 (2000, 1100),
+				new Vector2 (1143, 465),
 				new GenericItem("SlipperyCo(tm) scrubbing soap.", "The label says \"Don't Drop it\".")
 			));
 
 			entities.Add (new StaticEntity (
 				"environment/microwave",
-				new Vector2 (1600, 1100),
-				new GenericItem("A microwave.", "It's called that because you need a magnifying glass to see the waves.")
+				new Vector2 (2031, 922),
+				new GenericItem("A microwave.", "It's called that because you need a magnifying glass to see the waves."),
+				null,
+				new Vector2(0, -70)
 			));
 
 			entities.Add (new StaticEntity (
@@ -489,6 +521,32 @@ namespace Adventure
 				new Vector2 (2100, 1100),
 				new GenericItem ("Bleach", "\"Warning, do not drink\"")
 			));
+
+
+
+
+			// table and things on the table
+			entities.Add (new DumbSprite (
+				"environment/kitchen_table",
+				new Vector2 (2316, 1137)));
+
+			StaticEntity chips, dip;
+			chips = new StaticEntity (
+				"environment/chip_bowl",
+				new Vector2 (2251, 1080),
+				new GenericItem ("A Bowl of chips")
+			);
+			dip = new StaticEntity (
+				"environment/salsa",
+				new Vector2 (2376, 1077),
+				new GenericItem ("Ooh, some salsa")
+			);
+
+			chips.SortingY = 1138;
+			dip.SortingY = 1138;
+			entities.Add (chips);
+			entities.Add (dip);
+			
 
 		}
 
