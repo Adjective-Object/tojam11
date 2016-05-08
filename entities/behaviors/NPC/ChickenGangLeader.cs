@@ -12,6 +12,13 @@ namespace Adventure
 			// turn to face player
 			character.facingLeft = player.position.X < character.position.X;
 
+            if (GameStateDictionary.instance.getState("penguin_racist").Equals("yes"))
+            {
+                EmitSpeech("I heard you don't like penguins either *high fives*");
+                LogEndMessage("Found out the chickens are racist.");
+                return;
+            }
+
 			// do conversation
 			switch (interactionCount) {
 			case 0:
