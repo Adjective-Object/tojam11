@@ -25,7 +25,7 @@ namespace Adventure
             {
                 EmitSpeechOption("...",
                         new SpeechText.Option[] {
-					                    new SpeechText.Option("So do you like Linux?", () => doRant = true),
+					                    new SpeechText.Option("So do you like Linux?", () => {doRant = true; AdventureGame.instance.AddEndGameMessage("Triggered the penguin.");}),
 					                },
                         walkAway(
                         player, character,

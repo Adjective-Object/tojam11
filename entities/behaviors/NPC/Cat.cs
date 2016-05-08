@@ -33,6 +33,7 @@ namespace Adventure
             else if (GameStateDictionary.instance.getState("cat_dtf").Equals("yes"))
             {
                 EmitSpeech("Call me after the party ;)");
+                AdventureGame.instance.AddEndGameMessage("Got the cat's phone number.");
             }
             else
             {
