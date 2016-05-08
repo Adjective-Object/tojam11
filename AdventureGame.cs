@@ -518,8 +518,10 @@ namespace Adventure
 
 			entities.Add (new StaticEntity (
 				"environment/bleach",
-				new Vector2 (2100, 1100),
-				new GenericItem ("Bleach", "\"Warning, do not drink\"")
+				new Vector2 (2374, 956),
+				new GenericItem ("Bleach", "\"Warning, do not drink\""),
+				new Vector2(0, -100),
+				new Vector2(0, -177)
 			));
 
 
@@ -530,22 +532,34 @@ namespace Adventure
 				"environment/kitchen_table",
 				new Vector2 (2316, 1137)));
 
-			StaticEntity chips, dip;
+			StaticEntity chips, dip, punch;
 			chips = new StaticEntity (
 				"environment/chip_bowl",
 				new Vector2 (2251, 1080),
-				new GenericItem ("A Bowl of chips")
+				new ChipBowl(),
+				null, null,
+				new Dictionary<String, String>() {
+					{"empty", "environment/empty_bowl"}
+				}
 			);
 			dip = new StaticEntity (
 				"environment/salsa",
-				new Vector2 (2376, 1077),
+				new Vector2 (2388, 1091),
 				new GenericItem ("Ooh, some salsa")
+			);
+			punch = new StaticEntity (
+				"environment/punch_bowl",
+				new Vector2 (2310, 1114),
+				new GenericItem ("A bowl of punch.", "It smells like rum?"),
+				null, new Vector2(0, -100)
 			);
 
 			chips.SortingY = 1138;
+			punch.SortingY = 1138;
 			dip.SortingY = 1138;
 			entities.Add (chips);
 			entities.Add (dip);
+			entities.Add (punch);
 			
 
 		}

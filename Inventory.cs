@@ -8,7 +8,7 @@ namespace Adventure
 {
 	public class Inventory
 	{
-		public static List<ItemID> contents = new List<ItemID>() {ItemID.NO_ITEM};
+		public static IList<ItemID> contents = new List<ItemID>() {ItemID.NO_ITEM};
 		public static int capacity = 5;
 		public static int selector = 0;
 		public static Boolean active;
@@ -23,9 +23,13 @@ namespace Adventure
 			get { return contents.Count >= capacity; }
 		}
 
-		public static void Add(ItemID i) {
-			contents.Add (i);
-			deferredActivation = true;
+		public static Boolean Add(ItemID i) {
+			if (contents.Count - 1 < capacity) {
+				contents.Add (i);
+				deferredActivation = true;
+				return true;
+			}
+			return false;
 		}
 
 		public static Item SelectedItem {

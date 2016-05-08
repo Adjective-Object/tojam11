@@ -13,7 +13,7 @@ namespace Adventure
 			this.sounds = (sounds == null) ? AdventureGame.DefaultSoundFont : sounds;
 		}
 
-		public virtual void BindToEntity(BaseEntity entity) {
+		public virtual void BindToEntity(InteractableEntity entity) {
 			this.entity = entity;
 		}
 

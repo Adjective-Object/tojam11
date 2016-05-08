@@ -6,7 +6,7 @@ namespace Adventure
 	public interface EntityBehavior
 	{
 		Boolean IsDisabled();
-		void BindToEntity(BaseEntity entity);
+		void BindToEntity(InteractableEntity entity);
 		void Update(GameTime elapsed);
 		void RespondToInteraction(Character player);
 	}

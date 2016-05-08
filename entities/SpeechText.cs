@@ -237,14 +237,17 @@ namespace Adventure
 		public void DrawStringBkg(SpriteBatch batch, Vector2 lineOrigin, String str, Double[] ages, int ageArrayOffset = 0) {
 			float targetWidth = LETTER_OFFSET.X * str.Length + LINE_MARGIN.X * 2;
 			if (!this.IsDismissed) {
+				float t = (float) (Math.Min(1, ages [ageArrayOffset] / ANIMATION_TIME));
+				t = (1 - (1-t) * (1-t));
 				batch.Draw (blackRect, null, new Rectangle (
 					(int)(lineOrigin.X - LINE_MARGIN.X),
 					(int)(lineOrigin.Y - LINE_MARGIN.Y),
-					(int)(Math.Min (1, (ages [ageArrayOffset] / ANIMATION_TIME)) * targetWidth),
+					(int)(t * targetWidth),
 					(int)(LINE_HEIGHT.Y + LINE_MARGIN.Y * 2)
 				));
 			} else {
 				float t = Math.Min(1, (float) ((this.ages[this.ages.Length - 1] - dismissedTime) / ANIMATION_TIME));
+				t = (1 - (1-t) * (1-t));
 				batch.Draw (blackRect, null, new Rectangle (
 					(int)(lineOrigin.X - LINE_MARGIN.X + t * targetWidth),
 					(int)(lineOrigin.Y - LINE_MARGIN.Y),

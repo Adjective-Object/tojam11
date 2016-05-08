@@ -18,7 +18,7 @@ namespace Adventure
 		}
 
 		public Character character;
-		override public void BindToEntity(BaseEntity entity) {
+		override public void BindToEntity(InteractableEntity entity) {
 			base.BindToEntity(entity);
 			character = (Character) entity;
 		}
