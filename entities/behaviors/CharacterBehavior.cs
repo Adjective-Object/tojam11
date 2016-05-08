@@ -73,6 +73,8 @@ namespace Adventure
 
 		protected int interactionCount;
 
+
+
 		// misc helpers for stuff that gets used a lot
 		protected void SpeakAndAdvance(Character player, String str) {
 			EmitSpeech (
@@ -91,6 +93,9 @@ namespace Adventure
 			};
 		}
 
+
+
+		// random speech from end of list
 		static Random r = new Random();
 		protected void EmitRandom(String[] options, 
 			SpeechText.SpeechMode mode = SpeechText.SpeechMode.PLAYER_CONTROLLED,

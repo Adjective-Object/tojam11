@@ -29,7 +29,13 @@ namespace Adventure
 					EmitSpeech("yo, where did that chip go?");
 					expectingChip = false;
 				} else {
+					GameStateDictionary.Increment ("fed_chips");
 					EmitSpeech("Thanks, that hit the spot");
+					if (GameStateDictionary.GetNum("fed_chips") == 1) {
+						LogEndMessage("Fed the high guy a chip");
+					} else {
+						LogEndMessage("Fed the high guy " + GameStateDictionary.GetNum("fed_chips") + " chips");
+					}
 					expectingChip = false;
 					Inventory.RemoveCurrent();
 				}

@@ -120,8 +120,6 @@ namespace Adventure
 			// initialize the static Input class
 			Input.Initialize();
 
-			CharSelect.Initialize ();
-
 			headSprites = new List<string>();
 			headSprites.Add("bunny");
 			headSprites.Add("kitty");
@@ -129,14 +127,14 @@ namespace Adventure
 			headSprites.Add("mouse");
 			headSprites.Add("raccoon");
 			headSprites.Add("fish");
-			headSprites.Add("beaver");
-            headSprites.Add("goat");
-            headSprites.Add("frog");
             headSprites.Add("fox");
             headSprites.Add("dog");
             headSprites.Add("penguin");
             headSprites.Add("rooster");
             headSprites.Add("chicken");
+            headSprites.Add("frog");
+			headSprites.Add("beaver");
+            headSprites.Add("goat");
 
 			bodySprites = new List<string>();
 			bodySprites.Add("male");
@@ -154,11 +152,13 @@ namespace Adventure
                 bodySprites[0], new Color[] { new Color(255, 255, 255), new Color(255, 255, 200) },
 				new PlayerBehavior(catSounds)
             );
-            player.Load(Content, entityBatch);
-			
+			CharSelect.Initialize ();
+			CharSelect.OnEnter ();
+
 			// initialize the camera
 			gameCamera = new Camera(player, new int [] {600, 1000, 1500});
 			this.entities.Add (gameCamera);
+
 
 			// init game
 			base.Initialize ();
@@ -172,6 +172,8 @@ namespace Adventure
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			entityBatch = new SpriteBatch (GraphicsDevice);
+
+            player.Load(Content, entityBatch);
 
 			Item.LoadContent(Content);
 			Inventory.LoadContent (Content, entityBatch);
@@ -227,7 +229,8 @@ namespace Adventure
 
 		Vector2 previousMousePos = new Vector2(0,0);
 
-
+		Jitter<float> reeJitterX = new Jitter<float>(-2, 2);
+		Jitter<float> reeJitterY = new Jitter<float>(-2, 2);
 
 		/// <summary>
 		/// Allows the game to run logic such as updating the world,
@@ -279,9 +282,13 @@ namespace Adventure
             }
             else if (currentState == GameState.EndGame)
             {
+				reeJitterX.Update (gameTime);
+				reeJitterY.Update (gameTime);
+
                 if (Input.KeyPressed(Key.ENTER))
                 {
                     currentState = GameState.StartGame;
+					initStart ();
                 }
             }
 
@@ -315,10 +322,21 @@ namespace Adventure
 		}
 
 
-        public void AddEndGameMessage(String message)
+        public int AddEndGameMessage(String message)
         {
+			int i = endGameMessages.Count;
             endGameMessages.Add(message);
+			return i;
         }
+
+		public int AddEndGameMessage(int index, String message) {
+			if (index == -1) {
+				return AddEndGameMessage (message);
+			} else {
+				endGameMessages [index] = message;
+				return index;
+			}
+		}
 
         /**
          * Call to cause end of game.
@@ -361,6 +379,10 @@ namespace Adventure
 
             endGameMessages.Clear();
         }
+
+		public void initStart() {
+			CharSelect.OnEnter ();
+		}
 
 		Random r = new Random ();
 		Color oldBkg = new Color (0, 0, 0);
@@ -409,11 +431,6 @@ namespace Adventure
                 }
                 entityBatch.End();
 
-                entityBatch.Begin();
-                Inventory.Draw(entityBatch);
-                entityBatch.End();
-
-
 				entityBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
 					DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
@@ -425,10 +442,16 @@ namespace Adventure
 					entityBatch.DrawString (this.defaultFont, "Press 'esc' to close", new Vector2(10, 10), Color.White);
 				}
 				if (phoneGUI.Running) {
-					entityBatch.DrawString (this.defaultFont, "Press 'p' to close", new Vector2(10, 10), Color.White);
+					entityBatch.DrawString (this.defaultFont, "Press 'p' to close", new Vector2 (10, 0), Color.White);
+				} else {
+					entityBatch.DrawString (this.defaultFont, "press 'p' for phone", new Vector2(10, ScreenBounds.Height - 40), Color.White);
 				}
 
 				entityBatch.End ();
+
+                entityBatch.Begin();
+                Inventory.Draw(entityBatch);
+                entityBatch.End();
 
             }
             else if (currentState == GameState.EndGame)
@@ -443,7 +466,10 @@ namespace Adventure
 
                 if (endGameMessages.Count == 0)
                 {
-                    entityBatch.DrawString(defaultFont, "You did nothing... BETTER THAN TALKING TO NORMIES, REEEE", new Vector2(1280 / 2 - defaultFont.MeasureString("You did nothing... BETTER THAN TALKING TO NORMIES, REEEE").X / 2, 250), Color.White);
+                    entityBatch.DrawString(defaultFont, "You did nothing... BETTER THAN TALKING TO NORMIES, REEEE", 
+						new Vector2(1280 / 2 - defaultFont.MeasureString("You did nothing... BETTER THAN TALKING TO NORMIES, REEEE").X / 2, 250) + 
+						new Vector2(reeJitterX.current, reeJitterY.current), 
+						Color.White);
                 }
                 else
                 {
@@ -564,36 +590,34 @@ namespace Adventure
 			// pointless flavor items
 			entities.Add (new StaticEntity (
 				"environment/guitar",
-				new Vector2 (1162, 1057),
-				new GenericItem("it's a guitar.")
+				new Vector2 (1652, 471),
+				new Guitar()
 			));
 
 			entities.Add (new StaticEntity (
 				"environment/catnip",
 				new Vector2 (2571, 939),
-				new GenericItem("Mmm, deliious catnip...", "Too bad you're not a cat.")
+				new GenericItem("Mmm, delicious catnip...", "Too bad you're not a cat.")
 			));
 			
 			entities.Add (new StaticEntity (
 				"environment/soap",
-				new Vector2 (1143, 465),
-				new GenericItem("SlipperyCo(tm) scrubbing soap.", "The label says \"Don't Drop it\".")
+				new Vector2 (1111, 1402),
+				new GenericItem("SlipperyCo(tm) cleaning detergent.", "The label says \"Don't Drop it\".")
 			));
 
 			entities.Add (new StaticEntity (
 				"environment/microwave",
 				new Vector2 (2031, 922),
-				new GenericItem("A microwave.", "It's called that because you need a magnifying glass to see the waves."),
+				new GenericItem(ItemID.MICROWAVE, "A microwave.", "It's called that because you need a magnifying glass to see the waves."),
 				null,
 				new Vector2(0, -70)
 			));
 
 			entities.Add (new StaticEntity (
 				"environment/bleach",
-				new Vector2 (2374, 956),
-				new GenericItem ("Bleach", "\"Warning, do not drink\""),
-				new Vector2(0, -50),
-				new Vector2(0, -127)
+				new Vector2 (1172, 1402),
+				new GenericItem ("Bleach", "\"Warning, do not drink\"")
 			));
 
 
@@ -622,9 +646,117 @@ namespace Adventure
 				new Vector2(0, -30), new Vector2(0, -90)
 			));
 
+			//bathtub
+			entities.Add (new StaticEntity (
+				null, new Vector2 (986, 560),
+				new GenericItem ("Whee I'm in a bathtub")
+			));
+
+			//dresser
+			entities.Add (new StaticEntity (
+				null, new Vector2 (1549, 702),
+				new GenericItem ("I shouldn't be going through other people's clothes")
+			));
+
+			//bed
+			entities.Add (new StaticEntity (
+				null, new Vector2 (1748, 541),
+				new GenericItem (
+					"I wonder if anyone is going to be using this tonight", 
+					"....", "That's inappropriate")
+			));
+
+			//couch
+			entities.Add (new StaticEntity (
+				null, new Vector2 (1283, 1030),
+				new GenericItem(
+					"A comfy looking couch"
+				)
+			));
+
+			//speakers
+			entities.Add (new StaticEntity (
+				null, new Vector2 (1553, 890),
+				new GenericItem(
+					"These tunes are bumpin'"
+				)
+			));
+
+			//cactus
+			entities.Add (new StaticEntity (
+				null, new Vector2 (1971, 920),
+				new GenericItem(
+					"Prickly"
+				)
+			));
+
+			//switches
+			entities.Add (new StaticEntity (
+				null, new Vector2 (988, 1399),
+				new GenericItem(
+					"I feel like these switches would have made a good minigame"
+				)
+			));
+
+			// laundry machines
+			entities.Add (new StaticEntity (
+				null, new Vector2 (999, 1625),
+				new GenericItem(
+					"Looks like mo is doing laundry again"
+				)
+			));
+
+			//picture in bathroom
+			entities.Add (new StaticEntity (
+				null, new Vector2 (1105, 500),
+				new GenericItem(
+					"So soothing...",
+					"Makes me want to poop"
+				),
+				null, new Vector2(0, -150)
+			));
+
+
+			//plates
+			entities.Add (new StaticEntity (
+				null, new Vector2 (2239, 923),
+				new GenericItem(
+					"Everything you'd need to eat off or out of"
+				),
+				null, new Vector2(0, -120)
+			));
+
+
+			//crop circle
+			DumbSprite cropCircle = new DumbSprite(
+				"environment/crop_circle_0", new Vector2 (2649, 1181)
+			);
+			cropCircle.SortingY = -1000;
+			entities.Add (cropCircle);
+
+			StaticEntity transmitter = new StaticEntity (
+				"environment/transmitter_0", new Vector2 (2649, 1161), new Transmitter(),
+				null, null, new Dictionary<string,string> {
+					{"microwave", "environment/transmitter_1"},
+					{"wire", "environment/transmitter_2"},
+					{"antenna", "environment/transmitter_3"}
+				}
+			);
+			entities.Add (transmitter);
 
 
 
+
+
+
+
+
+			entities.Add (new StaticEntity (
+				null,
+				new Vector2 (2150, 930),
+				new GenericItem (ItemID.KNIFE, "You rummage around in the kitchen drawer", "...", "Is this a knife?"),
+				null, new Vector2 (0, 0)
+			));
 
 			// table and things on the table
 			entities.Add (new DumbSprite (
@@ -654,13 +786,12 @@ namespace Adventure
 			);
 
 			chips.SortingY = 1138;
-			punch.SortingY = 1138;
-			dip.SortingY = 1138;
+			punch.SortingY = 1139;
+			dip.SortingY = 1140;
 			entities.Add (chips);
 			entities.Add (dip);
 			entities.Add (punch);
 			
-
 		}
 
 		// schedules an entity to be spawned after this update loop

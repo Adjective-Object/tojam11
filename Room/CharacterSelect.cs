@@ -19,17 +19,28 @@ namespace Adventure
 		Jitter<float> titleJitterRotation;
 		Jitter<Vector2> titleJitter;
 
+		public void OnEnter() {
+			Character player = AdventureGame.Player;
+			player.position.X = AdventureGame.ScreenBounds.Width / 3;
+			player.SetCharacterColor(bodyColors[currentBodyColor]);
+		}
+
 		public void Initialize () {
 			bodyColors = new List<Color[]>();
 
-			bodyColors.Add(new Color[] { new Color(255, 255, 255), new Color(25, 135, 0), new Color(0, 20, 200) });
-			bodyColors.Add(new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) });
-            bodyColors.Add(new Color[] { new Color(100, 50, 15), new Color(100, 0, 100), new Color(250, 250, 100) });
+			bodyColors.Add (new Color[] { new Color (214, 195, 189), 	new Color (172, 179, 190), 	new Color (141, 0, 3) });
+			bodyColors.Add (new Color[] { new Color (227, 205, 164), 	new Color (199, 121, 102), 	new Color (112, 48, 48) });
+			bodyColors.Add (new Color[] { new Color (255, 255, 157), 	new Color (190, 235, 159), 	new Color (0, 163, 136) });
+			bodyColors.Add (new Color[] { new Color (178,  88,  25), 	new Color (237,  53,  25), 	new Color (154,  38,  94) });
+			bodyColors.Add (new Color[] { new Color (  0,  64,  62), 	new Color (187,  53,  25), 	new Color (154,  38,  94) });
+			bodyColors.Add (new Color[] { new Color (255, 255, 255), 	new Color (255, 200, 200), 	new Color (180, 100, 100) });
+			bodyColors.Add (new Color[] { new Color (255, 255, 255), 	new Color (25, 135, 0), 	new Color (0, 20, 200) });
+			bodyColors.Add (new Color[] { new Color (180, 190, 170), 	new Color (255, 200, 200),	new Color (250, 250, 100) });
+			bodyColors.Add (new Color[] { new Color (100, 50, 15), 		new Color (100, 0, 100), 	new Color (250, 250, 100) });
 
 			indicatorHeight = new Easing<float> (410f, 460f, 10);
 			titleJitterRotation = new Jitter<float> (-0.02f, 0.02f);
 			titleJitter = new Jitter<Vector2> (new Vector2(0, -3), new Vector2(0, 3));
-
 		}
 			
 		public void Update (GameTime gameTime) {
@@ -78,7 +89,6 @@ namespace Adventure
 			}
 
 			Character player = AdventureGame.Player;
-			player.position.X = AdventureGame.ScreenBounds.Width / 3;
 
 			if (selectionChanged)
 			{
@@ -143,7 +153,7 @@ namespace Adventure
 
 			entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(characterOffset - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
 
-			const String controlsString = "Controls:\nWASD/Arrows to move\nENTER to interact\nTAB to select optins\nI to go through inventory";
+			const String controlsString = "Controls:\nWASD/Arrows to move\nENTER to interact\nTAB to select options\nI to go through inventory\nP to use phone";
 			entityBatch.DrawString (
 				defaultFont, 
 				controlsString,
