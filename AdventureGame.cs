@@ -60,6 +60,10 @@ namespace Adventure
         GameState currentState;
 		Room CharSelect = new CharacterSelect();
 
+
+        TimeSpan startTime;
+        TimeSpan gameEndTime;
+        List<String> endGameMessages;
         bool endGame = false;
 
 		public AdventureGame ()
@@ -113,6 +117,7 @@ namespace Adventure
             headSprites.Add("frog");
             headSprites.Add("fox");
             headSprites.Add("dog");
+            headSprites.Add("penguin");
             headSprites.Add("rooster");
             headSprites.Add("chicken");
 
@@ -120,8 +125,11 @@ namespace Adventure
 			bodySprites.Add("male");
 			bodySprites.Add("female_hipster");
             bodySprites.Add("jacket");
+            bodySprites.Add("penguin");
             bodySprites.Add("jock");
             bodySprites.Add("male_hipster");
+
+            endGameMessages = new List<string>();
 
             //Initialize player class
             player = new Character(new Vector2(1280/2, 500),
@@ -240,10 +248,9 @@ namespace Adventure
                 Inventory.Update(gameTime);
 
                 if (endGame)
-                    GameOver();
+                    GameOver(gameTime);
             }
-            
-            if (currentState == GameState.EndGame)
+            else if (currentState == GameState.EndGame)
             {
                 if (Input.KeyPressed(Key.ENTER))
                 {
@@ -256,7 +263,10 @@ namespace Adventure
 		}
 
 
-
+        public void AddEndGameMessage(String message)
+        {
+            endGameMessages.Add(message);
+        }
 
         /**
          * Call to cause end of game.
@@ -266,13 +276,15 @@ namespace Adventure
             endGame = true;
         }
 
-		public void StartGame() {
+		public void StartGame(GameTime gameTime) {
+            startTime = gameTime.TotalGameTime;
 			currentState = GameState.Game;
 			initGame ();
 		}
 
-        public void GameOver()
+        public void GameOver(GameTime gameTime)
         {
+            gameEndTime = gameTime.TotalGameTime;
             endGame = false;
             currentState = GameState.EndGame;
             entities.Clear();
@@ -294,12 +306,9 @@ namespace Adventure
             {
                 e.Load(Content, entityBatch);
             }
+
+            endGameMessages.Clear();
         }
-
-
-
-
-
 
 		Random r = new Random ();
 		Color oldBkg = new Color (0, 0, 0);
@@ -355,6 +364,25 @@ namespace Adventure
                 graphics.GraphicsDevice.Clear(Color.Black);
                 entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
                 entityBatch.DrawString(titleFont, "Well that party is over...", new Vector2(1280 / 2 - titleFont.MeasureString("Well that party is over...").X / 2, 100), Color.White);
+
+                String timeSpent = "You spent " + (int)(gameEndTime.TotalSeconds - startTime.TotalSeconds) + " seconds at the party";
+                entityBatch.DrawString(defaultFont, timeSpent, new Vector2(1280 / 2 - defaultFont.MeasureString(timeSpent).X / 2, 190), Color.White);
+                entityBatch.DrawString(defaultFont, "What You Accomplished:", new Vector2(1280 / 2 - defaultFont.MeasureString("What You Accomplished:").X / 2, 210), Color.White);
+
+                if (endGameMessages.Count == 0)
+                {
+                    entityBatch.DrawString(defaultFont, "You did nothing... BETTER THAN TALKING TO NORMIES, REEEE", new Vector2(1280 / 2 - defaultFont.MeasureString("You did nothing... BETTER THAN TALKING TO NORMIES, REEEE").X / 2, 250), Color.White);
+                }
+                else
+                {
+                    int offsetY = 0;
+                    foreach (String message in endGameMessages)
+                    {
+                        entityBatch.DrawString(defaultFont, message, new Vector2(1280 / 2 - defaultFont.MeasureString(message).X / 2, 250 + offsetY), Color.White);
+                        offsetY += 23;
+                    }
+                }
+
                 entityBatch.End();
             }
             else if (currentState == GameState.StartGame)
@@ -399,6 +427,15 @@ namespace Adventure
 				new Vector2(0, -97),
 				new Vector2(0, -117)
 			));
+
+            // Door
+            entities.Add(new StaticEntity(
+                null,
+                new Vector2(825, 863),
+                new Door(),
+                new Vector2(0, -97),
+                new Vector2(0, -117)
+            ));
 
 			// TODO position these flavor items
 

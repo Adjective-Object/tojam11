@@ -26,16 +26,23 @@ namespace Adventure
 		}
 
 		override public void Load(ContentManager content, SpriteBatch batch) {
-			this.sprite = content.Load<Texture2D> (this.spritePath);
-			this.bakedSpriteOffset = new Vector2 (- this.sprite.Bounds.Width / 2, - this.sprite.Bounds.Height);
+            if (this.spritePath != null)
+            {
+                this.sprite = content.Load<Texture2D>(this.spritePath);
+                this.bakedSpriteOffset = new Vector2(-this.sprite.Bounds.Width / 2, -this.sprite.Bounds.Height);
+            }
 		}
 
 		override public void Draw(SpriteBatch batch, GameTime elapsed) {
-			batch.Draw (this.sprite, 
-				this.position +
-					this.bakedSpriteOffset +
-					this.spriteOffset);
-			base.DrawFocusIndicator (batch, this.speechOffset);
+            if (this.spritePath != null)
+            {
+                batch.Draw(this.sprite,
+                    this.position +
+                        this.bakedSpriteOffset +
+                        this.spriteOffset);
+            }
+            base.DrawFocusIndicator(batch, this.speechOffset);
+            
 		}
 
 
