@@ -12,6 +12,8 @@ namespace Adventure
 		double speedy = 190;
 		double interactionRadius = 100;
 
+		public SpeechText triggeredText;
+
 		public PlayerBehavior (SoundFont s = null) : base(s)
 		{
 		}
@@ -21,7 +23,12 @@ namespace Adventure
 			UpdateMotion(time);
 	
 			// update highlights
-			UpdateHighlights();
+			if (triggeredText != null && !triggeredText.alive) {
+				triggeredText = null;
+			}
+			if (triggeredText == null) {
+				UpdateHighlights ();
+			}
 
 			if (Inventory.SelectedItemID != ItemID.NO_ITEM) {
 				this.character.heldItem = Inventory.SelectedItemID;

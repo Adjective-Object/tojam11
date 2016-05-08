@@ -189,6 +189,10 @@ namespace Adventure
 
 		}
 
+
+
+
+
 		/// <summary>
 		/// Allows the game to run logic such as updating the world,
 		/// checking for collisions, gathering input, and playing audio.
@@ -244,6 +248,9 @@ namespace Adventure
 			base.Update (gameTime);
 		}
 
+
+
+
         /**
          * Call to cause end of game.
          */
@@ -268,8 +275,8 @@ namespace Adventure
         public void initGame()
         {
             // Move player to start position
-            // player.position = new Vector2(1500, 1500);
-            player.position = new Vector2(825, 963);
+            player.position = new Vector2(3000, 1000);
+            // player.position = new Vector2(825, 963);
 
             // add all the entities on the map
             this.InitEntities();
@@ -281,6 +288,11 @@ namespace Adventure
                 e.Load(Content, entityBatch);
             }
         }
+
+
+
+
+
 
 		Random r = new Random ();
 		Color oldBkg = new Color (0, 0, 0);
@@ -345,6 +357,11 @@ namespace Adventure
 			base.Draw (gameTime);
 		}
 
+
+
+
+
+
 		SoundFont catSounds;
 		private void InitEntities() {
 			entities.Add (player);
@@ -385,12 +402,6 @@ namespace Adventure
 			));
 
 			entities.Add (new StaticEntity (
-				"environment/hammer",
-				new Vector2 (1300, 1100),
-				new GenericItem("I sure wish I could pick up this hammer.")
-			));
-
-			entities.Add (new StaticEntity (
 				"environment/catnip",
 				new Vector2 (1500, 1100),
 				new GenericItem("Mmm, deliious catnip...", "Too bad you're not a cat.")
@@ -398,8 +409,16 @@ namespace Adventure
 
 			entities.Add (new StaticEntity (
 				"environment/saw",
-				new Vector2 (1800, 1100),
-				new GenericItem("I see a saw. What do you see?")
+				new Vector2 (3258, 878),
+				new GenericItem("I see a saw. What do you see?"),
+				new Vector2(0, -30), new Vector2(0, -90)
+			));
+
+			entities.Add (new StaticEntity (
+				"environment/hammer",
+				new Vector2 (3196, 878),
+				new GenericItem(ItemID.BEER, "I sure wish I could pick up this hammer."),
+				new Vector2(0, -30), new Vector2(0, -90)
 			));
 
 			entities.Add (new StaticEntity (
