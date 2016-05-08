@@ -40,6 +40,7 @@ namespace Adventure
 				EmitSpeech ("I was told there would be catnip.");
 				break;
             case 4:
+                AdventureGame.instance.AddEndGameMessage("Talked to the cat");
                 AdventureGame.instance.SetEndGame();
                 break;
 			default:

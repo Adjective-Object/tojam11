@@ -60,6 +60,7 @@ namespace Adventure
         GameState currentState;
 		Room CharSelect = new CharacterSelect();
 
+        List<String> endGameMessages;
         bool endGame = false;
 
 		public AdventureGame ()
@@ -122,6 +123,8 @@ namespace Adventure
             bodySprites.Add("jacket");
             bodySprites.Add("jock");
             bodySprites.Add("male_hipster");
+
+            endGameMessages = new List<string>();
 
             //Initialize player class
             player = new Character(new Vector2(1280/2, 500),
@@ -235,8 +238,7 @@ namespace Adventure
                 if (endGame)
                     GameOver();
             }
-            
-            if (currentState == GameState.EndGame)
+            else if (currentState == GameState.EndGame)
             {
                 if (Input.KeyPressed(Key.ENTER))
                 {
@@ -249,7 +251,10 @@ namespace Adventure
 		}
 
 
-
+        public void AddEndGameMessage(String message)
+        {
+            endGameMessages.Add(message);
+        }
 
         /**
          * Call to cause end of game.
@@ -287,12 +292,9 @@ namespace Adventure
             {
                 e.Load(Content, entityBatch);
             }
+
+            endGameMessages.Clear();
         }
-
-
-
-
-
 
 		Random r = new Random ();
 		Color oldBkg = new Color (0, 0, 0);
@@ -348,6 +350,23 @@ namespace Adventure
                 graphics.GraphicsDevice.Clear(Color.Black);
                 entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
                 entityBatch.DrawString(titleFont, "Well that party is over...", new Vector2(1280 / 2 - titleFont.MeasureString("Well that party is over...").X / 2, 100), Color.White);
+
+                entityBatch.DrawString(defaultFont, "What You Accomplished:", new Vector2(1280 / 2 - defaultFont.MeasureString("What You Accomplished:").X / 2, 210), Color.White);
+
+                if (endGameMessages.Count == 0)
+                {
+                    entityBatch.DrawString(defaultFont, "You did nothing... BETTER THAN TALKING TO NORMIES, REEEE", new Vector2(1280 / 2 - defaultFont.MeasureString("You did nothing... BETTER THAN TALKING TO NORMIES, REEEE").X / 2, 210), Color.White);
+                }
+                else
+                {
+                    int offsetY = 0;
+                    foreach (String message in endGameMessages)
+                    {
+                        entityBatch.DrawString(defaultFont, message, new Vector2(1280 / 2 - defaultFont.MeasureString(message).X / 2, 250 + offsetY), Color.White);
+                        offsetY += 23;
+                    }
+                }
+
                 entityBatch.End();
             }
             else if (currentState == GameState.StartGame)
