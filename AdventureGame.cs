@@ -442,7 +442,9 @@ namespace Adventure
 					entityBatch.DrawString (this.defaultFont, "Press 'esc' to close", new Vector2(10, 10), Color.White);
 				}
 				if (phoneGUI.Running) {
-					entityBatch.DrawString (this.defaultFont, "Press 'p' to close", new Vector2(10,0), Color.White);
+					entityBatch.DrawString (this.defaultFont, "Press 'p' to close", new Vector2 (10, 0), Color.White);
+				} else {
+					entityBatch.DrawString (this.defaultFont, "press 'p' for phone", new Vector2(10, ScreenBounds.Height - 40), Color.White);
 				}
 
 				entityBatch.End ();
@@ -711,18 +713,36 @@ namespace Adventure
 					"So soothing...",
 					"Makes me want to poop"
 				),
-				null, new Vector2(0, -120)
+				null, new Vector2(0, -150)
 			));
 
 
 			//plates
 			entities.Add (new StaticEntity (
-				null, new Vector2 (2238, 923),
+				null, new Vector2 (2239, 923),
 				new GenericItem(
 					"Everything you'd need to eat off or out of"
 				),
 				null, new Vector2(0, -120)
 			));
+
+
+			//crop circle
+			DumbSprite cropCircle = new DumbSprite(
+				"environment/crop_circle_0", new Vector2 (2649, 1181)
+			);
+			cropCircle.SortingY = -1000;
+			entities.Add (cropCircle);
+
+			StaticEntity transmitter = new StaticEntity (
+				"environment/transmitter_0", new Vector2 (2649, 1161), new Transmitter(),
+				null, null, new Dictionary<string,string> {
+					{"microwave", "environment/transmitter_1"},
+					{"wire", "environment/transmitter_2"},
+					{"antenna", "environment/transmitter_3"}
+				}
+			);
+			entities.Add (transmitter);
 
 
 

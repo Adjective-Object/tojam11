@@ -153,7 +153,7 @@ namespace Adventure
 
 			entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(characterOffset - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
 
-			const String controlsString = "Controls:\nWASD/Arrows to move\nENTER to interact\nTAB to select options\nI to go through inventory";
+			const String controlsString = "Controls:\nWASD/Arrows to move\nENTER to interact\nTAB to select options\nI to go through inventory\nP to use phone";
 			entityBatch.DrawString (
 				defaultFont, 
 				controlsString,

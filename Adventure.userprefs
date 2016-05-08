@@ -1,26 +1,25 @@
 ﻿<Properties StartupItem="Adventure.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="entities/SpeechText.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="AdventureGame.cs">
     <Files>
-      <File FileName="Camera.cs" Line="51" Column="49" />
-      <File FileName="AdventureGame.cs" Line="392" Column="24" />
-      <File FileName="Room/Room.cs" Line="6" Column="22" />
-      <File FileName="Room/CharacterSelect.cs" Line="1" Column="1" />
-      <File FileName="Room/Party.cs" Line="14" Column="1" />
-      <File FileName="SoundFont.cs" Line="29" Column="44" />
-      <File FileName="entities/behaviors/NPC/GenericItem.cs" Line="58" Column="4" />
-      <File FileName="entities/behaviors/NPC/Antenna.cs" Line="21" Column="16" />
-      <File FileName="entities/behaviors/SpriteBehavior.cs" Line="30" Column="23" />
-      <File FileName="entities/behaviors/NPC/Cat.cs" Line="1" Column="1" />
-      <File FileName="entities/StaticEntity.cs" Line="26" Column="3" />
-      <File FileName="entities/behaviors/PlayerBehavior.cs" Line="47" Column="22" />
-      <File FileName="entities/Character.cs" Line="143" Column="20" />
-      <File FileName="entities/SpeechText.cs" Line="234" Column="41" />
-      <File FileName="Inventory.cs" Line="38" Column="1" />
-      <File FileName="entities/behaviors/EntityBehavior.cs" Line="15" Column="1" />
-      <File FileName="entities/behaviors/CharacterBehavior.cs" Line="36" Column="64" />
-      <File FileName="entities/behaviors/NPC/Bro.cs" Line="12" Column="9" />
-      <File FileName="Item.cs" Line="26" Column="56" />
+      <File FileName="Room/CharacterSelect.cs" Line="156" Column="149" />
+      <File FileName="AdventureGame.cs" Line="447" Column="67" />
+      <File FileName="entities/behaviors/NPC/Cat.cs" Line="30" Column="43" />
+      <File FileName="entities/behaviors/NPC/Antenna.cs" Line="21" Column="30" />
+      <File FileName="entities/behaviors/CharacterBehavior.cs" Line="1" Column="1" />
+      <File FileName="entities/behaviors/EntityBehavior.cs" Line="11" Column="2" />
+      <File FileName="entities/behaviors/SpriteBehavior.cs" Line="41" Column="61" />
+      <File FileName="Room/Room.cs" Line="16" Column="1" />
+      <File FileName="entities/behaviors/NPC/ChipBowl.cs" Line="28" Column="29" />
+      <File FileName="entities/behaviors/NPC/HighGuy.cs" Line="30" Column="27" />
+      <File FileName="entities/behaviors/NPC/Door.cs" Line="7" Column="1" />
+      <File FileName="entities/behaviors/NPC/ChickenGangMemeber.cs" Line="1" Column="1" />
+      <File FileName="entities/behaviors/NPC/Guitar.cs" Line="25" Column="11" />
+      <File FileName="entities/behaviors/PlayerBehavior.cs" Line="1" Column="1" />
+      <File FileName="entities/behaviors/NPC/ChickenGangLeader.cs" Line="8" Column="3" />
+      <File FileName="entities/behaviors/NPC/GenericItem.cs" Line="60" Column="42" />
+      <File FileName="Item.cs" Line="29" Column="79" />
+      <File FileName="entities/behaviors/NPC/Microwave.cs" Line="10" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
