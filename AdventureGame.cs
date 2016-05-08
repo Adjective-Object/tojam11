@@ -60,6 +60,9 @@ namespace Adventure
         GameState currentState;
 		Room CharSelect = new CharacterSelect();
 
+
+        TimeSpan startTime;
+        TimeSpan gameEndTime;
         List<String> endGameMessages;
         bool endGame = false;
 
@@ -238,7 +241,7 @@ namespace Adventure
                 Inventory.Update(gameTime);
 
                 if (endGame)
-                    GameOver();
+                    GameOver(gameTime);
             }
             else if (currentState == GameState.EndGame)
             {
@@ -266,13 +269,15 @@ namespace Adventure
             endGame = true;
         }
 
-		public void StartGame() {
+		public void StartGame(GameTime gameTime) {
+            startTime = gameTime.TotalGameTime;
 			currentState = GameState.Game;
 			initGame ();
 		}
 
-        public void GameOver()
+        public void GameOver(GameTime gameTime)
         {
+            gameEndTime = gameTime.TotalGameTime;
             endGame = false;
             currentState = GameState.EndGame;
             entities.Clear();
@@ -353,6 +358,8 @@ namespace Adventure
                 entityBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
                 entityBatch.DrawString(titleFont, "Well that party is over...", new Vector2(1280 / 2 - titleFont.MeasureString("Well that party is over...").X / 2, 100), Color.White);
 
+                String timeSpent = "You spent " + (int)(gameEndTime.TotalSeconds - startTime.TotalSeconds) + " seconds at the party";
+                entityBatch.DrawString(defaultFont, timeSpent, new Vector2(1280 / 2 - defaultFont.MeasureString(timeSpent).X / 2, 190), Color.White);
                 entityBatch.DrawString(defaultFont, "What You Accomplished:", new Vector2(1280 / 2 - defaultFont.MeasureString("What You Accomplished:").X / 2, 210), Color.White);
 
                 if (endGameMessages.Count == 0)

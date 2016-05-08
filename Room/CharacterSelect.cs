@@ -43,7 +43,8 @@ namespace Adventure
 			bool selectionChanged = false;
 			if (Input.KeyPressed(Key.ENTER))
 			{
-				AdventureGame.instance.StartGame();
+				AdventureGame.instance.StartGame(gameTime);
+                return;
 			}
 			else if (Input.KeyPressed(Key.LEFT))
 			{
