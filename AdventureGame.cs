@@ -497,7 +497,7 @@ namespace Adventure
 			entities.Add (new Character (new Vector2 (1765, 1682),
 				"penguin", LinuxPalette,
 				"penguin", LinuxPalette,
-				new CatNPC(catSounds)
+				new LinuxNPC(catSounds)
 			));
 			
 			Color[] FoxPalette= Character.MakeRandomPallete (3);
