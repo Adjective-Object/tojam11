@@ -114,6 +114,7 @@ namespace Adventure
             headSprites.Add("frog");
             headSprites.Add("fox");
             headSprites.Add("dog");
+            headSprites.Add("penguin");
             headSprites.Add("rooster");
             headSprites.Add("chicken");
 
@@ -121,6 +122,7 @@ namespace Adventure
 			bodySprites.Add("male");
 			bodySprites.Add("female_hipster");
             bodySprites.Add("jacket");
+            bodySprites.Add("penguin");
             bodySprites.Add("jock");
             bodySprites.Add("male_hipster");
 
@@ -375,8 +377,6 @@ namespace Adventure
             }
 			base.Draw (gameTime);
 		}
-
-
 
 
 
