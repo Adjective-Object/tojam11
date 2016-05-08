@@ -77,6 +77,9 @@ namespace Adventure
 				currentSelectionType = Math.Min(currentSelectionType, 2);
 			}
 
+			Character player = AdventureGame.Player;
+			player.position.X = AdventureGame.ScreenBounds.Width / 3;
+
 			if (selectionChanged)
 			{
 				if (currentHeadSprite >= headSprites.Count)
@@ -95,7 +98,6 @@ namespace Adventure
 					currentBodyColor = bodyColors.Count - 1;
 
 				// a bit of a hack but whatever
-				Character player = AdventureGame.Player;
 				player.SetCharacterSprites(headSprites[currentHeadSprite], bodySprites[currentBodySprite]);
 				player.SetCharacterColor(bodyColors[currentBodyColor]);
 				player.Load(AdventureGame.instance.Content, AdventureGame.instance.entityBatch);
@@ -121,23 +123,34 @@ namespace Adventure
 
 			const int characterSpacing = 42;
 
+			int characterOffset = screenWidth / 3;
+			int controlsOffset = screenWidth * 2 / 3;
+
 			if (currentSelectionType == 0)
 			{
 				entityBatch.DrawString(
 					defaultFont, "Choose Your Head >", 
-					new Vector2(screenWidth / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Head >").X, (int)indicatorHeight.current), Color.White);
+					new Vector2(characterOffset - characterSpacing - defaultFont.MeasureString("Choose Your Head >").X, (int)indicatorHeight.current), Color.White);
 			}
 			else if (currentSelectionType == 1)
 			{
-				entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(screenWidth / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Outfit >").X, (int) indicatorHeight.current), Color.White);
+				entityBatch.DrawString(defaultFont, "Choose Your Outfit >", new Vector2(characterOffset - characterSpacing - defaultFont.MeasureString("Choose Your Outfit >").X, (int) indicatorHeight.current), Color.White);
 			}
 			else if (currentSelectionType == 2)
 			{
-				entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(screenWidth / 2 - characterSpacing - defaultFont.MeasureString("Choose Your Colors >").X, (int) indicatorHeight.current), Color.White);
+				entityBatch.DrawString(defaultFont, "Choose Your Colors >", new Vector2(characterOffset - characterSpacing - defaultFont.MeasureString("Choose Your Colors >").X, (int) indicatorHeight.current), Color.White);
 			}
 
-			entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(screenWidth/2 - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
-			entityBatch.End();
+			entityBatch.DrawString(defaultFont, "Press Enter To Start", new Vector2(characterOffset - defaultFont.MeasureString("Press Enter To Start").X/2, 650), Color.White);
+
+			const String controlsString = "Controls:\nWASD/Arrows to move\nENTER to interact\nTAB to select optins\nI to go through inventory";
+			entityBatch.DrawString (
+				defaultFont, 
+				controlsString,
+				new Vector2(controlsOffset - defaultFont.MeasureString(controlsString).X / 2, 350),
+				Color.White);
+
+			entityBatch.End ();
 
 			Matrix textPosition = Matrix.CreateTranslation (new Vector3(screenWidth / 2, 100, 0));
 			Matrix textRotation = Matrix.CreateRotationZ (this.titleJitterRotation.current);
