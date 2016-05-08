@@ -515,9 +515,9 @@ namespace Adventure
 		private void InitEntities() {
 			entities.Add (player);
 
-			Inventory.Add (ItemID.ANTENNA);
-			Inventory.Add (ItemID.MICROWAVE);
-			Inventory.Add (ItemID.STRINGS);
+			// Inventory.Add (ItemID.ANTENNA);
+			// Inventory.Add (ItemID.MICROWAVE);
+			// Inventory.Add (ItemID.STRINGS);
 
 			// people
 			Color[] CatPalette = Character.MakeRandomPallete (3);
