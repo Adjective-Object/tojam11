@@ -355,7 +355,7 @@ namespace Adventure
 
                 if (endGameMessages.Count == 0)
                 {
-                    entityBatch.DrawString(defaultFont, "You did nothing... BETTER THAN TALKING TO NORMIES, REEEE", new Vector2(1280 / 2 - defaultFont.MeasureString("You did nothing... BETTER THAN TALKING TO NORMIES, REEEE").X / 2, 210), Color.White);
+                    entityBatch.DrawString(defaultFont, "You did nothing... BETTER THAN TALKING TO NORMIES, REEEE", new Vector2(1280 / 2 - defaultFont.MeasureString("You did nothing... BETTER THAN TALKING TO NORMIES, REEEE").X / 2, 250), Color.White);
                 }
                 else
                 {
@@ -411,6 +411,15 @@ namespace Adventure
 				new Vector2(0, -97),
 				new Vector2(0, -117)
 			));
+
+            // Door
+            entities.Add(new StaticEntity(
+                null,
+                new Vector2(825, 863),
+                new Door(),
+                new Vector2(0, -97),
+                new Vector2(0, -117)
+            ));
 
 			// TODO position these flavor items
 

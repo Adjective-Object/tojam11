@@ -28,7 +28,8 @@ namespace Adventure
 					walkAway(
 						player, character,
 						() => {
-							GameStateDictionary.instance.setState("cat_favorite", "being an asshole"); 
+							GameStateDictionary.instance.setState("cat_favorite", "being an asshole");
+                            AdventureGame.instance.AddEndGameMessage("Pissed off the cat.");
 							EmitSpeech("where are you going?");
 						})
 				);
@@ -39,10 +40,6 @@ namespace Adventure
 			case 3:
 				EmitSpeech ("I was told there would be catnip.");
 				break;
-            case 4:
-                AdventureGame.instance.AddEndGameMessage("Talked to the cat");
-                AdventureGame.instance.SetEndGame();
-                break;
 			default:
 				EmitSpeech ("I'm out of things to say to you");
 				break;
