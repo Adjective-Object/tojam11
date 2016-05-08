@@ -76,12 +76,16 @@ namespace Adventure
 					this.ages [i] = i * -LETTER_SPAWN_DELAY;
 				}
 			}
+			
+			blackRect = new Texture2D(AdventureGame.instance.GraphicsDevice, 1, 1);
+			blackRect.SetData(new Color[] { Color.Black });
 		}
 
 		Option[] options = null;
 		Func<Boolean> checkWalkAway;
 		Action enterCallback;
 		int selectionIndex = 0;
+		Texture2D blackRect;
 		protected SpeechText(SpriteFont font, Vector2 position, String text, Option[] options)
 			: this(font, position, text, SpeechMode.PLAYER_ANSWER_QUESTION){
 			this.options = options;
@@ -96,6 +100,9 @@ namespace Adventure
 			for (int i = 0; i < totalStringLength; i++) {
 				this.ages [i] = i * -LETTER_SPAWN_DELAY;
 			}
+
+			blackRect = new Texture2D(AdventureGame.instance.GraphicsDevice, 1, 1);
+			blackRect.SetData(new Color[] { Color.Black });
 		}
 
 		public void AttachWalkawayCallback(Func<Boolean> checkWalkAway) {
@@ -191,10 +198,23 @@ namespace Adventure
 
 		public override void Draw(SpriteBatch batch, GameTime time) {
 			if (mode != SpeechMode.PLAYER_ANSWER_QUESTION) {
+				if (mode != SpeechMode.AMBIENT) {
+					DrawStringBkg (batch, this.position, this.text, this.ages);
+				}
 				DrawString (batch, this.position, this.text, this.ages);
 			} else {
-				DrawString (batch, this.position, this.text, this.ages);
+				DrawStringBkg (batch, this.position, this.text, this.ages);
 				int ageOffset = this.text.Length;
+				for (int i=0; i<this.options.Length; i++) {
+					DrawStringBkg (
+						batch, this.position + LINE_HEIGHT * (i + 1), this.options [i].text, 
+									this.ages, ageOffset);
+					ageOffset += this.options[i].text.Length;
+				}
+
+
+				DrawString (batch, this.position, this.text, this.ages);
+				ageOffset = this.text.Length;
 				for (int i=0; i<this.options.Length; i++) {
 					DrawString (
 						batch, this.position + LINE_HEIGHT * (i + 1), this.options[i].text, 
@@ -202,6 +222,28 @@ namespace Adventure
 						i == this.selectionIndex ? new Color(255,255,0) : Color.White);
 					ageOffset += this.options[i].text.Length;
 				}
+			}
+		}
+
+		Vector2 LINE_MARGIN = new Vector2(10,10);
+
+		public void DrawStringBkg(SpriteBatch batch, Vector2 lineOrigin, String str, Double[] ages, int ageArrayOffset = 0) {
+			float targetWidth = LETTER_OFFSET.X * str.Length + LINE_MARGIN.X * 2;
+			if (!this.IsDismissed) {
+				batch.Draw (blackRect, null, new Rectangle (
+					(int)(lineOrigin.X - LINE_MARGIN.X),
+					(int)(lineOrigin.Y - LINE_MARGIN.Y),
+					(int)(Math.Min (1, (ages [ageArrayOffset] / ANIMATION_TIME)) * targetWidth),
+					(int)(LINE_HEIGHT.Y + LINE_MARGIN.Y * 2)
+				));
+			} else {
+				float t = Math.Min(1, (float) ((this.ages[this.ages.Length - 1] - dismissedTime) / ANIMATION_TIME));
+				batch.Draw (blackRect, null, new Rectangle (
+					(int)(lineOrigin.X - LINE_MARGIN.X + t * targetWidth),
+					(int)(lineOrigin.Y - LINE_MARGIN.Y),
+					(int)((1 - t) * targetWidth),
+					(int)(LINE_HEIGHT.Y + LINE_MARGIN.Y * 2)
+				));
 			}
 		}
 
