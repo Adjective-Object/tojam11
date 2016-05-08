@@ -375,7 +375,7 @@ namespace Adventure
 			entities.Add (new Character (new Vector2 (1500, 740),
                 headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(20, 250, 30) },
                 bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(100, 60, 190), new Color(255, 200, 255) },
-				new CharacterBehavior(catSounds)
+				new BroNPC(catSounds)
 			));
 
 			entities.Add (new Character (new Vector2 (1450, 800),
