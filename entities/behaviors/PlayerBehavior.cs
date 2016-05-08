@@ -76,16 +76,8 @@ namespace Adventure
 					}
 				}
 
-                if (!PlayerCollidesWithMap(new Vector2(newPosition.X, character.position.Y)))
-                {
-                    character.position.X = newPosition.X;
-                }
-                if (!PlayerCollidesWithMap(new Vector2(character.position.X, newPosition.Y)))
-                {
-                    character.position.Y = newPosition.Y;
-                }
+                MoveCharacter(newPosition);
 
-                
 			} else {
 				character.PlayAnimBody("idle");
 			}
@@ -106,21 +98,7 @@ namespace Adventure
 			}
 		}
 
-        protected bool PlayerCollidesWithMap(Vector2 pos)
-        {
-            //Width and height of player collision
-            int width = 15;
-            int height = 15;
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = -width; x < width; x++)
-                {
-                    if (AdventureGame.instance.collisionMap[(int)pos.Y + y, (int)pos.X + x] == 1)
-                        return true;
-                }
-            }
-            return false;
-        }
+
 
 		HighlightManager highlights = new HighlightManager();
 		protected void UpdateHighlights() {
