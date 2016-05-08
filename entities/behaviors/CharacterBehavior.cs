@@ -37,6 +37,37 @@ namespace Adventure
 			this.EmitSpeech("response not implemented");
 			((Character) entity).facingLeft = player.position.X < entity.position.X;
 		}
+
+
+		protected int interactionCount;
+
+		// misc helpers for stuff that gets used a lot
+		protected void SpeakAndAdvance(Character player, String str) {
+			EmitSpeech (
+				str,
+				SpeechText.SpeechMode.PLAYER_CONTROLLED, 
+				walkAway(entity, player, advanceConvo(player)),
+				advanceConvo(player));
+		}
+		protected void resetConvo() {
+			this.interactionCount = 0;
+		}
+		protected Action advanceConvo(Character player) {
+			return () => {
+				interactionCount++;
+				this.RespondToInteraction (player);
+			};
+		}
+
+		static Random r = new Random();
+		protected void EmitRandom(String[] options, 
+			SpeechText.SpeechMode mode = SpeechText.SpeechMode.PLAYER_CONTROLLED,
+			Func<bool> walkAwayCallback = null, 
+			Action enterAction = null) {
+
+			this.EmitSpeech(options[r.Next (0, options.Length)]);
+		}
+
 	}
 }
 

@@ -462,7 +462,7 @@ namespace Adventure
 			entities.Add (new Character (new Vector2 (2677, 921),
 				"fox", FoxPalette,
 				"jacket", FoxPalette,
-				new CatNPC(catSounds)
+				new HighGuy(catSounds)
 			));
 
 
@@ -542,8 +542,8 @@ namespace Adventure
 				"environment/bleach",
 				new Vector2 (2374, 956),
 				new GenericItem ("Bleach", "\"Warning, do not drink\""),
-				new Vector2(0, -100),
-				new Vector2(0, -177)
+				new Vector2(0, -50),
+				new Vector2(0, -127)
 			));
 
 

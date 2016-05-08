@@ -32,6 +32,14 @@ namespace Adventure
 			return false;
 		}
 
+		public static void RemoveCurrent() {
+			if (selector != 0) {
+				contents.RemoveAt (selector);
+				selector--;
+				deferredActivation = true;
+			}
+		}
+
 		public static Item SelectedItem {
 			get { return Item.Get (contents [selector]); }
 		}

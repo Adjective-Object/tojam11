@@ -4,7 +4,6 @@ namespace Adventure
 {
 	public class HipsterNPC : CharacterBehavior
 	{
-		int interactionCount = 0;
 		int greeting;
 
 		public HipsterNPC (SoundFont speech) : base (speech) {
