@@ -244,6 +244,7 @@ namespace Adventure
 			#endif
 
 			Input.Update ();
+			Input.disabled = atari.Running || phoneGUI.Running;
 			TInput.Update ();
 
 			if (currentState == GameState.StartGame)

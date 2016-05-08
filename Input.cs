@@ -13,6 +13,8 @@ namespace Adventure
 		protected static Dictionary<Key, Boolean> pressedThisFrame;
 		protected static Dictionary<Key, Boolean> pressedLastFrame;
 
+		public static Boolean disabled;
+
 		public static void Initialize ()
 		{
 			pressedThisFrame = new Dictionary<Key, Boolean> ();
@@ -46,10 +48,16 @@ namespace Adventure
 		}
 
 		public static Boolean KeyDown(Key k) {
+			if (disabled) {
+				return false;
+			}
 			return pressedThisFrame[k];
 		}
 
 		public static Boolean KeyPressed(Key k) {
+			if (disabled) {
+				return false;
+			}
 			return (!pressedLastFrame[k]) && pressedThisFrame[k];
 		}
 	}
