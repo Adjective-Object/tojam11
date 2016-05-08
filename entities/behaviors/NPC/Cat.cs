@@ -4,8 +4,6 @@ namespace Adventure
 {
 	public class CatNPC : CharacterBehavior
 	{
-		int interactionCount = 0;
-
 		public CatNPC (SoundFont speech) : base (speech) {
 		}
 
