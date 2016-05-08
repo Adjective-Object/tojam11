@@ -653,6 +653,14 @@ namespace Adventure
 			#endregion
 		}
 
+		public void StartGame(int game) {
+			Running = true;
+			Timer = 200;
+			if (systemState < 0)
+				systemState = 0;
+			gameSelection = game;
+		}
+
 		public void Draw(SpriteBatch spriteBatch)
 		{
 			if (systemState > -1) 
