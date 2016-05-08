@@ -4,8 +4,6 @@ namespace Adventure
 {
     public class BroNPC : CharacterBehavior
     {
-        int interactionCount = 0;
-        int broFriendly = 0;
         public BroNPC(SoundFont speech)
             : base(speech)
         {

@@ -228,7 +228,14 @@ namespace Adventure
                 // add newly spawned entities
                 entities.AddRange(toSpawn);
                 toSpawn.Clear();
-                entities.Sort((BaseEntity e, BaseEntity f) => e.isUI ? 1 : e.position.Y.CompareTo(f.position.Y));
+				entities.Sort((BaseEntity e, BaseEntity f) => {
+					if (e.sortOrder == f.sortOrder) {
+						return e.position.Y.CompareTo(f.position.Y);
+					} else {
+						return e.sortOrder.CompareTo(f.sortOrder);
+					}
+				});
+						
 
                 Inventory.Update(gameTime);
 
@@ -360,8 +367,6 @@ namespace Adventure
 
 
 
-
-
 		SoundFont catSounds;
 		private void InitEntities() {
 			entities.Add (player);
@@ -381,8 +386,10 @@ namespace Adventure
 			entities.Add (new Character (new Vector2 (1450, 800),
                 headSprites[r.Next(0, headSprites.Count)], new Color[] { new Color(180, 190, 170), new Color(255, 200, 200), new Color(250, 250, 100) },
                 bodySprites[r.Next(0, bodySprites.Count)], new Color[] { new Color(180, 190, 170), new Color(120, 120, 30), new Color(255, 200, 255) },
-				new CharacterBehavior(catSounds)
+				new HipsterNPC(catSounds)
 			));
+
+			entities.Add(new DissapearingWall("environment/shed", new Vector2(3128,997), player));
 
 
 			entities.Add (new StaticEntity (
@@ -409,14 +416,21 @@ namespace Adventure
 
 			entities.Add (new StaticEntity (
 				"environment/saw",
-				new Vector2 (3258, 878),
+				new Vector2 (3277, 879),
 				new GenericItem("I see a saw. What do you see?"),
 				new Vector2(0, -30), new Vector2(0, -90)
 			));
 
 			entities.Add (new StaticEntity (
+				"environment/screwdriver",
+				new Vector2 (3226, 878),
+				new GenericItem(ItemID.SCREWDRIVER, "It's a screwdriver"),
+				new Vector2(0, -30), new Vector2(0, -90)
+			));
+
+			entities.Add (new StaticEntity (
 				"environment/hammer",
-				new Vector2 (3196, 878),
+				new Vector2 (3178, 877),
 				new GenericItem(ItemID.HAMMER, "I sure wish I could pick up this hammer."),
 				new Vector2(0, -30), new Vector2(0, -90)
 			));

@@ -34,16 +34,14 @@ namespace Adventure
 				);
 				break;
 			case 2:
-                EmitSpeech("so you like " + GameStateDictionary.instance.getState("cat_favorite") + "?");
+                EmitSpeech("so you like " + GameStateDictionary.instance.getState("cat_favorite") + "?",
+					SpeechText.SpeechMode.PLAYER_CONTROLLED,
+					null, () => {
+						this.RespondToInteraction(player);
+					});
 				break;
-			case 3:
-				EmitSpeech ("I was told there would be catnip.");
-				break;
-            case 4:
-                AdventureGame.instance.SetEndGame();
-                break;
 			default:
-				EmitSpeech ("I'm out of things to say to you");
+				EmitSpeech ("I hate " + GameStateDictionary.instance.getState("cat_favorite") +", we can't be friends");
 				break;
 			}
 			interactionCount++;

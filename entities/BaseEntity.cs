@@ -13,8 +13,8 @@ namespace Adventure
 			get { return false; }
 		}
 
-		public virtual Boolean isUI {
-			get { return false; }
+		public virtual int sortOrder {
+			get { return 0; }
 		}
 
 		public Boolean alive {

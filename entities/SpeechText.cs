@@ -23,6 +23,7 @@ namespace Adventure
 			if (fonts.Count == 0) SpeechText.fonts ["default"] = font;
 			SpeechText.fonts [fontName] = font;
 		}
+
 		public static SpeechText Spawn(String fontName, Vector2 position, String text, SpeechMode mode = SpeechMode.AMBIENT) {
 			SpeechText e = new SpeechText (fonts [fontName], position, text, mode);
 			AdventureGame.SpawnEntity(e);
@@ -48,8 +49,8 @@ namespace Adventure
 		static double AMBIENT_SPEECH_LIFETIME = 3.0;
 
 
-		override public Boolean isUI {
-			get { return true; }
+		override public int sortOrder {
+			get { return 1; }
 		}
 		public Boolean DoneEmitting {
 			get { return this.ages[this.ages.Length - 1] > ANIMATION_TIME; }
@@ -64,21 +65,30 @@ namespace Adventure
 		double dismissedTime;
 		string text;
 		double timeScale = 1;
-		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode) : base (position) {
+
+
+		private SpeechText(SpriteFont font, Vector2 position, String text) : base (position) {
 			this.text = text;
 			this.font = font;
 			this.mode = mode;
 			this.dismissedTime = -1;
+
+			blackRect = new Texture2D(AdventureGame.instance.GraphicsDevice, 1, 1);
+			blackRect.SetData(new Color[] { Color.Black });
+		}
+
+		protected SpeechText(SpriteFont font, Vector2 position, String text, SpeechMode mode) :
+		this(font, position, text){
+			this.mode = mode;
 
 			if (mode != SpeechMode.PLAYER_ANSWER_QUESTION) {
 				this.ages = new double[text.Length];
 				for (int i = 0; i < text.Length; i++) {
 					this.ages [i] = i * -LETTER_SPAWN_DELAY;
 				}
+			} else {
+				throw new Exception("SpeechText initialized without option but with mode PLAYER_ANSWER_QUESTION");
 			}
-			
-			blackRect = new Texture2D(AdventureGame.instance.GraphicsDevice, 1, 1);
-			blackRect.SetData(new Color[] { Color.Black });
 		}
 
 		Option[] options = null;
@@ -87,9 +97,9 @@ namespace Adventure
 		int selectionIndex = 0;
 		Texture2D blackRect;
 		protected SpeechText(SpriteFont font, Vector2 position, String text, Option[] options)
-			: this(font, position, text, SpeechMode.PLAYER_ANSWER_QUESTION){
+			: this(font, position, text){
 			this.options = options;
-			this.checkWalkAway = checkWalkAway;
+			this.mode = SpeechMode.PLAYER_ANSWER_QUESTION;
 
 			int totalStringLength = text.Length;
 			foreach (Option o in options) {
@@ -100,9 +110,6 @@ namespace Adventure
 			for (int i = 0; i < totalStringLength; i++) {
 				this.ages [i] = i * -LETTER_SPAWN_DELAY;
 			}
-
-			blackRect = new Texture2D(AdventureGame.instance.GraphicsDevice, 1, 1);
-			blackRect.SetData(new Color[] { Color.Black });
 		}
 
 		public void AttachWalkawayCallback(Func<Boolean> checkWalkAway) {

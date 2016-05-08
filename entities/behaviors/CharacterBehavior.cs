@@ -34,7 +34,7 @@ namespace Adventure
 		}
 
 		override public void RespondToInteraction(Character player) {
-			this.EmitSpeech("((Character) entity)response not implemented");
+			this.EmitSpeech("response not implemented");
 			((Character) entity).facingLeft = player.position.X < entity.position.X;
 		}
 	}
