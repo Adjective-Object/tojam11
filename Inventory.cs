@@ -40,6 +40,11 @@ namespace Adventure
 			}
 		}
 
+		public static void Clear() {
+			selector = 0;
+			contents = new List<ItemID> () { ItemID.NO_ITEM };
+		}
+
 		public static Item SelectedItem {
 			get { return Item.Get (contents [selector]); }
 		}

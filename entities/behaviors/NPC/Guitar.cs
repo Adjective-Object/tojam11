@@ -7,7 +7,6 @@ namespace Adventure
 		Boolean hasStrings = true;
 		public override void RespondToInteraction(Character player)
 		{
-			LogEndMessage ("poop");
 			if (this.hasStrings) {
 				switch (player.heldItem) {
 				case ItemID.SCREWDRIVER:

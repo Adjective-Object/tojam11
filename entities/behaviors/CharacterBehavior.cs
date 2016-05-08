@@ -53,6 +53,7 @@ namespace Adventure
 		override public void BindToEntity(InteractableEntity entity) {
 			base.BindToEntity(entity);
 			character = (Character) entity;
+			this.character.facingLeft = new Random ().NextDouble() > 0.5;
 		}
 
 		override public void EmitSpeech(String text, SpeechText.SpeechMode mode = SpeechText.SpeechMode.PLAYER_CONTROLLED, Func<bool> walkAwayCallback = null, Action enterCallback = null) {

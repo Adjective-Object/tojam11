@@ -60,21 +60,21 @@ namespace Adventure
 			else if (Input.KeyPressed(Key.LEFT))
 			{
 				if (currentSelectionType == 0)
-					currentHeadSprite++;
-				else if(currentSelectionType == 1)
-					currentBodySprite++;
-				else
-					currentBodyColor++;
-				selectionChanged = true;
-			}
-			else if (Input.KeyPressed(Key.RIGHT))
-			{
-				if (currentSelectionType == 0)
 					currentHeadSprite--;
 				else if(currentSelectionType == 1)
 					currentBodySprite--;
 				else
 					currentBodyColor--;
+				selectionChanged = true;
+			}
+			else if (Input.KeyPressed(Key.RIGHT))
+			{
+				if (currentSelectionType == 0)
+					currentHeadSprite++;
+				else if(currentSelectionType == 1)
+					currentBodySprite++;
+				else
+					currentBodyColor++;
 				selectionChanged = true;
 			}
 			else if (Input.KeyPressed(Key.UP))

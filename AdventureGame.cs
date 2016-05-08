@@ -159,6 +159,7 @@ namespace Adventure
 			gameCamera = new Camera(player, new int [] {600, 1000, 1500});
 			this.entities.Add (gameCamera);
 
+			graphics.IsFullScreen = true;
 
 			// init game
 			base.Initialize ();
@@ -184,10 +185,10 @@ namespace Adventure
 			alien = Content.Load<Texture2D> ("alien");
 			alienOffset = new Vector2 (alien.Bounds.Width, alien.Bounds.Height) * -0.5f;
 
-			catSounds = new SoundFont("soundfonts/SWAR1685_TalkingEngM", 94);
-			catSounds.LoadContent (Content);
 			defaultSoundFont = new SoundFont ("soundfonts/machine", 9);
 			defaultSoundFont.LoadContent (Content);
+			catSounds = defaultSoundFont; //new SoundFont("soundfonts/SWAR1685_TalkingEngM", 94) ;
+			catSounds.LoadContent (Content);
 
 			//Tell font loader to load Monaco as defaulft font
 			defaultFont = Content.Load<SpriteFont>("Monaco");
@@ -371,10 +372,12 @@ namespace Adventure
         {
             // Move player to start position
             // player.position = new Vector2(3000, 1000);
-            player.position = new Vector2(825, 963);
+            player.position = new Vector2(871, 963);
 
             // add all the entities on the map
             this.InitEntities();
+
+			Inventory.Clear ();
 
             this.entities.Add(gameCamera);
 
@@ -741,9 +744,28 @@ namespace Adventure
 
 			//plates
 			entities.Add (new StaticEntity (
-				null, new Vector2 (2239, 923),
+				null, new Vector2 (2337, 923),
 				new GenericItem(
 					"Everything you'd need to eat off or out of"
+				),
+				null, new Vector2(0, -120)
+			));
+
+
+			// coats
+			entities.Add (new StaticEntity (
+				null, new Vector2 (970, 895),
+				new GenericItem(
+					"Coats"
+				),
+				null, new Vector2(0, -120)
+			));
+
+			// coats
+			entities.Add (new StaticEntity (
+				null, new Vector2 (752, 990),
+				new GenericItem(
+					"Smells like feet"
 				),
 				null, new Vector2(0, -120)
 			));
