@@ -159,7 +159,7 @@ namespace Adventure
 			gameCamera = new Camera(player, new int [] {600, 1000, 1500});
 			this.entities.Add (gameCamera);
 
-			graphics.IsFullScreen = true;
+			// graphics.IsFullScreen = true;
 
 			// init game
 			base.Initialize ();
@@ -384,8 +384,9 @@ namespace Adventure
             foreach (BaseEntity e in this.entities)
             {
                 e.Load(Content, entityBatch);
-            }
+			}
 
+			((PlayerBehavior)player.behavior).triggeredText = null;
             endGameMessages.Clear();
         }
 
